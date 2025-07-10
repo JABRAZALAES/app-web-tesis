@@ -1,0 +1,95 @@
+<div class="min-h-screen flex items-center justify-center p-4 relative bg-gradient-to-b from-[#667eea] via-[#4B73E8] to-[#3b5998] overflow-hidden">
+
+  <!-- Fondo dinámico animado -->
+  <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
+    <div class="absolute bg-[#667eea] opacity-30 rounded-full blur-3xl animate-slow-move w-80 h-80 -top-32 -left-32"></div>
+    <div class="absolute bg-[#4B73E8] opacity-20 rounded-full blur-3xl animate-slow-move-delay w-96 h-96 top-20 right-0"></div>
+  </div>
+
+  <!-- Contenedor de login -->
+  <div class="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-lg border border-[#4B73E8] overflow-hidden">
+
+    <!-- Encabezado -->
+    <div class="bg-gradient-to-br from-[#667eea] to-[#4B73E8] px-8 py-8 text-center rounded-t-2xl shadow" style="box-shadow: 0 8px 32px 0 rgba(59,89,152,0.15);">
+      <img src="assets/logo.png" alt="Logo ESPE" class="w-20 h-auto mx-auto mb-4" />
+      <h1 class="text-2xl font-semibold text-white mb-1 tracking-tight">Gestión de Novedades e Incidentes</h1>
+      <p class="text-[#dbeafe] text-sm">Acceso Administrativo</p>
+    </div>
+
+    <!-- Formulario -->
+    <div class="px-8 py-10 bg-white">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6" autocomplete="off">
+        <!-- Correo -->
+        <div>
+          <label for="correo" class="block text-sm font-medium text-[#3b5998]">Correo</label>
+          <div class="mt-1 relative">
+            <fa-icon [icon]="faEnvelope" class="absolute left-3 top-3.5 text-[#4B73E8]"></fa-icon>
+            <input
+              type="email"
+              id="correo"
+              name="correo"
+              required
+              email
+              [(ngModel)]="correo"
+              #correoModel="ngModel"
+              placeholder="ejemplo@espe.edu.ec"
+              class="pl-10 pr-3 py-3.5 w-full border border-[#4B73E8] rounded-lg text-sm text-[#3b5998] shadow-sm focus:ring-2 focus:ring-[#667eea] focus:border-[#4B73E8]"
+            />
+          </div>
+          <div *ngIf="correoModel.invalid && (correoModel.dirty || correoModel.touched)" class="text-red-600 text-xs mt-1">
+            <div *ngIf="correoModel.errors?.['required']">El correo es obligatorio.</div>
+            <div *ngIf="correoModel.errors?.['email']">Formato de correo inválido.</div>
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div>
+          <label for="contrasena" class="block text-sm font-medium text-[#3b5998]">Contraseña</label>
+          <div class="mt-1 relative">
+            <fa-icon [icon]="faLock" class="absolute left-3 top-3.5 text-[#4B73E8]"></fa-icon>
+            <input
+              [type]="mostrarPassword ? 'text' : 'password'"
+              id="contrasena"
+              name="contrasena"
+              required
+              minlength="6"
+              [(ngModel)]="contrasena"
+              #contrasenaModel="ngModel"
+              placeholder="Ingrese su contraseña"
+              class="pl-10 pr-10 py-3.5 w-full border border-[#4B73E8] rounded-lg text-sm text-[#3b5998] shadow-sm focus:ring-2 focus:ring-[#667eea] focus:border-[#4B73E8]"
+            />
+            <button type="button" (click)="togglePassword()" class="absolute right-3 top-3.5 text-[#3b5998] focus:outline-none">
+              <fa-icon [icon]="mostrarPassword ? faEyeSlash : faEye"></fa-icon>
+            </button>
+          </div>
+          <div *ngIf="contrasenaModel.invalid && (contrasenaModel.dirty || contrasenaModel.touched)" class="text-red-600 text-xs mt-1">
+            <div *ngIf="contrasenaModel.errors?.['required']">La contraseña es obligatoria.</div>
+            <div *ngIf="contrasenaModel.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
+          </div>
+        </div>
+
+        <!-- Error de autenticación -->
+        <div *ngIf="errorLogin" class="text-red-600 text-sm text-center -mt-4">
+          {{ errorLogin }}
+        </div>
+
+        <!-- Botón -->
+        <button
+          type="submit"
+          [disabled]="loginForm.invalid"
+          class="w-full py-3.5 px-4 rounded-lg text-white bg-gradient-to-r from-[#4B73E8] to-[#667eea] hover:from-[#3b5998] hover:to-[#4B73E8] text-sm font-medium shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Iniciar Sesión
+        </button>
+      </form>
+    </div>
+
+    <!-- Pie -->
+    <div class="px-8 py-4 bg-[#f1f5f9] text-center border-t border-[#4B73E8] text-xs text-[#3b5998]">
+      <div class="flex justify-center items-center gap-1 text-[#4B73E8] font-medium">
+        <fa-icon [icon]="faShieldAlt" class="w-4 h-4"></fa-icon>
+        Conexión segura
+      </div>
+    </div>
+  </div>
+</div>

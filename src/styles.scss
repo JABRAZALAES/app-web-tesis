@@ -1,1 +1,104 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  @apply bg-gray-900 text-gray-100;
+}
+
+/* Animaciones personalizadas */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Componentes Tailwind personalizados */
+@layer components {
+  .btn {
+    @apply px-4 py-2 rounded-lg font-medium text-sm border-0 cursor-pointer transition-all duration-300 inline-flex items-center gap-2 hover:-translate-y-0.5 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none;
+  }
+
+  .btn-primary {
+    @apply btn bg-blue-600 text-white hover:bg-blue-700 shadow-md hover:shadow-blue-500/30;
+  }
+
+  .btn-outline {
+    @apply btn border border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:border-gray-500 hover:text-white;
+  }
+
+  .btn-export {
+    @apply btn border border-gray-600 text-gray-300 bg-gray-800 hover:bg-gray-700 hover:text-white;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1 text-xs rounded-md;
+  }
+
+  .btn-success {
+    @apply btn bg-green-600 text-white hover:bg-green-700 shadow-md hover:shadow-green-500/30;
+  }
+
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 shadow-md hover:shadow-red-500/30;
+  }
+
+  .card {
+    @apply bg-gray-800 rounded-xl shadow-lg border border-gray-700 transition-all duration-300 hover:shadow-xl hover:border-gray-600;
+  }
+
+  .stat-card {
+    @apply relative flex flex-col items-center gap-2 p-6 rounded-xl border-l-4 bg-gray-800 shadow-lg transition-all duration-300 hover:shadow-xl;
+  }
+
+  /* Scrollbar personalizada */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-gray-800;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-600 rounded-full hover:bg-gray-500;
+  }
+@keyframes slowMove {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(20px, 15px);
+  }
+}
+
+@keyframes slowMoveDelay {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(-20px, -15px);
+  }
+}
+
+.animate-slow-move {
+  animation: slowMove 20s ease-in-out infinite;
+}
+
+.animate-slow-move-delay {
+  animation: slowMoveDelay 20s ease-in-out infinite;
+}
+
+
+
+
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

@@ -1,0 +1,625 @@
+
+  <!-- Sidebar -->
+<div class="flex h-screen bg-gray-50">
+  <!-- Sidebar -->
+
+<div class="flex h-screen">
+  <!-- Botón de toggle (fuera del sidebar) -->
+  <button (click)="sidebarOpen = !sidebarOpen" class="fixed left-4 top-4 z-50 p-2 rounded-lg bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all">
+    <i class="fas fa-bars text-xl"></i>
+  </button>
+
+  <!-- Sidebar con animación -->
+  <aside [class]="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+         class="w-72 min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 shadow-2xl transform transition-transform duration-300 ease-in-out fixed z-40">
+
+    <!-- Encabezado con logo -->
+    <div class="flex flex-col items-center justify-center pt-6 pb-4 px-4 border-b border-blue-400 border-opacity-20 backdrop-blur-sm bg-white bg-opacity-10">
+      <div class="mb-3">
+        <img src="assets/logo.png" alt="Logo ESPE" class="h-14 w-auto object-contain transition-all duration-300">
+      </div>
+      <div class="text-center transition-all duration-300" [class]="sidebarOpen ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'">
+        <h1 class="text-xl font-bold text-white tracking-wider">Jefatura de Laboratorios</h1>
+        <p class="text-blue-100 text-xs mt-1 font-light">Incidentes y Novedades</p>
+      </div>
+    </div>
+
+    <!-- Menú de navegación -->
+<nav class="flex flex-col p-4 space-y-2">
+  <!-- Botón principal Inicio -->
+  <button (click)="activeTab = 'cards'; submenuOpen = !submenuOpen"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium group overflow-hidden text-white hover:bg-white/10">
+    <div class="w-8 h-8 flex items-center justify-center min-w-[2rem]">
+      <i class="fas fa-home text-lg"></i>
+    </div>
+    <span class="whitespace-nowrap">Inicio</span>
+    <i class="fas" [ngClass]="submenuOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
+  </button>
+
+  <!-- Submenú desplegable -->
+  <div *ngIf="submenuOpen" class="ml-8 flex flex-col gap-1 transition-all duration-300">
+    <button (click)="activeTab = 'charts'"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition">
+      <i class="fas fa-chart-bar"></i>
+      <span>Reportes</span>
+    </button>
+    <button (click)="activeTab = 'tables'"
+            class="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition">
+      <i class="fas fa-table"></i>
+      <span>Datos</span>
+    </button>
+  </div>
+</nav>
+
+    <!-- Efecto decorativo inferior -->
+    <div class="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-blue-900 to-transparent opacity-20"></div>
+  </aside>
+
+  <!-- Contenido principal (se ajusta cuando el sidebar se abre/cierra) -->
+  <main [class]="sidebarOpen ? 'ml-72' : 'ml-0'" class="flex-1 p-6 transition-all duration-300">
+    <!-- Tu contenido principal aquí -->
+  </main>
+</div>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-auto">
+ <!-- Vista Cards (Inicio) -->
+  <div *ngIf="activeTab === 'cards'">
+<!-- Header con solo el título -->
+<header class="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
+  <div class="flex items-center justify-center relative">
+    <!-- Título principal centrado -->
+    <div class="text-center">
+      <h1 class="text-3xl font-bold text-gray-900">INCIDENTES Y NOVEDADES</h1> <!-- Cambiado a gray-900 -->
+      <p class="text-lg text-gray-800 mt-1">Panel de Gestión</p> <!-- Cambiado a gray-800 -->
+    </div>
+
+    <!-- Perfil de usuario -->
+    <div class="absolute right-0">
+      <button (click)="toggleUserDropdown()" class="flex items-center gap-2">
+        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm shadow-md">
+          <fa-icon [icon]="faIcons.user"></fa-icon>
+        </div>
+      </button>
+
+      <!-- Menú desplegable -->
+      <div [class.hidden]="!userDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl border border-gray-200 z-50 py-1">
+        <div class="px-4 py-2 text-sm text-gray-900 border-b border-gray-100"> <!-- Cambiado a gray-900 -->
+          <p class="font-medium">{{ usuario?.nombre || 'Usuario' }}</p>
+          <p class="text-xs text-gray-700">{{ usuario?.rol || 'Admin' }}</p> <!-- Cambiado a gray-700 -->
+        </div>
+        <button (click)="cerrarSesion()" class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-50"> <!-- Cambiado a gray-900 -->
+          <fa-icon [icon]="faIcons.logout" class="mr-2 text-gray-700"></fa-icon> <!-- Añadido text-gray-700 -->
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Componente de Filtros -->
+<div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
+  <div class="flex flex-col md:flex-row gap-3 justify-between items-center">
+    <!-- Grupo de filtros -->
+    <div class="flex flex-wrap gap-3 w-full md:w-auto">
+      <!-- Fecha Inicio -->
+      <div class="relative flex-1 min-w-[150px]">
+        <fa-icon [icon]="faIcons.clock" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
+        <input type="date" [(ngModel)]="filtros.fechaInicio"
+               class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm text-gray-900"> <!-- Añadido text-gray-900 -->
+      </div>
+
+      <!-- Fecha Fin -->
+      <div class="relative flex-1 min-w-[150px]">
+        <fa-icon [icon]="faIcons.clock" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
+        <input type="date" [(ngModel)]="filtros.fechaFin"
+               class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm text-gray-900"> <!-- Añadido text-gray-900 -->
+      </div>
+
+      <!-- Laboratorio -->
+      <div class="relative flex-1 min-w-[180px]">
+        <fa-icon [icon]="faIcons.settings" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
+        <select [(ngModel)]="filtros.laboratorio"
+                class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm appearance-none text-gray-900"> <!-- Añadido text-gray-900 -->
+          <option value="" class="text-gray-900">Todos los laboratorios</option> <!-- Añadido text-gray-900 -->
+          <option *ngFor="let lab of laboratoriosUnicos" [value]="lab" class="text-gray-900">{{lab}}</option> <!-- Añadido text-gray-900 -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Botones de acción -->
+    <div class="flex gap-2 w-full md:w-auto justify-end">
+      <button (click)="aplicarFiltros()"
+              class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-md flex items-center gap-2">
+        <fa-icon [icon]="faIcons.filter"></fa-icon>
+        <span>Aplicar</span>
+      </button>
+      <button (click)="limpiarFiltros()"
+              class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-lg transition-colors shadow flex items-center gap-2"> <!-- Cambiado a gray-900 -->
+        <fa-icon [icon]="faIcons.clear" class="text-gray-700"></fa-icon> <!-- Añadido text-gray-700 -->
+        <span>Limpiar</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+
+    <!-- Content -->
+    <div class="p-8">
+      <!-- Mensaje de error -->
+      <div *ngIf="error" class="mb-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow">
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          <span>{{error}}</span>
+        </div>
+      </div>
+      <!-- Loading -->
+      <div *ngIf="loading" class="flex justify-center items-center p-8">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+
+      <!-- Vista Cards -->
+      <div *ngIf="activeTab === 'cards' && !loading">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Métricas Principales</h2>
+          <div class="flex gap-2">
+            <button (click)="exportarExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-excel mr-1"></i>Métricas Excel
+            </button>
+            <button (click)="exportarPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-pdf mr-1"></i>Métricas PDF
+            </button>
+          </div>
+        </div>
+        <!-- Métricas principales -->
+         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+  <!-- Tarjeta 1: Total Incidentes -->
+   <!-- Tarjeta 1: Total Incidentes -->
+  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Total Incidentes</p>
+        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.totalIncidentes}}</p>
+        <div class="flex items-center">
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+            </svg>
+            Último período
+          </span>
+        </div>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-50 text-blue-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  <!-- Tarjeta 2: Incidentes Activos -->
+  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Incidentes Activos</p>
+        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.incidentesActivos}}</p>
+        <div class="flex items-center">
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600">
+            {{porcentajeIncidentesActivos}}% del total
+          </span>
+        </div>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-amber-50 text-amber-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta 3: Incidentes Resueltos -->
+  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Incidentes Resueltos</p>
+        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.incidentesResueltos}}</p>
+        <div class="flex items-center">
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-600">
+            {{porcentajeIncidentesResueltos}}% del total
+          </span>
+        </div>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-green-50 text-green-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tarjeta 4: Objetos Perdidos -->
+<div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
+    <div class="flex items-center justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Objetos Perdidos</p>
+        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.totalObjetosPerdidos}}</p>
+        <div class="flex items-center">
+          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+            Registrados
+          </span>
+        </div>
+      </div>
+      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-purple-50 text-purple-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+  <!-- Laboratorio con más incidentes -->
+  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Laboratorio con Más Incidentes</p>
+        <p class="text-2xl font-semibold text-gray-800 mt-1">{{estadisticasResumen.laboratorioConMasIncidentes || 'N/A'}}</p>
+        <p class="text-sm text-gray-500 mt-2">Registros más altos</p>
+      </div>
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50 text-blue-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inconveniente más frecuente -->
+  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Inconveniente Más Frecuente</p>
+        <p class="text-2xl font-semibold text-gray-800 mt-1">{{estadisticasResumen.inconvenienteMasFrecuente || 'N/A'}}</p>
+        <p class="text-sm text-gray-500 mt-2">Problema principal</p>
+      </div>
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-amber-50 text-amber-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11v.01M12 7v.01" />
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasa de resolución -->
+  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
+    <div class="flex items-start justify-between">
+      <div class="w-full">
+        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Tasa de Resolución</p>
+        <p class="text-2xl font-semibold text-gray-800 mt-1">{{porcentajeIncidentesResueltos}}%</p>
+        <div class="w-full mt-3">
+          <div class="w-full bg-gray-100 rounded-full h-2">
+            <div class="bg-green-500 h-2 rounded-full transition-all duration-500" [style.width.%]="porcentajeIncidentesResueltos"></div>
+          </div>
+          <p class="text-xs text-gray-500 mt-1 text-right">Eficiencia en solución</p>
+        </div>
+      </div>
+      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50 text-green-500 ml-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- Vista Gráficos -->
+        <div *ngIf="activeTab === 'cards'">
+    <section id="chartsSection">
+
+      <div *ngIf="activeTab === 'cards' && !loading">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Reportes Gráficos</h2>
+          <div class="flex gap-2">
+            <button (click)="exportarGraficosExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-excel mr-1"></i>Gráficos Excel
+            </button>
+            <button (click)="exportarGraficosPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-pdf mr-1"></i>Gráficos PDF
+            </button>
+          </div>
+        </div>
+        <div *ngIf="datosVacios()" class="text-center p-8 text-gray-500">
+          <i class="fas fa-chart-bar text-4xl mb-4"></i>
+          <p>No hay datos disponibles para mostrar los gráficos</p>
+        </div>
+        <div *ngIf="!datosVacios()" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Gráfico de barras -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Laboratorio</h3>
+              <i class="fas fa-chart-bar text-blue-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="barChartType"
+                [data]="barChartData"
+                [options]="barChartOptions">
+              </canvas>
+            </div>
+          </div>
+          <!-- Gráfico de estados -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Estado</h3>
+              <i class="fas fa-chart-pie text-green-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="estadoChartType"
+                [data]="estadoChartData"
+                [options]="estadoChartOptions">
+              </canvas>
+            </div>
+          </div>
+          <!-- Gráfico de objetos perdidos -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Objetos Perdidos por Laboratorio</h3>
+              <i class="fas fa-search text-red-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="pieChartType"
+                [data]="pieChartData"
+                [options]="pieChartOptions">
+              </canvas>
+            </div>
+          </div>
+          <!-- Gráfico de inconvenientes -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Inconveniente</h3>
+              <i class="fas fa-bug text-orange-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="inconvenienteChartType"
+                [data]="inconvenienteChartData"
+                [options]="inconvenienteChartOptions">
+              </canvas>
+            </div>
+          </div>
+          <!-- Gráfico de estados de objetos perdidos -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Estados de Objetos Perdidos</h3>
+              <i class="fas fa-info-circle text-purple-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="objetosEstadoChartType"
+                [data]="objetosEstadoChartData"
+                [options]="objetosEstadoChartOptions">
+              </canvas>
+            </div>
+          </div>
+          <!-- Gráfico de tendencia -->
+          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900">Tendencia de Incidentes</h3>
+              <i class="fas fa-chart-line text-indigo-500"></i>
+            </div>
+            <div class="h-80">
+              <canvas baseChart
+                [type]="tendenciaChartType"
+                [data]="tendenciaChartData"
+                [options]="tendenciaChartOptions">
+              </canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      </section>
+
+<div *ngIf="activeTab === 'cards'">
+    <section id="tablesSection">
+
+      <div *ngIf="activeTab === 'cards' && !loading">
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-2xl font-bold text-gray-900">Tablas de Datos</h2>
+          <div class="flex gap-2">
+            <button (click)="exportarTablasExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-excel mr-1"></i>Todas las Tablas Excel
+            </button>
+            <button (click)="exportarTablasPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
+              <i class="fas fa-file-pdf mr-1"></i>Todas las Tablas PDF
+            </button>
+          </div>
+        </div>
+        <div *ngIf="datosVacios()" class="text-center p-8 text-gray-500">
+          <i class="fas fa-table text-4xl mb-4"></i>
+          <p>No hay datos disponibles para mostrar la tabla</p>
+        </div>
+        <div *ngIf="!datosVacios()" class="space-y-8">
+          <!-- Tabla 1: Incidentes por Laboratorio -->
+          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-flask text-blue-500"></i>
+                Incidentes por Laboratorio
+              </h3>
+              <div class="flex gap-2">
+                <button (click)="exportarTablaExcel('incidentesLaboratorio')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
+                  <i class="fas fa-file-excel mr-1"></i>Excel
+                </button>
+                <button (click)="exportarTablaPDF('incidentesLaboratorio')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
+                  <i class="fas fa-file-pdf mr-1"></i>PDF
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-gray-900 rounded-lg">
+                <thead class="bg-blue-100">
+                  <tr>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Laboratorio</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Activos</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Resueltos</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Anulados</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of incidentesPorLaboratorio" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-900">{{item.laboratorio}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_activos}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_aprobados}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_anulados}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Tabla 2: Incidentes por Estado -->
+          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-info-circle text-green-500"></i>
+                Incidentes por Estado
+              </h3>
+              <div class="flex gap-2">
+                <button (click)="exportarTablaExcel('incidentesEstado')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
+                  <i class="fas fa-file-excel mr-1"></i>Excel
+                </button>
+                <button (click)="exportarTablaPDF('incidentesEstado')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
+                  <i class="fas fa-file-pdf mr-1"></i>PDF
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-gray-900 rounded-lg">
+                <thead class="bg-blue-100">
+                  <tr>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Estado</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of incidentesPorEstado" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-900">{{item.estado}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Tabla 3: Incidentes por Inconveniente -->
+          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-bug text-orange-500"></i>
+                Incidentes por Inconveniente
+              </h3>
+              <div class="flex gap-2">
+                <button (click)="exportarTablaExcel('incidentesInconveniente')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
+                  <i class="fas fa-file-excel mr-1"></i>Excel
+                </button>
+                <button (click)="exportarTablaPDF('incidentesInconveniente')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
+                  <i class="fas fa-file-pdf mr-1"></i>PDF
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-gray-900 rounded-lg">
+                <thead class="bg-blue-100">
+                  <tr>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Inconveniente</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of incidentesPorInconveniente" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-900">{{item.inconveniente}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Tabla 4: Objetos Perdidos por Laboratorio -->
+          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-search text-red-500"></i>
+                Objetos Perdidos por Laboratorio
+              </h3>
+              <div class="flex gap-2">
+                <button (click)="exportarTablaExcel('objetosLaboratorio')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
+                  <i class="fas fa-file-excel mr-1"></i>Excel
+                </button>
+                <button (click)="exportarTablaPDF('objetosLaboratorio')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
+                  <i class="fas fa-file-pdf mr-1"></i>PDF
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-gray-900 rounded-lg">
+                <thead class="bg-blue-100">
+                  <tr>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Laboratorio</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Objetos</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Encontrados</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Porcentaje Recuperación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of objetosPerdidosPorLaboratorio" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-900">{{item.laboratorio}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.total_objetos_perdidos}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{getObjetosEncontradosPorLab(item.laboratorio)}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{getPorcentajeObjetosEncontradosPorLab(item.laboratorio)}}%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <!-- Tabla 5: Objetos Perdidos por Estado -->
+          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                <i class="fas fa-info-circle text-purple-500"></i>
+                Objetos Perdidos por Estado
+              </h3>
+              <div class="flex gap-2">
+                <button (click)="exportarTablaExcel('objetosEstado')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
+                  <i class="fas fa-file-excel mr-1"></i>Excel
+                </button>
+                <button (click)="exportarTablaPDF('objetosEstado')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
+                  <i class="fas fa-file-pdf mr-1"></i>PDF
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto rounded-lg">
+              <table class="w-full text-gray-900 rounded-lg">
+                <thead class="bg-blue-100">
+                  <tr>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Estado</th>
+                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Objetos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of objetosPerdidosPorEstado" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
+                    <td class="py-3 px-4 text-gray-900">{{item.estado}}</td>
+                    <td class="py-3 px-4 text-gray-900">{{item.total_objetos}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
