@@ -21,9 +21,9 @@
       <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6" autocomplete="off">
         <!-- Correo -->
         <div>
-          <label for="correo" class="block text-sm font-medium text-[#3b5998]">Correo</label>
+          <label for="correo" class="block text-sm font-medium text-gray-900">Correo</label>
           <div class="mt-1 relative">
-            <fa-icon [icon]="faEnvelope" class="absolute left-3 top-3.5 text-[#4B73E8]"></fa-icon>
+            <fa-icon [icon]="faEnvelope" class="absolute left-3 top-3.5 text-gray-600"></fa-icon>
             <input
               type="email"
               id="correo"
@@ -33,7 +33,7 @@
               [(ngModel)]="correo"
               #correoModel="ngModel"
               placeholder="ejemplo@espe.edu.ec"
-              class="pl-10 pr-3 py-3.5 w-full border border-[#4B73E8] rounded-lg text-sm text-[#3b5998] shadow-sm focus:ring-2 focus:ring-[#667eea] focus:border-[#4B73E8]"
+              class="pl-10 pr-3 py-3.5 w-full border border-gray-300 rounded-lg text-sm text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
           <div *ngIf="correoModel.invalid && (correoModel.dirty || correoModel.touched)" class="text-red-600 text-xs mt-1">
@@ -44,9 +44,9 @@
 
         <!-- Contraseña -->
         <div>
-          <label for="contrasena" class="block text-sm font-medium text-[#3b5998]">Contraseña</label>
+          <label for="contrasena" class="block text-sm font-medium text-gray-900">Contraseña</label>
           <div class="mt-1 relative">
-            <fa-icon [icon]="faLock" class="absolute left-3 top-3.5 text-[#4B73E8]"></fa-icon>
+            <fa-icon [icon]="faLock" class="absolute left-3 top-3.5 text-gray-600"></fa-icon>
             <input
               [type]="mostrarPassword ? 'text' : 'password'"
               id="contrasena"
@@ -56,9 +56,9 @@
               [(ngModel)]="contrasena"
               #contrasenaModel="ngModel"
               placeholder="Ingrese su contraseña"
-              class="pl-10 pr-10 py-3.5 w-full border border-[#4B73E8] rounded-lg text-sm text-[#3b5998] shadow-sm focus:ring-2 focus:ring-[#667eea] focus:border-[#4B73E8]"
+              class="pl-10 pr-10 py-3.5 w-full border border-gray-300 rounded-lg text-sm text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             />
-            <button type="button" (click)="togglePassword()" class="absolute right-3 top-3.5 text-[#3b5998] focus:outline-none">
+            <button type="button" (click)="togglePassword()" class="absolute right-3 top-3.5 text-gray-600 focus:outline-none">
               <fa-icon [icon]="mostrarPassword ? faEyeSlash : faEye"></fa-icon>
             </button>
           </div>
@@ -85,8 +85,8 @@
     </div>
 
     <!-- Pie -->
-    <div class="px-8 py-4 bg-[#f1f5f9] text-center border-t border-[#4B73E8] text-xs text-[#3b5998]">
-      <div class="flex justify-center items-center gap-1 text-[#4B73E8] font-medium">
+    <div class="px-8 py-4 bg-gray-50 text-center border-t border-gray-200 text-xs text-gray-600">
+      <div class="flex justify-center items-center gap-1 text-gray-700 font-medium">
         <fa-icon [icon]="faShieldAlt" class="w-4 h-4"></fa-icon>
         Conexión segura
       </div>

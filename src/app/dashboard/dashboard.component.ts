@@ -1,28 +1,20 @@
-import { Component, OnInit } from '@angular/core';
-import { ChartConfiguration, ChartType } from 'chart.js';
-import { finalize } from 'rxjs';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
-import { RouterModule } from '@angular/router';
-
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { NgChartsModule } from 'ng2-charts';
+import { Subject, takeUntil, forkJoin, Observable } from 'rxjs';
+import { Chart, ChartConfiguration, ChartType } from 'chart.js';
+import { BaseChartDirective, NgChartsModule } from 'ng2-charts';
+import { registerables } from 'chart.js';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import {
-  ReportesService,
-  IncidenteLaboratorio,
-  IncidenteEstado,
-  IncidentePeriodo,
-  IncidenteInconveniente,
-  ObjetoLaboratorio,
-  ObjetoEstado,
-  FiltrosReporte
-} from '../services/reportes.service';
-
+// Servicios
+import { ReportesService, FiltrosReporte } from '../services/reportes.service';
 import { PdfExportService } from '../services/pdf-export.service';
-import { ExcelExportService } from '../services/excel-exports.service'
+import { ExcelExportService } from '../services/excel-exports.service';
 
+// Iconos FontAwesome
 import {
   faTachometerAlt,
   faChartBar,
@@ -45,456 +37,666 @@ import {
   faSearch,
   faChartLine,
   faBoxOpen,
-
-
   faEraser,
   faCalendarDay,
   faCalendarWeek,
   faFlask,
+  faDownload,
+  faRefresh,
+  faEye,
+  faEyeSlash,
+  faHome,
+  faUsers,
+  faTools,
+  faInfoCircle,
+  faPlus,
+  faFileAlt,
+  faRoute,
+  faTrophy,
+  faMedal,
+  faCrown,
+  faStar
 } from '@fortawesome/free-solid-svg-icons';
+
+// Registrar todos los componentes de Chart.js
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-dashboard',
-  standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  imports: [CommonModule, FormsModule, NgChartsModule, FontAwesomeModule, RouterModule]
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    NgChartsModule,
+    FontAwesomeModule
+  ]
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
+  @ViewChild(BaseChartDirective) chart!: BaseChartDirective;
+
+  private destroy$ = new Subject<void>();
+
+  // Usuario y estado
   usuario: any = null;
-  // FontAwesome icons
-  faIcons = {
-    dashboard: faTachometerAlt,
-    reports: faChartBar,
-    data: faDatabase,
-    logout: faSignOutAlt,
-    check: faCheckCircle,
-    warning: faExclamationTriangle,
-    user: faUser,
-    userCog: faUserCog,
-    settings: faCog,
-    filter: faFilter,
-    clear: faTimes,
-    cards: faThLarge,
-    charts: faChartPie,
-    table: faTable,
-    pdf: faFilePdf,
-    excel: faFileExcel,
-    alert: faExclamationCircle,
-    clock: faClock,
-    search: faSearch,
-    trend: faChartLine,
-    objects: faBoxOpen,
-
-  };
-    submenuOpen = false;
-
-  toggleSubmenu() {
-    this.submenuOpen = !this.submenuOpen;
-  }
-scrollToSection(sectionId: string) {
-  setTimeout(() => {
-    const el = document.getElementById(sectionId);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }, 100); // Espera a que el DOM actualice el *ngIf
-}
-  // Component state
   loading = false;
   error: string | null = null;
-  userDropdownOpen = false;
-  activeTab: 'cards' | 'tables' | 'charts' = 'cards';
 
-  // Filters
-  filtros: FiltrosReporte = { limite: 100 };
+  // Formulario de filtros
+  filtrosForm: FormGroup;
 
-  // Raw data
-  incidentesPorLaboratorio: IncidenteLaboratorio[] = [];
-  incidentesPorEstado: IncidenteEstado[] = [];
-  incidentesPorPeriodo: IncidentePeriodo[] = [];
-  incidentesPorInconveniente: IncidenteInconveniente[] = [];
-  objetosPerdidosPorLaboratorio: ObjetoLaboratorio[] = [];
-  objetosPerdidosPorEstado: ObjetoEstado[] = [];
+  // Iconos FontAwesome
+      faIcons = {
+      dashboard: faTachometerAlt,
+      bars: faThLarge,
+      reports: faChartBar,
+      chartBar: faChartBar,
+      data: faDatabase,
+      logout: faSignOutAlt,
+      check: faCheckCircle,
+      warning: faExclamationTriangle,
+      exclamationTriangle: faExclamationTriangle,
+      exclamationCircle: faExclamationCircle,
+      user: faUser,
+      userCog: faUserCog,
+      settings: faCog,
+      filter: faFilter,
+      clear: faTimes,
+      times: faTimes,
+      cards: faThLarge,
+      charts: faChartPie,
+      table: faTable,
+      pdf: faFilePdf,
+      excel: faFileExcel,
+      alert: faExclamationCircle,
+      clock: faClock,
+      search: faSearch,
+      trend: faChartLine,
+      chartLine: faChartLine,
+      objects: faBoxOpen,
+      boxOpen: faBoxOpen,
+      eraser: faEraser,
+      calendarDay: faCalendarDay,
+      calendarWeek: faCalendarWeek,
+      flask: faFlask,
+      download: faDownload,
+      refresh: faRefresh,
+      eye: faEye,
+      eyeSlash: faEyeSlash,
+      home: faHome,
+      users: faUsers,
+      tools: faTools,
+      info: faInfoCircle,
+      plus: faPlus,
+      fileAlt: faFileAlt,
+      route: faRoute,
+      trophy: faTrophy,
+      medal: faMedal,
+      crown: faCrown,
+      star: faStar
+    };
 
-  // Summary statistics
-  estadisticasResumen = {
+  // Estado del sidebar
+  sidebarOpen = false;
+  submenuOpen = false;
+
+  // Pestañas activas
+  activeTab: 'overview' | 'incidents' | 'objects' | 'users' | 'analytics' | 'rankings' | 'trazabilidad' = 'overview';
+
+  // Métricas principales
+  metricas = {
     totalIncidentes: 0,
     incidentesActivos: 0,
     incidentesResueltos: 0,
-    totalObjetosPerdidos: 0,
-    objetosEncontrados: 0,
-    objetosNoEncontrados: 0,
-    laboratorioConMasIncidentes: '',
-    inconvenienteMasFrecuente: '',
-    periodoConMasIncidentes: ''
+    totalObjetos: 0,
+    objetosEnCustodia: 0,
+    objetosDevueltos: 0,
+    laboratoriosActivos: 0,
+    usuariosActivos: 0,
+    tiempoPromedioResolucion: 0,
+    porcentajeResolucion: 0
   };
-sidebarOpen: boolean = true; // Inicialmente abierto
-  // Chart colors for dark mode
-  private chartTextColor = '#374151'; // Texto oscuro para fondo claro
-  private chartGridColor = '#E5E7EB'; // Líneas claras
 
-  // Chart data - 6 gráficos
+  // Datos para gráficos
+  incidentesPorLaboratorio: any[] = [];
+  incidentesPorEstado: any[] = [];
+  incidentesPorPeriodo: any[] = [];
+  incidentesPorPeriodoResumen: any[] = [];
+  incidentesPorInconveniente: any[] = [];
+  objetosPerdidosPorLaboratorio: any[] = [];
+  objetosPerdidosPorEstado: any[] = [];
+  rankingUsuarios: any[] = [];
+  trazabilidadEstados: any[] = [];
+  
+  // Datos de trazabilidad
+  trazabilidadCompleta: any[] = [];
+  trazabilidadIncidentes: any[] = [];
+  trazabilidadObjetos: any[] = [];
+  
+  // Datos dinámicos para filtros
+  periodosAcademicos: any[] = [];
+  laboratorios: any[] = [];
+  
+  // Datos de rankings
+  top10Usuarios: any[] = [];
+  loadingRankings = false;
+  
+  // Consulta específica por ID de usuario
+  idUsuarioConsulta: number | null = null;
+  trazabilidadIncidenteEspecifico: any[] = [];
+  trazabilidadObjetoEspecifico: any[] = [];
+  
+  // Mensajes de descarga
+  mensajeDescarga: string = '';
+  descargaExitosa: boolean = false;
+  mensajeExito: string = '';
+
+  // Configuración de gráficos
   public barChartType: ChartType = 'bar';
-  public barChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public barChartOptions: ChartConfiguration['options'] = this.getChartOptions('Incidentes por Laboratorio');
-
   public pieChartType: ChartType = 'pie';
-  public pieChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public pieChartOptions: ChartConfiguration['options'] = this.getChartOptions('Objetos Perdidos por Laboratorio');
+  public doughnutChartType: ChartType = 'doughnut';
+  public lineChartType: ChartType = 'line';
 
-  public estadoChartType: ChartType = 'doughnut';
-  public estadoChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public estadoChartOptions: ChartConfiguration['options'] = this.getChartOptions('Estados de Incidentes');
+  // Datos de gráficos
+  public incidentesLaboratorioChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  public incidentesEstadoChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  public objetosLaboratorioChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  public objetosEstadoChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  public tendenciaChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
+  public rankingChart: ChartConfiguration['data'] = { labels: [], datasets: [] };
 
-  public inconvenienteChartType: ChartType = 'pie';
-  public inconvenienteChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public inconvenienteChartOptions: ChartConfiguration['options'] = this.getChartOptions('Tipos de Inconvenientes');
-
-  public objetosEstadoChartType: ChartType = 'doughnut';
-  public objetosEstadoChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public objetosEstadoChartOptions: ChartConfiguration['options'] = this.getChartOptions('Estados de Objetos Perdidos');
-
-  public tendenciaChartType: ChartType = 'line';
-  public tendenciaChartData: ChartConfiguration['data'] = { labels: [], datasets: [] };
-  public tendenciaChartOptions: ChartConfiguration['options'] = this.getChartOptions('Tendencia de Incidentes por Período');
+  // Opciones de gráficos
+  public chartOptions: ChartConfiguration['options'] = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: '#374151',
+          font: { size: 12 }
+        }
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleFont: { size: 14 },
+        bodyFont: { size: 12 },
+        padding: 12,
+        cornerRadius: 4
+      }
+    },
+    scales: {
+      x: {
+        ticks: {
+          color: '#374151',
+          font: { size: 12 }
+        },
+        grid: {
+          color: '#E5E7EB',
+        }
+      },
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: '#374151',
+          font: { size: 12 }
+        },
+        grid: {
+          color: '#E5E7EB',
+        }
+      }
+    }
+  };
 
   constructor(
+    private router: Router,
     private reportesService: ReportesService,
     private pdfExportService: PdfExportService,
     private excelExportService: ExcelExportService,
-    private router: Router
-  ) {}
-
-ngOnInit(): void {
-  // Recupera el usuario guardado en localStorage
-  const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado);
-  }
-  this.cargarDatos();
-}
-  exportarExcel(): void {
-    this.excelExportService.exportReporteCompleto(
-      this.incidentesPorLaboratorio,
-      this.incidentesPorEstado,
-      this.incidentesPorPeriodo,
-      this.incidentesPorInconveniente,
-      this.objetosPerdidosPorLaboratorio,
-      this.objetosPerdidosPorEstado,
-      this.estadisticasResumen,
-      this.filtros
-    );
+    private fb: FormBuilder
+  ) {
+    this.filtrosForm = this.fb.group({
+      fechaInicio: [''],
+      fechaFin: [''],
+      periodoAcademico: [''],
+      laboratorio: ['']
+    });
   }
 
-   getObjetosEncontradosPorLab(laboratorio: string): number {
-    // Primero obtenemos el total de objetos perdidos en este laboratorio
-    const totalObjLab = this.objetosPerdidosPorLaboratorio.find(o => o.laboratorio === laboratorio)?.total_objetos_perdidos || 0;
-
-    // Si no hay objetos perdidos en este laboratorio, no hay encontrados
-    if (totalObjLab === 0) return 0;
-
-    // Obtenemos el total de objetos encontrados (sin importar laboratorio)
-    const encontrados = this.objetosPerdidosPorEstado.find(e => e.estado.toLowerCase().includes('encontrado'))?.total_objetos || 0;
-
-    // Calculamos el porcentaje de objetos encontrados en general
-    const totalGlobal = this.objetosPerdidosPorLaboratorio.reduce((sum, item) => sum + item.total_objetos_perdidos, 0);
-    const porcentajeEncontrados = totalGlobal > 0 ? (encontrados / totalGlobal) : 0;
-
-    // Estimamos los encontrados para este laboratorio basado en el porcentaje global
-    return Math.round(totalObjLab * porcentajeEncontrados);
+  ngOnInit(): void {
+    this.recuperarUsuario();
+    this.cargarDatosFiltros();
+    this.cargarDashboard();
+    this.initializeSidebarState();
   }
 
-getPorcentajeObjetosEncontradosPorLab(laboratorio: string): number {
-    const total = this.getObjetosPerdidosPorLaboratorio(laboratorio);
-    const encontrados = this.getObjetosEncontradosPorLab(laboratorio);
-    return total > 0 ? Math.round((encontrados / total) * 100) : 0;
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
-// ...existing code...
 
-exportarTablaExcel(tabla: string) {
-  switch (tabla) {
-    case 'incidentesLaboratorio':
-      this.excelExportService.exportIncidentesPorLaboratorio(this.incidentesPorLaboratorio, this.filtros);
-      break;
-    case 'incidentesEstado':
-      this.excelExportService.exportIncidentesPorEstado(this.incidentesPorEstado, this.filtros);
-      break;
-    case 'incidentesInconveniente':
-      this.excelExportService.exportIncidentesPorInconveniente(this.incidentesPorInconveniente, this.filtros);
-      break;
-    case 'objetosLaboratorio':
-      this.excelExportService.exportObjetosPerdidosPorLaboratorio(this.objetosPerdidosPorLaboratorio, this.filtros);
-      break;
-    case 'objetosEstado':
-      this.excelExportService.exportObjetosPerdidosPorEstado(this.objetosPerdidosPorEstado, this.filtros);
-      break;
-    case 'incidentesPeriodo':
-      this.excelExportService.exportIncidentesPorPeriodo(this.incidentesPorPeriodo, this.filtros);
-      break;
+  // Recuperar información del usuario
+  recuperarUsuario(): void {
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado);
+    }
   }
-}
 
-exportarTablaPDF(tabla: string) {
-  switch (tabla) {
-    case 'incidentesLaboratorio':
-      this.pdfExportService.exportIncidentesPorLaboratorio(this.incidentesPorLaboratorio, this.filtros);
-      break;
-    case 'incidentesEstado':
-      this.pdfExportService.exportIncidentesPorEstado(this.incidentesPorEstado, this.filtros);
-      break;
-    case 'incidentesInconveniente':
-      this.pdfExportService.exportIncidentesPorInconveniente(this.incidentesPorInconveniente, this.filtros);
-      break;
-    case 'objetosLaboratorio':
-      this.pdfExportService.exportObjetosPerdidosPorLaboratorio(this.objetosPerdidosPorLaboratorio, this.filtros);
-      break;
-    case 'objetosEstado':
-      this.pdfExportService.exportObjetosPerdidosPorEstado(this.objetosPerdidosPorEstado, this.filtros);
-      break;
-    case 'incidentesPeriodo':
-      this.pdfExportService.exportIncidentesPorPeriodo(this.incidentesPorPeriodo, this.filtros);
-      break;
+
+
+  // Inicializar estado del sidebar
+  private initializeSidebarState(): void {
+    if (window.innerWidth >= 1024) {
+      this.sidebarOpen = true;
+    } else {
+      this.sidebarOpen = false;
+    }
   }
-}
-exportarGraficosExcel() {
-  this.excelExportService.exportGraficos(
-    this.barChartData,
-    this.estadoChartData,
-    this.pieChartData,
-    this.inconvenienteChartData,
-    this.objetosEstadoChartData,
-    this.tendenciaChartData,
-    this.filtros
-  );
-}
 
-exportarGraficosPDF() {
-  this.pdfExportService.exportGraficos(
-    this.barChartData,
-    this.estadoChartData,
-    this.pieChartData,
-    this.inconvenienteChartData,
-    this.objetosEstadoChartData,
-    this.tendenciaChartData,
-    this.filtros
-  );
-}
-exportarTablasExcel() {
-  this.excelExportService.exportReporteCompleto(
-    this.incidentesPorLaboratorio,
-    this.incidentesPorEstado,
-    this.incidentesPorPeriodo,
-    this.incidentesPorInconveniente,
-    this.objetosPerdidosPorLaboratorio,
-    this.objetosPerdidosPorEstado,
-    this.estadisticasResumen,
-    this.filtros
-  );
-}
-
-exportarTablasPDF() {
-  this.pdfExportService.exportReporteCompleto(
-    this.incidentesPorLaboratorio,
-    this.incidentesPorEstado,
-    this.incidentesPorPeriodo,
-    this.incidentesPorInconveniente,
-    this.objetosPerdidosPorLaboratorio,
-    this.objetosPerdidosPorEstado,
-    this.estadisticasResumen,
-    this.filtros
-  );
-}
-// ...existing code...
- getChartOptions(title: string): ChartConfiguration['options'] {
-    return {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'top',
-          labels: {
-            color: this.chartTextColor,
-            font: { size: 12 }
-          }
-        },
-        title: {
-          display: !!title,
-          text: title,
-          color: this.chartTextColor,
-          font: { size: 16, weight: 'bold' }
-        },
-        tooltip: {
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          titleFont: { size: 14 },
-          bodyFont: { size: 12 },
-          padding: 12,
-          cornerRadius: 4
-        }
+  // Cargar datos dinámicos para los filtros
+  cargarDatosFiltros(): void {
+    console.log('Cargando datos dinámicos para filtros...');
+    
+    // Cargar períodos académicos
+    this.reportesService.getPeriodosAcademicos().subscribe({
+      next: (response) => {
+        console.log('Períodos académicos cargados:', response);
+        this.periodosAcademicos = response?.data || [];
       },
-      scales: {
-        x: {
-          ticks: {
-            color: this.chartTextColor,
-            font: { size: 12 }
-          },
-          grid: {
-            color: this.chartGridColor,
-          }
-        },
-        y: {
-          beginAtZero: true,
-          ticks: {
-            color: this.chartTextColor,
-            font: { size: 12 }
-          },
-          grid: {
-            color: this.chartGridColor,
-          }
-        }
-      },
-      elements: {
-        bar: { borderRadius: 4 },
-        line: { tension: 0.4 }
+      error: (error) => {
+        console.error('Error cargando períodos académicos:', error);
+        // Si no hay endpoint, intentar extraer de los datos existentes
+        this.extraerPeriodosDeDatos();
       }
-    };
+    });
+
+    // Cargar laboratorios
+    this.reportesService.getLaboratorios().subscribe({
+      next: (response) => {
+        console.log('Laboratorios cargados:', response);
+        this.laboratorios = response?.data || [];
+      },
+      error: (error) => {
+        console.error('Error cargando laboratorios:', error);
+        // Si no hay endpoint, intentar extraer de los datos existentes
+        this.extraerLaboratoriosDeDatos();
+      }
+    });
   }
 
-  cargarDatos(): void {
+  // Extraer períodos académicos de los datos existentes
+  extraerPeriodosDeDatos(): void {
+    console.log('Extrayendo períodos de datos existentes...');
+    const periodosUnicos = new Set<string>();
+    
+    // Extraer de incidentes por período
+    if (this.incidentesPorPeriodo && this.incidentesPorPeriodo.length > 0) {
+      this.incidentesPorPeriodo.forEach(item => {
+        if (item.periodo_academico) {
+          periodosUnicos.add(item.periodo_academico);
+        }
+      });
+    }
+    
+    // Convertir a array de objetos
+    this.periodosAcademicos = Array.from(periodosUnicos).map(periodo => ({
+      id: periodo,
+      nombre: periodo,
+      periodo_academico: periodo
+    }));
+    
+    console.log('Períodos extraídos:', this.periodosAcademicos);
+  }
+
+  // Extraer laboratorios de los datos existentes
+  extraerLaboratoriosDeDatos(): void {
+    console.log('Extrayendo laboratorios de datos existentes...');
+    const laboratoriosUnicos = new Set<string>();
+    
+    // Extraer de incidentes por laboratorio
+    if (this.incidentesPorLaboratorio && this.incidentesPorLaboratorio.length > 0) {
+      this.incidentesPorLaboratorio.forEach(item => {
+        if (item.laboratorio) {
+          laboratoriosUnicos.add(item.laboratorio);
+        }
+      });
+    }
+    
+    // Convertir a array de objetos
+    this.laboratorios = Array.from(laboratoriosUnicos).map(lab => ({
+      id: lab,
+      nombre: lab,
+      laboratorio: lab
+    }));
+    
+    console.log('Laboratorios extraídos:', this.laboratorios);
+  }
+
+  // Cargar datos del dashboard
+  cargarDashboard(): void {
     this.loading = true;
     this.error = null;
+    this.mensajeExito = '';
 
-    this.reportesService.getDashboardData(this.filtros)
-      .pipe(finalize(() => this.loading = false))
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    console.log('Cargando dashboard con filtros:', filtros);
+    
+    // Validar y limpiar filtros vacíos
+    const filtrosLimpios: FiltrosReporte = {};
+    if (filtros.fechaInicio) filtrosLimpios.fechaInicio = filtros.fechaInicio;
+    if (filtros.fechaFin) filtrosLimpios.fechaFin = filtros.fechaFin;
+    if (filtros.periodoAcademico) filtrosLimpios.periodoAcademico = filtros.periodoAcademico;
+    if (filtros.laboratorio) filtrosLimpios.laboratorio = filtros.laboratorio;
+    
+    console.log('Filtros limpios enviados al backend:', filtrosLimpios);
+
+    // Cargar todos los datos en paralelo
+    const requests = [
+      this.reportesService.getIncidentesPorLaboratorio(filtrosLimpios),
+      this.reportesService.getIncidentesPorEstado(filtrosLimpios),
+      this.reportesService.getIncidentesPorPeriodo(filtrosLimpios),
+      this.reportesService.getIncidentesPorInconveniente(filtrosLimpios),
+      this.reportesService.getObjetosPerdidosPorLaboratorio(filtrosLimpios),
+      this.reportesService.getObjetosPerdidosPorEstado(filtrosLimpios),
+      this.reportesService.getRankingUsuarios(filtrosLimpios),
+      this.reportesService.getTrazabilidadEstados(filtrosLimpios),
+      this.reportesService.getTrazabilidadCompleta(filtrosLimpios)
+    ];
+
+    forkJoin(requests)
+      .pipe(takeUntil(this.destroy$))
       .subscribe({
-        next: (data) => {
-          this.incidentesPorLaboratorio = data.incidentesLaboratorio?.data || [];
-          this.incidentesPorEstado = data.incidentesEstado?.data || [];
-          this.incidentesPorPeriodo = data.incidentesPeriodo?.data || [];
-          this.incidentesPorInconveniente = data.incidentesInconveniente?.data || [];
-          this.objetosPerdidosPorLaboratorio = data.objetosLaboratorio?.data || [];
-          this.objetosPerdidosPorEstado = data.objetosEstado?.data || [];
+        next: (responses) => {
+          try {
+            this.incidentesPorLaboratorio = responses[0]?.data || [];
+            this.incidentesPorEstado = responses[1]?.data || [];
+            this.incidentesPorPeriodo = responses[2]?.data?.incidentes || [];
+            
+            // Procesar datos de incidentes por período para crear resumen
+            this.procesarIncidentesPorPeriodo();
+            
+            this.incidentesPorInconveniente = responses[3]?.data || [];
+            this.objetosPerdidosPorLaboratorio = responses[4]?.data || [];
+            this.objetosPerdidosPorEstado = responses[5]?.data || [];
+            this.rankingUsuarios = responses[6]?.data?.ranking_incidentes || [];
+            this.trazabilidadEstados = responses[7]?.data || [];
+            
+            // Manejar respuesta de trazabilidad completa según el formato del backend
+            const trazabilidadResponse = responses[8];
+            if (trazabilidadResponse?.success && Array.isArray(trazabilidadResponse.data)) {
+              this.trazabilidadCompleta = trazabilidadResponse.data;
+            } else if (Array.isArray(trazabilidadResponse?.data)) {
+              this.trazabilidadCompleta = trazabilidadResponse.data;
+            } else {
+              this.trazabilidadCompleta = [];
+            }
 
-          this.calcularEstadisticasResumen();
-          this.actualizarGraficos();
+            // Filtrar trazabilidad por tipo - asegurar que sea un array
+            if (Array.isArray(this.trazabilidadCompleta)) {
+              this.trazabilidadIncidentes = this.trazabilidadCompleta.filter(item => item.tipo_entidad === 'INCIDENTE');
+              this.trazabilidadObjetos = this.trazabilidadCompleta.filter(item => item.tipo_entidad === 'OBJETO_PERDIDO');
+            } else {
+              this.trazabilidadIncidentes = [];
+              this.trazabilidadObjetos = [];
+            }
+
+            this.calcularMetricas();
+            this.prepararGraficos();
+            
+            // Si no se cargaron los filtros dinámicos, extraer de los datos
+            if (this.periodosAcademicos.length === 0) {
+              this.extraerPeriodosDeDatos();
+            }
+            if (this.laboratorios.length === 0) {
+              this.extraerLaboratoriosDeDatos();
+            }
+            
+            this.loading = false;
+          } catch (error) {
+            console.error('Error procesando datos del dashboard:', error);
+            this.error = 'Error al procesar los datos del dashboard';
+            this.loading = false;
+          }
         },
-        error: (err) => {
-          console.error('Error al cargar dashboard:', err);
-          this.error = 'No se pudo cargar la información del dashboard. Intente nuevamente más tarde.';
+        error: (error) => {
+          console.error('Error cargando dashboard:', error);
+          console.error('Detalles del error:', {
+            status: error.status,
+            statusText: error.statusText,
+            message: error.message,
+            url: error.url
+          });
+          
+          if (error.status === 0) {
+            this.error = 'No se puede conectar con el servidor. Verifica que el backend esté ejecutándose.';
+          } else if (error.status === 404) {
+            this.error = 'Los endpoints del backend no están disponibles. Verifica las rutas del API.';
+          } else if (error.status === 500) {
+            this.error = 'Error interno del servidor. Revisa los logs del backend.';
+          } else if (error.status === 400) {
+            this.error = 'Error en los parámetros enviados. Verifica los filtros aplicados.';
+          } else {
+            this.error = `Error al cargar los datos del dashboard: ${error.message || error.statusText}`;
+          }
+          this.loading = false;
         }
       });
   }
 
-  aplicarFiltros(): void {
-    if (this.filtros.fechaInicio && this.filtros.fechaFin) {
-      const ini = new Date(this.filtros.fechaInicio);
-      const fin = new Date(this.filtros.fechaFin);
-      if (ini > fin) {
-        this.error = 'La fecha de inicio no puede ser mayor a la fecha final';
-        return;
-      }
-    }
-    if (this.filtros.limite && (this.filtros.limite < 1 || this.filtros.limite > 1000)) {
-      this.error = 'El límite debe estar entre 1 y 1000 registros';
+  // Procesar incidentes por período para crear resumen
+  procesarIncidentesPorPeriodo(): void {
+    if (!Array.isArray(this.incidentesPorPeriodo)) {
+      this.incidentesPorPeriodoResumen = [];
       return;
     }
-    this.error = null;
-    this.cargarDatos();
+
+    // Agrupar por período académico
+    const resumenPorPeriodo = new Map<string, any>();
+
+    this.incidentesPorPeriodo.forEach(incidente => {
+      const periodo = incidente.periodo_academico || 'Sin Período';
+      
+      if (!resumenPorPeriodo.has(periodo)) {
+        resumenPorPeriodo.set(periodo, {
+          periodo_academico: periodo,
+          total_incidentes: 0,
+          incidentes_activos: 0,
+          incidentes_resueltos: 0,
+          incidentes_anulados: 0,
+          tiempos_resolucion: []
+        });
+      }
+
+      const resumen = resumenPorPeriodo.get(periodo);
+      resumen.total_incidentes++;
+
+      // Contar por estado
+      const estado = incidente.estado?.toUpperCase() || '';
+      if (estado.includes('PENDIENTE') || estado.includes('ACTIVO')) {
+        resumen.incidentes_activos++;
+      } else if (estado.includes('RESUELTO') || estado.includes('COMPLETADO')) {
+        resumen.incidentes_resueltos++;
+      } else if (estado.includes('ANULADO') || estado.includes('CANCELADO')) {
+        resumen.incidentes_anulados++;
+      }
+
+      // Calcular tiempo de resolución si está disponible
+      if (incidente.tiempo_resolucion_horas) {
+        resumen.tiempos_resolucion.push(incidente.tiempo_resolucion_horas);
+      }
+    });
+
+    // Convertir a array y calcular porcentajes y promedios
+    this.incidentesPorPeriodoResumen = Array.from(resumenPorPeriodo.values()).map(resumen => {
+      const porcentajeResolucion = resumen.total_incidentes > 0 
+        ? Math.round((resumen.incidentes_resueltos / resumen.total_incidentes) * 100)
+        : 0;
+
+      const tiempoPromedio = resumen.tiempos_resolucion.length > 0
+        ? Math.round(resumen.tiempos_resolucion.reduce((sum: number, tiempo: number) => sum + tiempo, 0) / resumen.tiempos_resolucion.length)
+        : 0;
+
+      return {
+        ...resumen,
+        porcentaje_resolucion: porcentajeResolucion,
+        tiempo_promedio_resolucion: tiempoPromedio
+      };
+    });
+
+    // Ordenar por período académico
+    this.incidentesPorPeriodoResumen.sort((a, b) => {
+      return a.periodo_academico.localeCompare(b.periodo_academico);
+    });
   }
 
-  limpiarFiltros(): void {
-    this.filtros = { limite: 100 };
-    this.cargarDatos();
+  // Calcular métricas principales
+  calcularMetricas(): void {
+    // Métricas de incidentes
+    this.metricas.totalIncidentes = this.incidentesPorLaboratorio.reduce((sum, item) => sum + (item.total_incidentes || 0), 0);
+    this.metricas.incidentesActivos = this.incidentesPorLaboratorio.reduce((sum, item) => sum + (item.incidentes_activos || 0), 0);
+    this.metricas.incidentesResueltos = this.incidentesPorLaboratorio.reduce((sum, item) => sum + (item.incidentes_resueltos || 0), 0);
+
+    // Métricas de objetos
+    this.metricas.totalObjetos = this.objetosPerdidosPorLaboratorio.reduce((sum, item) => sum + (item.total_objetos_encontrados || 0), 0);
+    this.metricas.objetosEnCustodia = this.objetosPerdidosPorLaboratorio.reduce((sum, item) => sum + (item.objetos_en_custodia || 0), 0);
+    this.metricas.objetosDevueltos = this.objetosPerdidosPorLaboratorio.reduce((sum, item) => sum + (item.objetos_devueltos || 0), 0);
+
+    // Métricas adicionales
+    this.metricas.laboratoriosActivos = this.incidentesPorLaboratorio.length;
+    this.metricas.usuariosActivos = this.rankingUsuarios.length;
+
+    // Porcentaje de resolución
+    this.metricas.porcentajeResolucion = this.metricas.totalIncidentes > 0 
+      ? Math.round((this.metricas.incidentesResueltos / this.metricas.totalIncidentes) * 100) 
+      : 0;
+
+    // Tiempo promedio de resolución
+    const tiemposResolucion = this.incidentesPorLaboratorio
+      .filter(item => item.tiempo_promedio_resolucion_horas)
+      .map(item => item.tiempo_promedio_resolucion_horas);
+    
+    this.metricas.tiempoPromedioResolucion = tiemposResolucion.length > 0 
+      ? Math.round(tiemposResolucion.reduce((sum, tiempo) => sum + tiempo, 0) / tiemposResolucion.length)
+      : 0;
   }
 
-  toggleUserDropdown(): void {
-    this.userDropdownOpen = !this.userDropdownOpen;
+  // Preparar datos para gráficos
+  prepararGraficos(): void {
+    this.prepararGraficoIncidentesPorLaboratorio();
+    this.prepararGraficoIncidentesPorEstado();
+    this.prepararGraficoObjetosPorLaboratorio();
+    this.prepararGraficoObjetosPorEstado();
+    this.prepararGraficoTendencia();
+    this.prepararGraficoRanking();
   }
 
-  cerrarSesion(): void {
-    localStorage.removeItem('token');
-    this.router.navigate(['/login']);
-  }
-
-  actualizarGraficos(): void {
-    // Gráfico 1: Incidentes por laboratorio (barras)
-    this.barChartData = {
-      labels: this.incidentesPorLaboratorio.map(i => i.laboratorio),
-      datasets: [{
-        data: this.incidentesPorLaboratorio.map(i => i.total_incidentes),
-        label: 'Incidentes',
-        backgroundColor: 'rgba(54, 162, 235, 0.7)',
-        borderColor: 'rgba(54, 162, 235, 1)',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(54, 162, 235, 0.9)'
-      }]
+  private prepararGraficoIncidentesPorLaboratorio(): void {
+    this.incidentesLaboratorioChart = {
+      labels: this.incidentesPorLaboratorio.map(item => item.laboratorio),
+      datasets: [
+        {
+          data: this.incidentesPorLaboratorio.map(item => item.total_incidentes),
+          label: 'Total Incidentes',
+          backgroundColor: 'rgba(54, 162, 235, 0.7)',
+          borderColor: 'rgba(54, 162, 235, 1)',
+          borderWidth: 1
+        },
+        {
+          data: this.incidentesPorLaboratorio.map(item => item.incidentes_activos),
+          label: 'Activos',
+          backgroundColor: 'rgba(255, 99, 132, 0.7)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 1
+        },
+        {
+          data: this.incidentesPorLaboratorio.map(item => item.incidentes_resueltos),
+          label: 'Resueltos',
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }
+      ]
     };
+  }
 
-    // Gráfico 2: Objetos perdidos por laboratorio (pie)
-    this.pieChartData = {
-      labels: this.objetosPerdidosPorLaboratorio.map(o => o.laboratorio),
+  private prepararGraficoIncidentesPorEstado(): void {
+    this.incidentesEstadoChart = {
+      labels: this.incidentesPorEstado.map(item => item.estado),
       datasets: [{
-        data: this.objetosPerdidosPorLaboratorio.map(o => o.total_objetos_perdidos),
-        label: 'Objetos Perdidos',
+        data: this.incidentesPorEstado.map(item => item.total_incidentes),
         backgroundColor: [
           '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
           '#9966FF', '#FF9F40', '#8AC24A', '#FF5722'
         ],
-        borderWidth: 1
+        borderWidth: 2
       }]
     };
+  }
 
-    // Gráfico 3: Estados de incidentes (doughnut)
-    this.estadoChartData = {
-      labels: this.incidentesPorEstado.map(e => e.estado),
+  private prepararGraficoObjetosPorLaboratorio(): void {
+    this.objetosLaboratorioChart = {
+      labels: this.objetosPerdidosPorLaboratorio.map(item => item.laboratorio),
+      datasets: [
+        {
+          data: this.objetosPerdidosPorLaboratorio.map(item => item.total_objetos_encontrados),
+          label: 'Total Objetos',
+          backgroundColor: 'rgba(255, 159, 64, 0.7)',
+          borderColor: 'rgba(255, 159, 64, 1)',
+          borderWidth: 1
+        },
+        {
+          data: this.objetosPerdidosPorLaboratorio.map(item => item.objetos_en_custodia),
+          label: 'En Custodia',
+          backgroundColor: 'rgba(255, 205, 86, 0.7)',
+          borderColor: 'rgba(255, 205, 86, 1)',
+          borderWidth: 1
+        },
+        {
+          data: this.objetosPerdidosPorLaboratorio.map(item => item.objetos_devueltos),
+          label: 'Devueltos',
+          backgroundColor: 'rgba(75, 192, 192, 0.7)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }
+      ]
+    };
+  }
+
+  private prepararGraficoObjetosPorEstado(): void {
+    this.objetosEstadoChart = {
+      labels: this.objetosPerdidosPorEstado.map(item => item.estado),
       datasets: [{
-        data: this.incidentesPorEstado.map(e => e.total_incidentes),
-        label: 'Estados',
+        data: this.objetosPerdidosPorEstado.map(item => item.total_objetos),
         backgroundColor: [
-          '#FF6384', '#36A2EB', '#FFCE56', '#9966FF',
-          '#4BC0C0', '#FF9F40'
+          '#36A2EB', '#FF6384', '#FFCE56', '#4BC0C0',
+          '#9966FF', '#FF9F40'
         ],
-        borderWidth: 1
+        borderWidth: 2
       }]
     };
+  }
 
-    // Gráfico 4: Tipos de inconvenientes (pie)
-    this.inconvenienteChartData = {
-      labels: this.incidentesPorInconveniente.map(i => i.inconveniente),
+  private prepararGraficoTendencia(): void {
+    // Agrupar incidentes por período académico
+    const periodosAgrupados = this.incidentesPorPeriodo.reduce((acc, incidente) => {
+      const periodo = incidente.periodo_academico;
+      if (!acc[periodo]) {
+        acc[periodo] = 0;
+      }
+      acc[periodo]++;
+      return acc;
+    }, {} as Record<string, number>);
+
+    const periodosOrdenados = Object.keys(periodosAgrupados).sort();
+    const datosOrdenados = periodosOrdenados.map(periodo => periodosAgrupados[periodo]);
+
+    this.tendenciaChart = {
+      labels: periodosOrdenados,
       datasets: [{
-        data: this.incidentesPorInconveniente.map(i => i.total_incidentes),
-        label: 'Inconvenientes',
-        backgroundColor: [
-          '#4BC0C0', '#FF9F40', '#9966FF', '#8AC24A',
-          '#FF5722', '#607D8B'
-        ],
-        borderWidth: 1
-      }]
-    };
-
-    // Gráfico 5: Estados de objetos perdidos (doughnut)
-    this.objetosEstadoChartData = {
-      labels: this.objetosPerdidosPorEstado.map(e => e.estado),
-      datasets: [{
-        data: this.objetosPerdidosPorEstado.map(e => e.total_objetos),
-        label: 'Estados',
-        backgroundColor: ['#36A2EB', '#FF6384', '#FFCE56'],
-        borderWidth: 1
-      }]
-    };
-
-    // Gráfico 6: Tendencia de incidentes por período (línea)
-    const periodosUnicos = [...new Set(this.incidentesPorPeriodo.map(p => p.periodo_academico))];
-    const incidentesPorPeriodo = periodosUnicos.map(periodo => {
-      return this.incidentesPorPeriodo
-        .filter(p => p.periodo_academico === periodo)
-        .length;
-    });
-
-    this.tendenciaChartData = {
-      labels: periodosUnicos,
-      datasets: [{
-        data: incidentesPorPeriodo,
+        data: datosOrdenados,
         label: 'Incidentes',
         borderColor: '#4BC0C0',
         backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -502,161 +704,960 @@ exportarTablasPDF() {
         pointBackgroundColor: '#4BC0C0',
         pointBorderColor: '#fff',
         pointHoverRadius: 6,
-        fill: true
+        fill: true,
+        tension: 0.4
       }]
     };
   }
 
-  calcularEstadisticasResumen(): void {
-    this.estadisticasResumen.totalIncidentes = this.incidentesPorLaboratorio.reduce((sum, item) => sum + item.total_incidentes, 0);
-    this.estadisticasResumen.incidentesActivos = this.incidentesPorLaboratorio.reduce((sum, item) => sum + item.incidentes_activos, 0);
-    this.estadisticasResumen.incidentesResueltos = this.incidentesPorLaboratorio.reduce((sum, item) => sum + item.incidentes_aprobados, 0);
-    this.estadisticasResumen.totalObjetosPerdidos = this.objetosPerdidosPorLaboratorio.reduce((sum, item) => sum + item.total_objetos_perdidos, 0);
+  private prepararGraficoRanking(): void {
+    const topUsuarios = this.rankingUsuarios.slice(0, 10);
+    
+    this.rankingChart = {
+      labels: topUsuarios.map(item => item.nombre),
+      datasets: [{
+        data: topUsuarios.map(item => item.total_incidentes),
+        label: 'Incidentes Reportados',
+        backgroundColor: 'rgba(153, 102, 255, 0.7)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
+      }]
+    };
+  }
 
-    // Calcular objetos encontrados vs no encontrados
-    const encontrados = this.objetosPerdidosPorEstado.find(e => e.estado.toLowerCase().includes('encontrado'));
-    const noEncontrados = this.objetosPerdidosPorEstado.find(e => e.estado.toLowerCase().includes('perdido'));
-
-    this.estadisticasResumen.objetosEncontrados = encontrados ? encontrados.total_objetos : 0;
-    this.estadisticasResumen.objetosNoEncontrados = noEncontrados ? noEncontrados.total_objetos : 0;
-
-    // Laboratorio con más incidentes
-    const labMax = this.incidentesPorLaboratorio.length
-      ? this.incidentesPorLaboratorio.reduce((max, cur) => cur.total_incidentes > max.total_incidentes ? cur : max)
-      : { laboratorio: 'N/A' };
-    this.estadisticasResumen.laboratorioConMasIncidentes = labMax.laboratorio;
-
-    // Inconveniente más frecuente
-    const incMax = this.incidentesPorInconveniente.length
-      ? this.incidentesPorInconveniente.reduce((max, cur) => cur.total_incidentes > max.total_incidentes ? cur : max)
-      : { inconveniente: 'N/A' };
-    this.estadisticasResumen.inconvenienteMasFrecuente = incMax.inconveniente;
-
-    // Período con más incidentes
-    if (this.incidentesPorPeriodo.length) {
-      const periodosAgrupados = this.incidentesPorPeriodo.reduce((acc, curr) => {
-        acc[curr.periodo_academico] = (acc[curr.periodo_academico] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
-
-      const periodoMax = Object.entries(periodosAgrupados).reduce((max, [periodo, count]) =>
-        count > max.count ? { periodo, count } : max,
-        { periodo: '', count: 0 }
-      );
-
-      this.estadisticasResumen.periodoConMasIncidentes = periodoMax.periodo || 'N/A';
-    } else {
-      this.estadisticasResumen.periodoConMasIncidentes = 'N/A';
+  // Métodos de navegación
+  cambiarTab(tab: 'overview' | 'incidents' | 'objects' | 'users' | 'analytics' | 'rankings' | 'trazabilidad'): void {
+    this.activeTab = tab;
+    
+    // Cargar datos específicos según la pestaña
+    if (tab === 'rankings') {
+      this.cargarTop10();
     }
   }
 
-  get laboratoriosUnicos(): string[] {
-    return [...new Set(this.incidentesPorLaboratorio.map(i => i.laboratorio))];
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
-  get periodosUnicos(): { id: number, nombre: string }[] {
-    return [...new Map(
-      this.incidentesPorPeriodo.map(i => [i.periodo_academico_id, {
-        id: i.periodo_academico_id,
-        nombre: i.periodo_academico
-      }])
-    ).values()];
-  }
-    sidebarVisible = true;
-
-  get porcentajeIncidentesResueltos(): number {
-    return this.estadisticasResumen.totalIncidentes === 0
-      ? 0
-      : Math.round((this.estadisticasResumen.incidentesResueltos / this.estadisticasResumen.totalIncidentes) * 100);
+  closeSidebar(): void {
+    this.sidebarOpen = false;
   }
 
-  get porcentajeIncidentesActivos(): number {
-    return this.estadisticasResumen.totalIncidentes === 0
-      ? 0
-      : Math.round((this.estadisticasResumen.incidentesActivos / this.estadisticasResumen.totalIncidentes) * 100);
+  toggleSubmenu(): void {
+    this.submenuOpen = !this.submenuOpen;
   }
 
-  get porcentajeObjetosEncontrados(): number {
-    return this.estadisticasResumen.totalObjetosPerdidos === 0
-      ? 0
-      : Math.round((this.estadisticasResumen.objetosEncontrados / this.estadisticasResumen.totalObjetosPerdidos) * 100);
+  // Métodos de filtros
+  aplicarFiltros(): void {
+    const filtros = this.filtrosForm.value;
+    console.log('Aplicando filtros:', filtros);
+    
+    // Validar que al menos un filtro esté seleccionado
+    const tieneFiltros = filtros.fechaInicio || filtros.fechaFin || filtros.periodoAcademico || filtros.laboratorio;
+    
+    if (!tieneFiltros) {
+      console.log('No hay filtros aplicados, cargando todos los datos');
+      this.mensajeExito = 'Cargando todos los datos sin filtros';
+    } else {
+      console.log('Filtros aplicados:', {
+        fechaInicio: filtros.fechaInicio || 'No especificada',
+        fechaFin: filtros.fechaFin || 'No especificada',
+        periodoAcademico: filtros.periodoAcademico || 'Todos',
+        laboratorio: filtros.laboratorio || 'Todos'
+      });
+      
+      // Crear mensaje descriptivo de los filtros aplicados
+      const filtrosAplicados = [];
+      if (filtros.fechaInicio) filtrosAplicados.push(`Desde: ${filtros.fechaInicio}`);
+      if (filtros.fechaFin) filtrosAplicados.push(`Hasta: ${filtros.fechaFin}`);
+      if (filtros.periodoAcademico) filtrosAplicados.push(`Período: ${filtros.periodoAcademico}`);
+      if (filtros.laboratorio) filtrosAplicados.push(`Laboratorio: ${filtros.laboratorio}`);
+      
+      this.mensajeExito = `Filtros aplicados: ${filtrosAplicados.join(', ')}`;
+    }
+    
+    this.cargarDashboard();
   }
 
-  getObjetosPerdidosPorLaboratorio(laboratorio: string): number {
-    const obj = this.objetosPerdidosPorLaboratorio.find(o => o.laboratorio === laboratorio);
-    return obj ? obj.total_objetos_perdidos : 0;
+  limpiarFiltros(): void {
+    this.filtrosForm.reset();
+    console.log('Filtros limpiados, cargando todos los datos');
+    this.mensajeExito = 'Filtros limpiados correctamente';
+    this.cargarDashboard();
   }
 
-  datosVacios(): boolean {
-    return !this.incidentesPorLaboratorio.length &&
-           !this.incidentesPorEstado.length &&
-           !this.incidentesPorPeriodo.length &&
-           !this.incidentesPorInconveniente.length &&
-           !this.objetosPerdidosPorLaboratorio.length &&
-           !this.objetosPerdidosPorEstado.length;
+  limpiarMensajeExito(): void {
+    this.mensajeExito = '';
   }
 
-  exportarPDF(): void {
-    this.pdfExportService.exportDashboardCompleto(
-      this.incidentesPorLaboratorio,
-      this.objetosPerdidosPorLaboratorio,
-      this.estadisticasResumen,
-      'Reporte_Dashboard_Completo'
-    );
+  // Método para probar la conexión con el backend
+  probarConexionBackend(): void {
+    console.log('Probando conexión con el backend...');
+    this.reportesService.testConnection().subscribe({
+      next: (response) => {
+        console.log('Conexión exitosa con el backend:', response);
+        this.mensajeExito = 'Conexión con el backend establecida correctamente';
+      },
+      error: (error) => {
+        console.error('Error de conexión con el backend:', error);
+        this.error = `Error de conexión: ${error.message || error.statusText}`;
+      }
+    });
   }
 
-  // Métodos para las tablas
-  getTablaIncidentesPorLaboratorio() {
-    return this.incidentesPorLaboratorio.map(item => ({
-      Laboratorio: item.laboratorio,
-      'Total Incidentes': item.total_incidentes,
-      'Activos': item.incidentes_activos,
-      'Resueltos': item.incidentes_aprobados,
-      'Anulados': item.incidentes_anulados
-    }));
+  // Método para probar los filtros específicamente
+  probarFiltros(): void {
+    const filtros = this.filtrosForm.value;
+    console.log('Probando filtros:', filtros);
+    console.log('Períodos académicos disponibles:', this.periodosAcademicos);
+    console.log('Laboratorios disponibles:', this.laboratorios);
+    
+    // Probar con un endpoint simple
+    this.reportesService.getIncidentesPorLaboratorio(filtros).subscribe({
+      next: (response) => {
+        console.log('Respuesta exitosa con filtros:', response);
+        this.mensajeExito = `Filtros funcionando correctamente. Datos recibidos: ${response?.data?.length || 0} registros`;
+      },
+      error: (error) => {
+        console.error('Error con filtros:', error);
+        this.error = `Error con filtros: ${error.message || error.statusText}`;
+      }
+    });
   }
 
-  getTablaIncidentesPorEstado() {
-    return this.incidentesPorEstado.map(item => ({
-      Estado: item.estado,
-      'Total Incidentes': item.total_incidentes
-    }));
+  // Método para mostrar información de debugging de filtros
+  mostrarInfoFiltros(): void {
+    const info = {
+      periodosDisponibles: this.periodosAcademicos,
+      laboratoriosDisponibles: this.laboratorios,
+      filtrosActuales: this.filtrosForm.value
+    };
+    console.log('Información de filtros:', info);
+    this.mensajeExito = `Períodos: ${this.periodosAcademicos.length}, Laboratorios: ${this.laboratorios.length}`;
   }
 
-  getTablaIncidentesPorInconveniente() {
-    return this.incidentesPorInconveniente.map(item => ({
-      Inconveniente: item.inconveniente,
-      'Total Incidentes': item.total_incidentes
-    }));
+  // Método para probar endpoints de ranking
+
+
+  // Cargar top 10 usuarios
+  cargarTop10(): void {
+    this.loadingRankings = true;
+    console.log('Cargando top 10 usuarios...');
+    
+    this.reportesService.getTop10Usuarios().subscribe({
+      next: (response) => {
+        console.log('Top 10 cargado exitosamente:', response);
+        this.top10Usuarios = response?.data || [];
+        this.loadingRankings = false;
+        this.error = null;
+      },
+      error: (error) => {
+        console.error('Error cargando top 10:', error);
+        this.error = 'No se pudo cargar el ranking de usuarios. Verifica que el backend esté ejecutándose.';
+        this.loadingRankings = false;
+        this.top10Usuarios = [];
+      }
+    });
   }
 
-  getTablaObjetosPerdidosPorLaboratorio() {
-    return this.objetosPerdidosPorLaboratorio.map(item => ({
-      Laboratorio: item.laboratorio,
-      'Objetos Perdidos': item.total_objetos_perdidos
-    }));
+  // Métodos para calcular estadísticas del ranking
+  getTotalIncidentesRanking(): number {
+    return this.top10Usuarios.reduce((sum, u) => sum + (u.total_actividad || 0), 0);
   }
 
-  getTablaObjetosPerdidosPorEstado() {
-    return this.objetosPerdidosPorEstado.map(item => ({
-      Estado: item.estado,
-      'Total Objetos': item.total_objetos
-    }));
+  getPromedioResolucionRanking(): number {
+    if (this.top10Usuarios.length === 0) return 0;
+    const total = this.top10Usuarios.reduce((sum, u) => sum + (u.incidentes_creados || 0), 0);
+    return Math.round(total / this.top10Usuarios.length);
   }
 
+  // Métodos de exportación
+  // ===== MÉTODOS DE EXPORTACIÓN =====
 
-
-
-
-    getIncidentesPorPeriodo(periodoNombre: string) {
-    return this.incidentesPorPeriodo.filter(i => i.periodo_academico === periodoNombre);
+  // Exportar reporte completo del dashboard
+  exportarDashboardExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarReporteCompleto(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Dashboard_Completo', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando Excel:', error);
+        this.error = 'Error al generar el reporte Excel';
+        this.loading = false;
+      }
+    });
   }
-    periodoAbierto: string | null = null;
 
-  togglePeriodo(nombre: string) {
-    this.periodoAbierto = this.periodoAbierto === nombre ? null : nombre;
+  exportarDashboardPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarReporteCompleto(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Dashboard_Completo', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando PDF:', error);
+        this.error = 'Error al generar el reporte PDF';
+        this.loading = false;
+      }
+    });
   }
 
+  // Exportar reportes específicos según la pestaña activa
+  exportarReporteEspecificoExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    let exportObservable: Observable<Blob>;
+    let tipoReporte: string;
+
+    switch (this.activeTab) {
+      case 'incidents':
+        exportObservable = this.excelExportService.exportarIncidentesPorLaboratorio(filtros);
+        tipoReporte = 'Incidentes_Por_Laboratorio';
+        break;
+      case 'objects':
+        exportObservable = this.excelExportService.exportarObjetosPerdidosPorLaboratorio(filtros);
+        tipoReporte = 'Objetos_Perdidos_Por_Laboratorio';
+        break;
+      case 'users':
+        exportObservable = this.excelExportService.exportarRankingUsuarios(filtros);
+        tipoReporte = 'Ranking_Usuarios';
+        break;
+      case 'analytics':
+        exportObservable = this.excelExportService.exportarReporteCompleto(filtros);
+        tipoReporte = 'Analytics_Completo';
+        break;
+      default:
+        exportObservable = this.excelExportService.exportarReporteCompleto(filtros);
+        tipoReporte = 'Dashboard_General';
+    }
+
+    exportObservable.subscribe({
+      next: (blob: Blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo(tipoReporte, 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Error exportando Excel específico:', error);
+        this.error = 'Error al generar el reporte Excel';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarReporteEspecificoPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    let exportObservable: Observable<Blob>;
+    let tipoReporte: string;
+
+    switch (this.activeTab) {
+      case 'incidents':
+        exportObservable = this.pdfExportService.exportarIncidentesPorLaboratorio(filtros);
+        tipoReporte = 'Incidentes_Por_Laboratorio';
+        break;
+      case 'objects':
+        exportObservable = this.pdfExportService.exportarObjetosPerdidosPorLaboratorio(filtros);
+        tipoReporte = 'Objetos_Perdidos_Por_Laboratorio';
+        break;
+      case 'users':
+        exportObservable = this.pdfExportService.exportarRankingUsuarios(filtros);
+        tipoReporte = 'Ranking_Usuarios';
+        break;
+      case 'analytics':
+        exportObservable = this.pdfExportService.exportarReporteCompleto(filtros);
+        tipoReporte = 'Analytics_Completo';
+        break;
+      default:
+        exportObservable = this.pdfExportService.exportarReporteCompleto(filtros);
+        tipoReporte = 'Dashboard_General';
+    }
+
+    exportObservable.subscribe({
+      next: (blob: Blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo(tipoReporte, 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('Error exportando PDF específico:', error);
+        this.error = 'Error al generar el reporte PDF';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Exportar reportes adicionales
+  exportarIncidentesExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarIncidentes(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Incidentes_Generales', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes Excel:', error);
+        this.error = 'Error al generar el reporte de incidentes';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarIncidentesPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarIncidentes(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Incidentes_Generales', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes PDF:', error);
+        this.error = 'Error al generar el reporte de incidentes';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarObjetosPerdidosExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarObjetosPerdidos(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Objetos_Perdidos_Generales', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos perdidos Excel:', error);
+        this.error = 'Error al generar el reporte de objetos perdidos';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarObjetosPerdidosPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarObjetosPerdidos(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Objetos_Perdidos_Generales', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos perdidos PDF:', error);
+        this.error = 'Error al generar el reporte de objetos perdidos';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarTrazabilidadGeneral(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Trazabilidad_General', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarTrazabilidadGeneral(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Trazabilidad_General', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Exportar ranking de usuarios
+  exportarRankingUsuariosExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarRankingUsuarios(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Ranking_Usuarios', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando ranking usuarios Excel:', error);
+        this.error = 'Error al generar el reporte de ranking de usuarios';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarRankingUsuariosPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarRankingUsuarios(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Ranking_Usuarios', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando ranking usuarios PDF:', error);
+        this.error = 'Error al generar el reporte de ranking de usuarios';
+        this.loading = false;
+      }
+    });
+  }
+
+  // ===== EXPORTACIÓN ESPECÍFICA POR ENDPOINT =====
+
+  // Incidentes por Laboratorio
+  exportarIncidentesPorLaboratorioExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarIncidentesPorLaboratorio(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Incidentes_Por_Laboratorio', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por laboratorio Excel:', error);
+        this.error = 'Error al generar el reporte de incidentes por laboratorio';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarIncidentesPorLaboratorioPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarIncidentesPorLaboratorio(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Incidentes_Por_Laboratorio', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por laboratorio PDF:', error);
+        this.error = 'Error al generar el reporte de incidentes por laboratorio';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Incidentes por Estado
+  exportarIncidentesPorEstadoExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarIncidentesPorEstado(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Incidentes_Por_Estado', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por estado Excel:', error);
+        this.error = 'Error al generar el reporte de incidentes por estado';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarIncidentesPorEstadoPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarIncidentesPorEstado(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Incidentes_Por_Estado', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por estado PDF:', error);
+        this.error = 'Error al generar el reporte de incidentes por estado';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Incidentes por Período
+  exportarIncidentesPorPeriodoExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarIncidentesPorPeriodo(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Incidentes_Por_Periodo', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por período Excel:', error);
+        this.error = 'Error al generar el reporte de incidentes por período';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarIncidentesPorPeriodoPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarIncidentesPorPeriodo(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Incidentes_Por_Periodo', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por período PDF:', error);
+        this.error = 'Error al generar el reporte de incidentes por período';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Incidentes por Inconveniente
+  exportarIncidentesPorInconvenienteExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarIncidentesPorInconveniente(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Incidentes_Por_Inconveniente', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por inconveniente Excel:', error);
+        this.error = 'Error al generar el reporte de incidentes por inconveniente';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarIncidentesPorInconvenientePDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarIncidentesPorInconveniente(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Incidentes_Por_Inconveniente', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando incidentes por inconveniente PDF:', error);
+        this.error = 'Error al generar el reporte de incidentes por inconveniente';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Objetos por Laboratorio
+  exportarObjetosPorLaboratorioExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarObjetosPerdidosPorLaboratorio(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Objetos_Por_Laboratorio', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos por laboratorio Excel:', error);
+        this.error = 'Error al generar el reporte de objetos por laboratorio';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarObjetosPorLaboratorioPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarObjetosPerdidosPorLaboratorio(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Objetos_Por_Laboratorio', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos por laboratorio PDF:', error);
+        this.error = 'Error al generar el reporte de objetos por laboratorio';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Objetos por Estado
+  exportarObjetosPorEstadoExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.excelExportService.exportarObjetosPerdidosPorEstado(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Objetos_Por_Estado', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos por estado Excel:', error);
+        this.error = 'Error al generar el reporte de objetos por estado';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarObjetosPorEstadoPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.pdfExportService.exportarObjetosPerdidosPorEstado(filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Objetos_Por_Estado', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando objetos por estado PDF:', error);
+        this.error = 'Error al generar el reporte de objetos por estado';
+        this.loading = false;
+      }
+    });
+  }
+
+  // ===== EXPORTACIÓN DE TRAZABILIDAD =====
+
+  // Trazabilidad Completa
+  exportarTrazabilidadCompletaExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarExcel('trazabilidad', filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Trazabilidad_Completa', 'xlsx');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad completa Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad completa';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadCompletaPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarPDF('trazabilidad', filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Trazabilidad_Completa', 'pdf');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad completa PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad completa';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Trazabilidad de Incidentes
+  exportarTrazabilidadIncidentesExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    // Filtrar solo incidentes
+    const filtrosIncidentes = { ...filtros, tipo: 'INCIDENTE' };
+    
+    this.excelExportService.exportarTrazabilidadGeneral(filtrosIncidentes).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Trazabilidad_Incidentes', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad incidentes Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad de incidentes';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadIncidentesPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    // Filtrar solo incidentes
+    const filtrosIncidentes = { ...filtros, tipo: 'INCIDENTE' };
+    
+    this.pdfExportService.exportarTrazabilidadGeneral(filtrosIncidentes).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Trazabilidad_Incidentes', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad incidentes PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad de incidentes';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Trazabilidad de Objetos Perdidos
+  exportarTrazabilidadObjetosExcel(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    // Filtrar solo objetos perdidos
+    const filtrosObjetos = { ...filtros, tipo: 'OBJETO_PERDIDO' };
+    
+    this.excelExportService.exportarTrazabilidadGeneral(filtrosObjetos).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo('Trazabilidad_Objetos', 'xlsx');
+        this.excelExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad objetos Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad de objetos';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadObjetosPDF(): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    // Filtrar solo objetos perdidos
+    const filtrosObjetos = { ...filtros, tipo: 'OBJETO_PERDIDO' };
+    
+    this.pdfExportService.exportarTrazabilidadGeneral(filtrosObjetos).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo('Trazabilidad_Objetos', 'pdf');
+        this.pdfExportService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad objetos PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad de objetos';
+        this.loading = false;
+      }
+    });
+  }
+
+  // ===== EXPORTACIÓN DE TRAZABILIDAD ESPECÍFICA =====
+
+  // Trazabilidad de Incidente Específico
+  exportarTrazabilidadIncidenteEspecificoExcel(id: number): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarExcel(`trazabilidad-incidente/${id}`, filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo(`Trazabilidad_Incidente_${id}`, 'xlsx');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad incidente específico Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad del incidente';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadIncidenteEspecificoPDF(id: number): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarPDF(`trazabilidad-incidente/${id}`, filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo(`Trazabilidad_Incidente_${id}`, 'pdf');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad incidente específico PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad del incidente';
+        this.loading = false;
+      }
+    });
+  }
+
+  // Trazabilidad de Objeto Perdido Específico
+  exportarTrazabilidadObjetoPerdidoEspecificoExcel(id: number): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarExcel(`trazabilidad-objeto-perdido/${id}`, filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.excelExportService.generarNombreArchivo(`Trazabilidad_Objeto_${id}`, 'xlsx');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad objeto perdido específico Excel:', error);
+        this.error = 'Error al generar el reporte de trazabilidad del objeto perdido';
+        this.loading = false;
+      }
+    });
+  }
+
+  exportarTrazabilidadObjetoPerdidoEspecificoPDF(id: number): void {
+    this.loading = true;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+    
+    this.reportesService.descargarPDF(`trazabilidad-objeto-perdido/${id}`, filtros).subscribe({
+      next: (blob) => {
+        const nombreArchivo = this.pdfExportService.generarNombreArchivo(`Trazabilidad_Objeto_${id}`, 'pdf');
+        this.reportesService.descargarArchivo(blob, nombreArchivo);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Error exportando trazabilidad objeto perdido específico PDF:', error);
+        this.error = 'Error al generar el reporte de trazabilidad del objeto perdido';
+        this.loading = false;
+      }
+    });
+  }
+
+  // ===== DESCARGA DIRECTA POR ID DE USUARIO =====
+
+  // Descargar trazabilidad por usuario en PDF
+  descargarTrazabilidadUsuarioPDF(): void {
+    if (!this.idUsuarioConsulta) {
+      this.mostrarMensajeDescarga('Por favor ingresa un ID de usuario válido', false);
+      return;
+    }
+
+    this.loading = true;
+    this.error = null;
+    const filtros: FiltrosReporte = this.filtrosForm.value;
+
+    // Usar el endpoint correcto de trazabilidad por usuario
+    this.reportesService.descargarPDF('trazabilidad-por-usuario', { ...filtros, usuarioId: this.idUsuarioConsulta.toString() })
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (blob) => {
+          const nombreArchivo = `Trazabilidad_Usuario_${this.idUsuarioConsulta}_${new Date().toISOString().split('T')[0]}.pdf`;
+          this.reportesService.descargarArchivo(blob, nombreArchivo);
+          this.mostrarMensajeDescarga(`PDF de trazabilidad del usuario #${this.idUsuarioConsulta} descargado exitosamente`, true);
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Error descargando trazabilidad por usuario:', error);
+          if (error.status === 404) {
+            this.mostrarMensajeDescarga(`No se encontró trazabilidad para el usuario #${this.idUsuarioConsulta}`, false);
+          } else {
+            this.mostrarMensajeDescarga(`Error al descargar la trazabilidad del usuario: ${error.message || error.statusText}`, false);
+          }
+          this.loading = false;
+        }
+      });
+  }
+
+  // Mostrar mensaje de descarga
+  mostrarMensajeDescarga(mensaje: string, exitoso: boolean): void {
+    this.mensajeDescarga = mensaje;
+    this.descargaExitosa = exitoso;
+    
+    // Limpiar mensaje después de 5 segundos
+    setTimeout(() => {
+      this.mensajeDescarga = '';
+      this.descargaExitosa = false;
+    }, 5000);
+  }
+
+  // Limpiar consultas específicas
+  limpiarConsultasEspecificas(): void {
+    this.idUsuarioConsulta = null;
+    this.trazabilidadIncidenteEspecifico = [];
+    this.trazabilidadObjetoEspecifico = [];
+    this.error = null;
+    this.mensajeDescarga = '';
+    this.descargaExitosa = false;
+  }
+
+  // Métodos de utilidad
+  cerrarSesion(): void {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    this.router.navigate(['/login']);
+  }
+
+  getCurrentDate(): string {
+    return new Date().toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
+  formatearNumero(numero: number): string {
+    return numero.toLocaleString('es-ES');
+  }
+
+  formatearPorcentaje(valor: number): string {
+    return `${valor}%`;
+  }
+
+  formatearTiempo(horas: number): string {
+    if (horas < 24) {
+      return `${horas}h`;
+    } else {
+      const dias = Math.floor(horas / 24);
+      const horasRestantes = horas % 24;
+      return `${dias}d ${horasRestantes}h`;
+    }
+  }
 }
-
-

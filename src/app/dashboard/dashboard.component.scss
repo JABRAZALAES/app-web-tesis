@@ -1,41 +1,202 @@
-.sidebar-item {
+// Estilos específicos para el dashboard usando Tailwind CSS
+// La mayoría de los estilos están ahora en el HTML con clases de Tailwind
+
+// Animación de spinning para el ícono de refresh
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+// Overlay para el sidebar en móviles
+@media (max-width: 1023px) {
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 40;
+  }
+}
+
+// Asegurar que los gráficos se rendericen correctamente
+canvas {
+  max-width: 100%;
+  height: auto;
+}
+
+// Mejoras para tablas en dispositivos móviles
+@media (max-width: 768px) {
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+// Transiciones suaves para elementos interactivos
+.transition-all {
+  transition: all 0.2s ease-in-out;
+}
+
+// Mejoras para el focus en elementos de formulario
+.focus-ring:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+} 
+
+// Estilos para la pirámide de rankings
+.ranking-pyramid {
+  perspective: 1000px;
+}
+
+.ranking-card {
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.ranking-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+// Animaciones personalizadas para la pirámide
+@keyframes slideInFromTop {
+  0% {
+    opacity: 0;
+    transform: translateY(-50px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-50px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    opacity: 0;
+    transform: translateX(50px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Aplicar animaciones a los elementos de la pirámide
+.pyramid-first {
+  animation: slideInFromTop 1s ease-out;
+}
+
+.pyramid-second {
+  animation: slideInFromLeft 1s ease-out 0.2s both;
+}
+
+.pyramid-third {
+  animation: slideInFromRight 1s ease-out 0.4s both;
+}
+
+.pyramid-rest {
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+// Efectos de brillo para las tarjetas
+.glow-effect {
   position: relative;
   overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.6s;
-  }
-
-  &:hover::before {
-    left: 100%;
-  }
 }
 
-.card-hover {
-  transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  }
+.glow-effect::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transform: rotate(45deg);
+  transition: all 0.6s ease;
+  opacity: 0;
 }
 
-.input-focus {
-  transition: all 0.3s ease;
-
-  &:focus {
-    transform: scale(1.02);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-  }
+.glow-effect:hover::before {
+  opacity: 1;
+  transform: rotate(45deg) translate(50%, 50%);
 }
 
-.user-dropdown {
+// Estilos para los iconos de trofeos
+.trophy-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
   transition: all 0.3s ease;
 }
+
+.trophy-icon:hover {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+  transform: scale(1.1);
+}
+
+// Efectos de partículas para el ganador
+.winner-glow {
+  position: relative;
+}
+
+.winner-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255, 215, 0, 0.2) 0%, transparent 70%);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .ranking-card {
+    margin-bottom: 1rem;
+  }
+  
+  .pyramid-container {
+    flex-direction: column;
+  }
+} 

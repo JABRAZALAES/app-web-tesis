@@ -1,625 +1,1374 @@
-
+<!-- Dashboard Container -->
+<div class="min-h-screen bg-gray-50 flex">
   <!-- Sidebar -->
-<div class="flex h-screen bg-gray-50">
-  <!-- Sidebar -->
-
-<div class="flex h-screen">
-  <!-- Botón de toggle (fuera del sidebar) -->
-  <button (click)="sidebarOpen = !sidebarOpen" class="fixed left-4 top-4 z-50 p-2 rounded-lg bg-blue-600 text-white shadow-lg hover:bg-blue-700 transition-all">
-    <i class="fas fa-bars text-xl"></i>
-  </button>
-
-  <!-- Sidebar con animación -->
-  <aside [class]="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-         class="w-72 min-h-screen bg-gradient-to-b from-blue-600 to-blue-800 shadow-2xl transform transition-transform duration-300 ease-in-out fixed z-40">
-
-    <!-- Encabezado con logo -->
-    <div class="flex flex-col items-center justify-center pt-6 pb-4 px-4 border-b border-blue-400 border-opacity-20 backdrop-blur-sm bg-white bg-opacity-10">
-      <div class="mb-3">
-        <img src="assets/logo.png" alt="Logo ESPE" class="h-14 w-auto object-contain transition-all duration-300">
+  <aside class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0" 
+         [class.translate-x-0]="sidebarOpen" 
+         [class.-translate-x-full]="!sidebarOpen">
+    
+    <!-- Sidebar Header -->
+    <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <div class="flex items-center space-x-3">
+        <img src="assets/logo.png" alt="ESPE Logo" class="w-8 h-8">
+        <h2 class="text-xl font-bold text-gray-800">ESPE</h2>
       </div>
-      <div class="text-center transition-all duration-300" [class]="sidebarOpen ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'">
-        <h1 class="text-xl font-bold text-white tracking-wider">Jefatura de Laboratorios</h1>
-        <p class="text-blue-100 text-xs mt-1 font-light">Incidentes y Novedades</p>
-      </div>
+      <button class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100" 
+              (click)="toggleSidebar()">
+        <fa-icon [icon]="faIcons.times" class="w-5 h-5"></fa-icon>
+      </button>
     </div>
 
-    <!-- Menú de navegación -->
-<nav class="flex flex-col p-4 space-y-2">
-  <!-- Botón principal Inicio -->
-  <button (click)="activeTab = 'cards'; submenuOpen = !submenuOpen"
-          class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 font-medium group overflow-hidden text-white hover:bg-white/10">
-    <div class="w-8 h-8 flex items-center justify-center min-w-[2rem]">
-      <i class="fas fa-home text-lg"></i>
+    <!-- Navigation -->
+    <nav class="flex-1 p-4">
+      <ul class="space-y-2">
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'overview'"
+                  [class.text-blue-700]="activeTab === 'overview'"
+                  [class.text-gray-700]="activeTab !== 'overview'"
+                  [class.hover:bg-gray-100]="activeTab !== 'overview'"
+                  (click)="cambiarTab('overview')">
+            <fa-icon [icon]="faIcons.dashboard" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Dashboard</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'incidents'"
+                  [class.text-blue-700]="activeTab === 'incidents'"
+                  [class.text-gray-700]="activeTab !== 'incidents'"
+                  [class.hover:bg-gray-100]="activeTab !== 'incidents'"
+                  (click)="cambiarTab('incidents')">
+            <fa-icon [icon]="faIcons.exclamationTriangle" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Incidentes</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'objects'"
+                  [class.text-blue-700]="activeTab === 'objects'"
+                  [class.text-gray-700]="activeTab !== 'objects'"
+                  [class.hover:bg-gray-100]="activeTab !== 'objects'"
+                  (click)="cambiarTab('objects')">
+            <fa-icon [icon]="faIcons.boxOpen" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Objetos Perdidos</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'users'"
+                  [class.text-blue-700]="activeTab === 'users'"
+                  [class.text-gray-700]="activeTab !== 'users'"
+                  [class.hover:bg-gray-100]="activeTab !== 'users'"
+                  (click)="cambiarTab('users')">
+            <fa-icon [icon]="faIcons.users" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Usuarios</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'analytics'"
+                  [class.text-blue-700]="activeTab === 'analytics'"
+                  [class.text-gray-700]="activeTab !== 'analytics'"
+                  [class.hover:bg-gray-100]="activeTab !== 'analytics'"
+                  (click)="cambiarTab('analytics')">
+            <fa-icon [icon]="faIcons.chartBar" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Analytics</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'rankings'"
+                  [class.text-blue-700]="activeTab === 'rankings'"
+                  [class.text-gray-700]="activeTab !== 'rankings'"
+                  [class.hover:bg-gray-100]="activeTab !== 'rankings'"
+                  (click)="cambiarTab('rankings')">
+            <fa-icon [icon]="faIcons.trophy" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Rankings</span>
+          </button>
+        </li>
+        <li>
+          <button class="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors duration-200"
+                  [class.bg-blue-50]="activeTab === 'trazabilidad'"
+                  [class.text-blue-700]="activeTab === 'trazabilidad'"
+                  [class.text-gray-700]="activeTab !== 'trazabilidad'"
+                  [class.hover:bg-gray-100]="activeTab !== 'trazabilidad'"
+                  (click)="cambiarTab('trazabilidad')">
+            <fa-icon [icon]="faIcons.route" class="w-5 h-5"></fa-icon>
+            <span class="font-medium">Trazabilidad</span>
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- User Info & Logout -->
+    <div class="p-4 border-t border-gray-200">
+      <div class="flex items-center space-x-3 mb-4">
+        <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+          <fa-icon [icon]="faIcons.user" class="w-5 h-5 text-blue-600"></fa-icon>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900 truncate">{{ usuario?.nombre || 'Usuario' }}</p>
+          <p class="text-xs text-gray-500 capitalize">{{ usuario?.rol || 'Rol' }}</p>
+        </div>
+      </div>
+      <button class="w-full flex items-center justify-center space-x-2 px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors duration-200"
+              (click)="cerrarSesion()">
+        <fa-icon [icon]="faIcons.logout" class="w-4 h-4"></fa-icon>
+        <span class="text-sm font-medium">Cerrar Sesión</span>
+      </button>
     </div>
-    <span class="whitespace-nowrap">Inicio</span>
-    <i class="fas" [ngClass]="submenuOpen ? 'fa-chevron-up' : 'fa-chevron-down'"></i>
-  </button>
-
-  <!-- Submenú desplegable -->
-  <div *ngIf="submenuOpen" class="ml-8 flex flex-col gap-1 transition-all duration-300">
-    <button (click)="activeTab = 'charts'"
-            class="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition">
-      <i class="fas fa-chart-bar"></i>
-      <span>Reportes</span>
-    </button>
-    <button (click)="activeTab = 'tables'"
-            class="flex items-center gap-2 px-3 py-2 rounded-lg text-white hover:bg-white/10 transition">
-      <i class="fas fa-table"></i>
-      <span>Datos</span>
-    </button>
-  </div>
-</nav>
-
-    <!-- Efecto decorativo inferior -->
-    <div class="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-blue-900 to-transparent opacity-20"></div>
   </aside>
 
-  <!-- Contenido principal (se ajusta cuando el sidebar se abre/cierra) -->
-  <main [class]="sidebarOpen ? 'ml-72' : 'ml-0'" class="flex-1 p-6 transition-all duration-300">
-    <!-- Tu contenido principal aquí -->
-  </main>
-</div>
-
   <!-- Main Content -->
-  <main class="flex-1 overflow-auto">
- <!-- Vista Cards (Inicio) -->
-  <div *ngIf="activeTab === 'cards'">
-<!-- Header con solo el título -->
-<header class="bg-white shadow-sm border-b border-gray-100 px-6 py-4">
-  <div class="flex items-center justify-center relative">
-    <!-- Título principal centrado -->
-    <div class="text-center">
-      <h1 class="text-3xl font-bold text-gray-900">INCIDENTES Y NOVEDADES</h1> <!-- Cambiado a gray-900 -->
-      <p class="text-lg text-gray-800 mt-1">Panel de Gestión</p> <!-- Cambiado a gray-800 -->
+  <div class="flex-1 flex flex-col lg:ml-0">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200">
+      <div class="flex items-center justify-between px-4 py-4 lg:px-6">
+        <div class="flex items-center space-x-4">
+          <button class="lg:hidden p-2 rounded-md text-gray-500 hover:text-gray-700 hover:bg-gray-100"
+                  (click)="toggleSidebar()">
+            <fa-icon [icon]="faIcons.bars" class="w-6 h-6"></fa-icon>
+          </button>
+          <div class="flex items-center space-x-3">
+            <fa-icon [icon]="faIcons.dashboard" class="w-6 h-6 text-blue-600"></fa-icon>
+            <h1 class="text-xl font-semibold text-gray-900">Panel de Control</h1>
+          </div>
+        </div>
+        
+        <div class="flex items-center space-x-3">
+          <button class="inline-flex items-center space-x-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200"
+                  [disabled]="loading"
+                  (click)="probarConexionBackend()">
+            <fa-icon [icon]="faIcons.info" class="w-4 h-4"></fa-icon>
+            <span class="text-sm font-medium">Probar Conexión</span>
+          </button>
+          <button class="inline-flex items-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                  [disabled]="loading"
+                  (click)="cargarDashboard()">
+            <fa-icon [icon]="faIcons.refresh" 
+                     [class.animate-spin]="loading" 
+                     class="w-4 h-4"></fa-icon>
+            <span class="text-sm font-medium">Actualizar</span>
+          </button>
+          <button class="inline-flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                  [disabled]="loading"
+                  (click)="exportarDashboardExcel()">
+            <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+            <span class="text-sm font-medium">Excel</span>
+          </button>
+          <button class="inline-flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                  [disabled]="loading"
+                  (click)="exportarDashboardPDF()">
+            <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+            <span class="text-sm font-medium">PDF</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Loading Overlay -->
+    <div *ngIf="loading" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg p-6 flex flex-col items-center space-y-4">
+        <fa-icon [icon]="faIcons.refresh" class="w-8 h-8 text-blue-600 animate-spin"></fa-icon>
+        <p class="text-gray-700 font-medium">Cargando datos...</p>
+      </div>
     </div>
 
-    <!-- Perfil de usuario -->
-    <div class="absolute right-0">
-      <button (click)="toggleUserDropdown()" class="flex items-center gap-2">
-        <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm shadow-md">
-          <fa-icon [icon]="faIcons.user"></fa-icon>
+    <!-- Error Message -->
+    <div *ngIf="error" class="mx-4 mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+      <div class="flex items-center space-x-3">
+        <fa-icon [icon]="faIcons.exclamationCircle" class="w-5 h-5 text-red-600"></fa-icon>
+        <div class="flex-1">
+          <p class="text-red-800">{{ error }}</p>
         </div>
-      </button>
-
-      <!-- Menú desplegable -->
-      <div [class.hidden]="!userDropdownOpen" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl border border-gray-200 z-50 py-1">
-        <div class="px-4 py-2 text-sm text-gray-900 border-b border-gray-100"> <!-- Cambiado a gray-900 -->
-          <p class="font-medium">{{ usuario?.nombre || 'Usuario' }}</p>
-          <p class="text-xs text-gray-700">{{ usuario?.rol || 'Admin' }}</p> <!-- Cambiado a gray-700 -->
-        </div>
-        <button (click)="cerrarSesion()" class="block w-full text-left px-4 py-2 text-sm text-gray-900 hover:bg-gray-50"> <!-- Cambiado a gray-900 -->
-          <fa-icon [icon]="faIcons.logout" class="mr-2 text-gray-700"></fa-icon> <!-- Añadido text-gray-700 -->
-          Cerrar sesión
+        <button class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                (click)="cargarDashboard()">
+          Reintentar
         </button>
       </div>
     </div>
-  </div>
-</header>
 
-<!-- Componente de Filtros -->
-<div class="bg-gray-50 border-b border-gray-200 px-6 py-4">
-  <div class="flex flex-col md:flex-row gap-3 justify-between items-center">
-    <!-- Grupo de filtros -->
-    <div class="flex flex-wrap gap-3 w-full md:w-auto">
-      <!-- Fecha Inicio -->
-      <div class="relative flex-1 min-w-[150px]">
-        <fa-icon [icon]="faIcons.clock" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
-        <input type="date" [(ngModel)]="filtros.fechaInicio"
-               class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm text-gray-900"> <!-- Añadido text-gray-900 -->
-      </div>
-
-      <!-- Fecha Fin -->
-      <div class="relative flex-1 min-w-[150px]">
-        <fa-icon [icon]="faIcons.clock" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
-        <input type="date" [(ngModel)]="filtros.fechaFin"
-               class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm text-gray-900"> <!-- Añadido text-gray-900 -->
-      </div>
-
-      <!-- Laboratorio -->
-      <div class="relative flex-1 min-w-[180px]">
-        <fa-icon [icon]="faIcons.settings" class="absolute left-3 top-3 text-gray-600 text-sm"></fa-icon> <!-- Cambiado a gray-600 -->
-        <select [(ngModel)]="filtros.laboratorio"
-                class="w-full pl-10 pr-3 py-2 text-sm border border-gray-200 rounded-lg focus:ring-1 focus:ring-blue-500 focus:border-blue-500 shadow-sm appearance-none text-gray-900"> <!-- Añadido text-gray-900 -->
-          <option value="" class="text-gray-900">Todos los laboratorios</option> <!-- Añadido text-gray-900 -->
-          <option *ngFor="let lab of laboratoriosUnicos" [value]="lab" class="text-gray-900">{{lab}}</option> <!-- Añadido text-gray-900 -->
-        </select>
-      </div>
-    </div>
-
-    <!-- Botones de acción -->
-    <div class="flex gap-2 w-full md:w-auto justify-end">
-      <button (click)="aplicarFiltros()"
-              class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors shadow-md flex items-center gap-2">
-        <fa-icon [icon]="faIcons.filter"></fa-icon>
-        <span>Aplicar</span>
-      </button>
-      <button (click)="limpiarFiltros()"
-              class="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-lg transition-colors shadow flex items-center gap-2"> <!-- Cambiado a gray-900 -->
-        <fa-icon [icon]="faIcons.clear" class="text-gray-700"></fa-icon> <!-- Añadido text-gray-700 -->
-        <span>Limpiar</span>
-      </button>
-    </div>
-  </div>
-</div>
-
-
-    <!-- Content -->
-    <div class="p-8">
-      <!-- Mensaje de error -->
-      <div *ngIf="error" class="mb-4 p-4 bg-red-100 border border-red-300 text-red-700 rounded-lg shadow">
-        <div class="flex items-center">
-          <i class="fas fa-exclamation-triangle mr-2"></i>
-          <span>{{error}}</span>
+    <!-- Success Message -->
+    <div *ngIf="mensajeExito" class="mx-4 mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div class="flex items-center space-x-3">
+        <fa-icon [icon]="faIcons.check" class="w-5 h-5 text-green-600"></fa-icon>
+        <div class="flex-1">
+          <p class="text-green-800">{{ mensajeExito }}</p>
         </div>
+        <button class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                (click)="limpiarMensajeExito()">
+          Cerrar
+        </button>
       </div>
-      <!-- Loading -->
-      <div *ngIf="loading" class="flex justify-center items-center p-8">
-        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
+    </div>
 
-      <!-- Vista Cards -->
-      <div *ngIf="activeTab === 'cards' && !loading">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-900">Métricas Principales</h2>
-          <div class="flex gap-2">
-            <button (click)="exportarExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-excel mr-1"></i>Métricas Excel
-            </button>
-            <button (click)="exportarPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-pdf mr-1"></i>Métricas PDF
-            </button>
+    <!-- Main Content Area -->
+    <main class="flex-1 p-4 lg:p-6" *ngIf="!loading && !error">
+      
+      <!-- Filters Section -->
+      <section class="mb-6 bg-white rounded-lg shadow-sm border border-gray-200">
+        <div class="flex items-center justify-between p-4 border-b border-gray-200">
+          <div class="flex items-center space-x-2">
+            <fa-icon [icon]="faIcons.filter" class="w-5 h-5 text-gray-600"></fa-icon>
+            <h3 class="text-lg font-medium text-gray-900">Filtros</h3>
           </div>
+          <button class="inline-flex items-center space-x-2 px-3 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                  (click)="limpiarFiltros()">
+            <fa-icon [icon]="faIcons.eraser" class="w-4 h-4"></fa-icon>
+            <span class="text-sm">Limpiar</span>
+          </button>
         </div>
-        <!-- Métricas principales -->
-         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-  <!-- Tarjeta 1: Total Incidentes -->
-   <!-- Tarjeta 1: Total Incidentes -->
-  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Total Incidentes</p>
-        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.totalIncidentes}}</p>
-        <div class="flex items-center">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-            </svg>
-            Último período
-          </span>
-        </div>
-      </div>
-      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-blue-50 text-blue-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-        </svg>
-      </div>
-    </div>
-  </div>
-  <!-- Tarjeta 2: Incidentes Activos -->
-  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Incidentes Activos</p>
-        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.incidentesActivos}}</p>
-        <div class="flex items-center">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-600">
-            {{porcentajeIncidentesActivos}}% del total
-          </span>
-        </div>
-      </div>
-      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-amber-50 text-amber-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-    </div>
-  </div>
+        
+        <form [formGroup]="filtrosForm" class="p-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Inicio</label>
+              <input type="date" formControlName="fechaInicio" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Fecha Fin</label>
+              <input type="date" formControlName="fechaFin" 
+                     class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Período Académico</label>
+              <select formControlName="periodoAcademico" 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Todos los períodos</option>
+                <option *ngFor="let periodo of periodosAcademicos" 
+                        [value]="periodo.id || periodo.periodo_academico_id || periodo.nombre">
+                  {{ periodo.nombre || periodo.periodo_academico || periodo.id }}
+                </option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Laboratorio</label>
+              <select formControlName="laboratorio" 
+                      class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                <option value="">Todos los laboratorios</option>
+                <option *ngFor="let lab of laboratorios" 
+                        [value]="lab.id || lab.laboratorio_id || lab.nombre">
+                  {{ lab.nombre || lab.laboratorio || lab.id }}
+                </option>
+              </select>
+            </div>
 
-  <!-- Tarjeta 3: Incidentes Resueltos -->
-  <div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Incidentes Resueltos</p>
-        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.incidentesResueltos}}</p>
-        <div class="flex items-center">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-50 text-green-600">
-            {{porcentajeIncidentesResueltos}}% del total
-          </span>
-        </div>
-      </div>
-      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-green-50 text-green-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tarjeta 4: Objetos Perdidos -->
-<div class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden">
-    <div class="flex items-center justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Objetos Perdidos</p>
-        <p class="text-3xl font-semibold text-gray-800 mt-1 mb-2">{{estadisticasResumen.totalObjetosPerdidos}}</p>
-        <div class="flex items-center">
-          <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-600">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-            Registrados
-          </span>
-        </div>
-      </div>
-      <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-purple-50 text-purple-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-  <!-- Laboratorio con más incidentes -->
-  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
-    <div class="flex items-start justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Laboratorio con Más Incidentes</p>
-        <p class="text-2xl font-semibold text-gray-800 mt-1">{{estadisticasResumen.laboratorioConMasIncidentes || 'N/A'}}</p>
-        <p class="text-sm text-gray-500 mt-2">Registros más altos</p>
-      </div>
-      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-blue-50 text-blue-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Inconveniente más frecuente -->
-  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
-    <div class="flex items-start justify-between">
-      <div>
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Inconveniente Más Frecuente</p>
-        <p class="text-2xl font-semibold text-gray-800 mt-1">{{estadisticasResumen.inconvenienteMasFrecuente || 'N/A'}}</p>
-        <p class="text-sm text-gray-500 mt-2">Problema principal</p>
-      </div>
-      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-amber-50 text-amber-500">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 11v.01M12 7v.01" />
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Tasa de resolución -->
-  <div class="bg-white rounded-xl p-5 shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100">
-    <div class="flex items-start justify-between">
-      <div class="w-full">
-        <p class="text-xs font-medium uppercase tracking-wider text-gray-500 mb-1">Tasa de Resolución</p>
-        <p class="text-2xl font-semibold text-gray-800 mt-1">{{porcentajeIncidentesResueltos}}%</p>
-        <div class="w-full mt-3">
-          <div class="w-full bg-gray-100 rounded-full h-2">
-            <div class="bg-green-500 h-2 rounded-full transition-all duration-500" [style.width.%]="porcentajeIncidentesResueltos"></div>
           </div>
-          <p class="text-xs text-gray-500 mt-1 text-right">Eficiencia en solución</p>
-        </div>
-      </div>
-      <div class="w-10 h-10 rounded-lg flex items-center justify-center bg-green-50 text-green-500 ml-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-        </svg>
-      </div>
-    </div>
-  </div>
-</div>
-
-      <!-- Vista Gráficos -->
-        <div *ngIf="activeTab === 'cards'">
-    <section id="chartsSection">
-
-      <div *ngIf="activeTab === 'cards' && !loading">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-900">Reportes Gráficos</h2>
-          <div class="flex gap-2">
-            <button (click)="exportarGraficosExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-excel mr-1"></i>Gráficos Excel
+          <div class="mt-4 flex justify-end space-x-3">
+            <button type="button" 
+                    class="inline-flex items-center space-x-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                    (click)="mostrarInfoFiltros()">
+              <fa-icon [icon]="faIcons.info" class="w-4 h-4"></fa-icon>
+              <span class="font-medium">Info Filtros</span>
             </button>
-            <button (click)="exportarGraficosPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-pdf mr-1"></i>Gráficos PDF
+            <button type="button" 
+                    class="inline-flex items-center space-x-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200"
+                    (click)="probarFiltros()">
+              <fa-icon [icon]="faIcons.info" class="w-4 h-4"></fa-icon>
+              <span class="font-medium">Probar Filtros</span>
+            </button>
+            <button type="button" 
+                    class="inline-flex items-center space-x-2 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    (click)="aplicarFiltros()">
+              <fa-icon [icon]="faIcons.search" class="w-4 h-4"></fa-icon>
+              <span class="font-medium">Aplicar Filtros</span>
             </button>
           </div>
-        </div>
-        <div *ngIf="datosVacios()" class="text-center p-8 text-gray-500">
-          <i class="fas fa-chart-bar text-4xl mb-4"></i>
-          <p>No hay datos disponibles para mostrar los gráficos</p>
-        </div>
-        <div *ngIf="!datosVacios()" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Gráfico de barras -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Laboratorio</h3>
-              <i class="fas fa-chart-bar text-blue-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="barChartType"
-                [data]="barChartData"
-                [options]="barChartOptions">
-              </canvas>
-            </div>
-          </div>
-          <!-- Gráfico de estados -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Estado</h3>
-              <i class="fas fa-chart-pie text-green-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="estadoChartType"
-                [data]="estadoChartData"
-                [options]="estadoChartOptions">
-              </canvas>
-            </div>
-          </div>
-          <!-- Gráfico de objetos perdidos -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Objetos Perdidos por Laboratorio</h3>
-              <i class="fas fa-search text-red-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="pieChartType"
-                [data]="pieChartData"
-                [options]="pieChartOptions">
-              </canvas>
-            </div>
-          </div>
-          <!-- Gráfico de inconvenientes -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Incidentes por Inconveniente</h3>
-              <i class="fas fa-bug text-orange-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="inconvenienteChartType"
-                [data]="inconvenienteChartData"
-                [options]="inconvenienteChartOptions">
-              </canvas>
-            </div>
-          </div>
-          <!-- Gráfico de estados de objetos perdidos -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Estados de Objetos Perdidos</h3>
-              <i class="fas fa-info-circle text-purple-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="objetosEstadoChartType"
-                [data]="objetosEstadoChartData"
-                [options]="objetosEstadoChartOptions">
-              </canvas>
-            </div>
-          </div>
-          <!-- Gráfico de tendencia -->
-          <div class="bg-white rounded-xl p-6 shadow border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Tendencia de Incidentes</h3>
-              <i class="fas fa-chart-line text-indigo-500"></i>
-            </div>
-            <div class="h-80">
-              <canvas baseChart
-                [type]="tendenciaChartType"
-                [data]="tendenciaChartData"
-                [options]="tendenciaChartOptions">
-              </canvas>
-            </div>
-          </div>
-        </div>
-      </div>
+        </form>
       </section>
 
-<div *ngIf="activeTab === 'cards'">
-    <section id="tablesSection">
+      <!-- Overview Tab -->
+      <div *ngIf="activeTab === 'overview'" class="space-y-6">
+        
+        <!-- Metrics Cards -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Métricas Principales</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            
+            <!-- Total Incidentes -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-600">Total Incidentes</p>
+                  <p class="text-3xl font-bold text-gray-900 mt-2">{{ formatearNumero(metricas.totalIncidentes) }}</p>
+                  <div class="flex items-center space-x-4 mt-3 text-sm">
+                    <span class="text-orange-600">{{ formatearNumero(metricas.incidentesActivos) }} Activos</span>
+                    <span class="text-green-600">{{ formatearNumero(metricas.incidentesResueltos) }} Resueltos</span>
+                  </div>
+                </div>
+                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                  <fa-icon [icon]="faIcons.exclamationTriangle" class="w-6 h-6 text-orange-600"></fa-icon>
+                </div>
+              </div>
+            </div>
 
-      <div *ngIf="activeTab === 'cards' && !loading">
-        <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-900">Tablas de Datos</h2>
-          <div class="flex gap-2">
-            <button (click)="exportarTablasExcel()" class="px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-excel mr-1"></i>Todas las Tablas Excel
+            <!-- Objetos Perdidos -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-600">Objetos Perdidos</p>
+                  <p class="text-3xl font-bold text-gray-900 mt-2">{{ formatearNumero(metricas.totalObjetos) }}</p>
+                  <div class="flex items-center space-x-4 mt-3 text-sm">
+                    <span class="text-blue-600">{{ formatearNumero(metricas.objetosEnCustodia) }} En Custodia</span>
+                    <span class="text-green-600">{{ formatearNumero(metricas.objetosDevueltos) }} Devueltos</span>
+                  </div>
+                </div>
+                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <fa-icon [icon]="faIcons.boxOpen" class="w-6 h-6 text-blue-600"></fa-icon>
+                </div>
+              </div>
+            </div>
+
+            <!-- Laboratorios Activos -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-600">Laboratorios Activos</p>
+                  <p class="text-3xl font-bold text-gray-900 mt-2">{{ formatearNumero(metricas.laboratoriosActivos) }}</p>
+                  <div class="flex items-center space-x-4 mt-3 text-sm">
+                    <span class="text-purple-600">{{ formatearNumero(metricas.usuariosActivos) }} Usuarios</span>
+                  </div>
+                </div>
+                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                  <fa-icon [icon]="faIcons.flask" class="w-6 h-6 text-purple-600"></fa-icon>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tasa de Resolución -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex-1">
+                  <p class="text-sm font-medium text-gray-600">Tasa de Resolución</p>
+                  <p class="text-3xl font-bold text-gray-900 mt-2">{{ formatearPorcentaje(metricas.porcentajeResolucion) }}</p>
+                  <div class="flex items-center space-x-4 mt-3 text-sm">
+                    <span class="text-indigo-600">{{ formatearTiempo(metricas.tiempoPromedioResolucion) }} Promedio</span>
+                  </div>
+                </div>
+                <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
+                  <fa-icon [icon]="faIcons.chartLine" class="w-6 h-6 text-indigo-600"></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Gráficos Principales</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <!-- Incidentes por Laboratorio -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Incidentes por Laboratorio</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="incidentesLaboratorioChart"
+                  [options]="chartOptions"
+                  [type]="barChartType">
+                </canvas>
+              </div>
+            </div>
+
+            <!-- Estados de Incidentes -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Estados de Incidentes</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="incidentesEstadoChart"
+                  [options]="chartOptions"
+                  [type]="pieChartType">
+                </canvas>
+              </div>
+            </div>
+
+            <!-- Objetos Perdidos por Laboratorio -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Objetos Perdidos por Laboratorio</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="objetosLaboratorioChart"
+                  [options]="chartOptions"
+                  [type]="barChartType">
+                </canvas>
+              </div>
+            </div>
+
+            <!-- Estados de Objetos -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Estados de Objetos</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="objetosEstadoChart"
+                  [options]="chartOptions"
+                  [type]="doughnutChartType">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Trends Section -->
+        <section>
+          <h2 class="text-xl font-semibold text-gray-900 mb-4">Tendencias y Rankings</h2>
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <!-- Tendencia de Incidentes -->
+            <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Tendencia de Incidentes por Período</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="tendenciaChart"
+                  [options]="chartOptions"
+                  [type]="lineChartType">
+                </canvas>
+              </div>
+            </div>
+
+            <!-- Top Usuarios -->
+            <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+              <h3 class="text-lg font-medium text-gray-900 mb-4">Top 10 Usuarios</h3>
+              <div class="h-64">
+                <canvas baseChart
+                  [data]="rankingChart"
+                  [options]="chartOptions"
+                  [type]="barChartType">
+                </canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Incidentes Tab -->
+      <div *ngIf="activeTab === 'incidents'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">Análisis de Incidentes</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                    (click)="exportarIncidentesExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Excel</span>
             </button>
-            <button (click)="exportarTablasPDF()" class="px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm shadow">
-              <i class="fas fa-file-pdf mr-1"></i>Todas las Tablas PDF
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                    (click)="exportarIncidentesPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">PDF</span>
             </button>
           </div>
         </div>
-        <div *ngIf="datosVacios()" class="text-center p-8 text-gray-500">
-          <i class="fas fa-table text-4xl mb-4"></i>
-          <p>No hay datos disponibles para mostrar la tabla</p>
+        
+        <!-- Incidentes por Laboratorio -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Incidentes por Laboratorio</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorLaboratorioExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorLaboratorioPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resueltos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Anulados</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Resolución</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiempo Promedio</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of incidentesPorLaboratorio" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.laboratorio }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_incidentes) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ formatearNumero(item.incidentes_activos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ formatearNumero(item.incidentes_resueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-red-600">{{ formatearNumero(item.incidentes_anulados) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearPorcentaje(item.porcentaje_resueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ formatearTiempo(item.tiempo_promedio_resolucion_horas) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div *ngIf="!datosVacios()" class="space-y-8">
-          <!-- Tabla 1: Incidentes por Laboratorio -->
-          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-flask text-blue-500"></i>
-                Incidentes por Laboratorio
-              </h3>
-              <div class="flex gap-2">
-                <button (click)="exportarTablaExcel('incidentesLaboratorio')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button (click)="exportarTablaPDF('incidentesLaboratorio')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-gray-900 rounded-lg">
-                <thead class="bg-blue-100">
-                  <tr>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Laboratorio</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Activos</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Resueltos</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Anulados</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of incidentesPorLaboratorio" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
-                    <td class="py-3 px-4 text-gray-900">{{item.laboratorio}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_activos}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_aprobados}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.incidentes_anulados}}</td>
-                  </tr>
-                </tbody>
-              </table>
+
+        <!-- Incidentes por Estado -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Incidentes por Estado</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorEstadoExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorEstadoPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
             </div>
           </div>
-          <!-- Tabla 2: Incidentes por Estado -->
-          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-info-circle text-green-500"></i>
-                Incidentes por Estado
-              </h3>
-              <div class="flex gap-2">
-                <button (click)="exportarTablaExcel('incidentesEstado')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button (click)="exportarTablaPDF('incidentesEstado')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-gray-900 rounded-lg">
-                <thead class="bg-blue-100">
-                  <tr>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Estado</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of incidentesPorEstado" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
-                    <td class="py-3 px-4 text-gray-900">{{item.estado}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% del Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Primer Incidente</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Último Incidente</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of incidentesPorEstado" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.estado }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_incidentes) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearPorcentaje(item.porcentaje_total) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_primer_incidente | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_ultimo_incidente | date:'short' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Incidentes por Período Académico -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Resumen de Incidentes por Período Académico</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorPeriodoExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorPeriodoPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
             </div>
           </div>
-          <!-- Tabla 3: Incidentes por Inconveniente -->
-          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-bug text-orange-500"></i>
-                Incidentes por Inconveniente
-              </h3>
-              <div class="flex gap-2">
-                <button (click)="exportarTablaExcel('incidentesInconveniente')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button (click)="exportarTablaPDF('incidentesInconveniente')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-gray-900 rounded-lg">
-                <thead class="bg-blue-100">
-                  <tr>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Inconveniente</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Incidentes</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of incidentesPorInconveniente" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
-                    <td class="py-3 px-4 text-gray-900">{{item.inconveniente}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.total_incidentes}}</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Período Académico</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Incidentes</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of incidentesPorPeriodoResumen" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.periodo_academico }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_incidentes) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Incidentes por Inconveniente -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Incidentes por Tipo de Inconveniente</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorInconvenienteExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarIncidentesPorInconvenientePDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
             </div>
           </div>
-          <!-- Tabla 4: Objetos Perdidos por Laboratorio -->
-          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-search text-red-500"></i>
-                Objetos Perdidos por Laboratorio
-              </h3>
-              <div class="flex gap-2">
-                <button (click)="exportarTablaExcel('objetosLaboratorio')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button (click)="exportarTablaPDF('objetosLaboratorio')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-gray-900 rounded-lg">
-                <thead class="bg-blue-100">
-                  <tr>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Laboratorio</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Objetos</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Encontrados</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Porcentaje Recuperación</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of objetosPerdidosPorLaboratorio" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
-                    <td class="py-3 px-4 text-gray-900">{{item.laboratorio}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.total_objetos_perdidos}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{getObjetosEncontradosPorLab(item.laboratorio)}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{getPorcentajeObjetosEncontradosPorLab(item.laboratorio)}}%</td>
-                  </tr>
-                </tbody>
-              </table>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Inconveniente</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% del Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio Más Afectado</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of incidentesPorInconveniente" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.inconveniente }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_incidentes) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearPorcentaje(item.porcentaje_total) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.laboratorio_mas_afectado }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Objetos Perdidos Tab -->
+      <div *ngIf="activeTab === 'objects'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">Análisis de Objetos Perdidos</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                    (click)="exportarObjetosPerdidosExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                    (click)="exportarObjetosPerdidosPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">PDF</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Objetos por Laboratorio -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Objetos Perdidos por Laboratorio</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarObjetosPorLaboratorioExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarObjetosPorLaboratorioPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
             </div>
           </div>
-          <!-- Tabla 5: Objetos Perdidos por Estado -->
-          <div class="bg-white rounded-xl p-6 shadow hover:shadow-lg border border-gray-100">
-            <div class="flex items-center justify-between mb-4">
-              <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                <i class="fas fa-info-circle text-purple-500"></i>
-                Objetos Perdidos por Estado
-              </h3>
-              <div class="flex gap-2">
-                <button (click)="exportarTablaExcel('objetosEstado')" class="px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700 transition-colors shadow">
-                  <i class="fas fa-file-excel mr-1"></i>Excel
-                </button>
-                <button (click)="exportarTablaPDF('objetosEstado')" class="px-3 py-1 bg-red-600 text-white rounded text-sm hover:bg-red-700 transition-colors shadow">
-                  <i class="fas fa-file-pdf mr-1"></i>PDF
-                </button>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">En Custodia</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Devueltos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reclamados</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Devueltos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiempo Promedio</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of objetosPerdidosPorLaboratorio" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.laboratorio }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_objetos_encontrados) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearNumero(item.objetos_en_custodia) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ formatearNumero(item.objetos_devueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-purple-600">{{ formatearNumero(item.objetos_reclamados) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-indigo-600">{{ formatearPorcentaje(item.porcentaje_devueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ formatearTiempo(item.tiempo_promedio_entrega_horas) }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Objetos por Estado -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Objetos por Estado</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                      (click)="exportarObjetosPorEstadoExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                      (click)="exportarObjetosPorEstadoPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% del Total</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Con Entrega</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tiempo Promedio (días)</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of objetosPerdidosPorEstado" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.estado }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_objetos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearPorcentaje(item.porcentaje_total) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ formatearNumero(item.objetos_con_entrega) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.tiempo_promedio_entrega_dias?.toFixed(1) || 'N/A' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Usuarios Tab -->
+      <div *ngIf="activeTab === 'users'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">Análisis de Usuarios</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                    (click)="exportarRankingUsuariosExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                    (click)="exportarRankingUsuariosPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">PDF</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Ranking de Usuarios -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Top Usuarios por Incidentes</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Incidentes</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Resueltos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activos</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">% Resolución</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Primer Incidente</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Último Incidente</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of rankingUsuarios" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.nombre }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 capitalize">{{ item.rol }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ formatearNumero(item.total_incidentes) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ formatearNumero(item.incidentes_resueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ formatearNumero(item.incidentes_activos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">{{ formatearPorcentaje(item.porcentaje_resueltos) }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.primer_incidente | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.ultimo_incidente | date:'short' }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Trazabilidad de Estados -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Trazabilidad de Estados</h3>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Entidad</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Anterior</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Nuevo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Cambio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of trazabilidadEstados" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.tipo_entidad }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ item.estado_anterior }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ item.estado_nuevo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.usuario_nombre }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_cambio | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.laboratorio }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Analytics Tab -->
+      <div *ngIf="activeTab === 'analytics'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">Analytics Avanzados</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    (click)="exportarIncidentesExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Incidentes Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    (click)="exportarIncidentesPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Incidentes PDF</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                    (click)="exportarObjetosPerdidosExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Objetos Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                    (click)="exportarObjetosPerdidosPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Objetos PDF</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                    (click)="exportarTrazabilidadExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Trazabilidad Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                    (click)="exportarTrazabilidadPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Trazabilidad PDF</span>
+            </button>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          <!-- Resumen Ejecutivo -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Resumen Ejecutivo</h3>
+            <div class="space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Total de Incidentes:</span>
+                <span class="font-medium text-gray-900">{{ formatearNumero(metricas.totalIncidentes) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Total de Objetos:</span>
+                <span class="font-medium text-gray-900">{{ formatearNumero(metricas.totalObjetos) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tasa de Resolución:</span>
+                <span class="font-medium text-blue-600">{{ formatearPorcentaje(metricas.porcentajeResolucion) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Tiempo Promedio de Resolución:</span>
+                <span class="font-medium text-gray-900">{{ formatearTiempo(metricas.tiempoPromedioResolucion) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Laboratorios Activos:</span>
+                <span class="font-medium text-gray-900">{{ formatearNumero(metricas.laboratoriosActivos) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Usuarios Activos:</span>
+                <span class="font-medium text-gray-900">{{ formatearNumero(metricas.usuariosActivos) }}</span>
               </div>
             </div>
-            <div class="overflow-x-auto rounded-lg">
-              <table class="w-full text-gray-900 rounded-lg">
-                <thead class="bg-blue-100">
-                  <tr>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Estado</th>
-                    <th class="text-left py-3 px-4 font-semibold text-blue-900">Total Objetos</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let item of objetosPerdidosPorEstado" class="border-b border-gray-100 hover:bg-blue-50 transition-colors odd:bg-gray-50">
-                    <td class="py-3 px-4 text-gray-900">{{item.estado}}</td>
-                    <td class="py-3 px-4 text-gray-900">{{item.total_objetos}}</td>
-                  </tr>
-                </tbody>
-              </table>
+          </div>
+
+          <!-- Recomendaciones -->
+          <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+            <h3 class="text-lg font-medium text-gray-900 mb-4">Recomendaciones</h3>
+            <div class="space-y-3">
+              <div *ngIf="metricas.porcentajeResolucion < 80" class="flex items-start space-x-3 p-3 bg-yellow-50 rounded-lg">
+                <fa-icon [icon]="faIcons.warning" class="w-5 h-5 text-yellow-600 mt-0.5"></fa-icon>
+                <p class="text-sm text-yellow-800">La tasa de resolución está por debajo del 80%. Considerar revisar procesos.</p>
+              </div>
+              <div *ngIf="metricas.tiempoPromedioResolucion > 48" class="flex items-start space-x-3 p-3 bg-orange-50 rounded-lg">
+                <fa-icon [icon]="faIcons.clock" class="w-5 h-5 text-orange-600 mt-0.5"></fa-icon>
+                <p class="text-sm text-orange-800">El tiempo promedio de resolución es alto. Optimizar flujos de trabajo.</p>
+              </div>
+              <div *ngIf="metricas.incidentesActivos > metricas.incidentesResueltos" class="flex items-start space-x-3 p-3 bg-red-50 rounded-lg">
+                <fa-icon [icon]="faIcons.exclamationTriangle" class="w-5 h-5 text-red-600 mt-0.5"></fa-icon>
+                <p class="text-sm text-red-800">Hay más incidentes activos que resueltos. Revisar prioridades.</p>
+              </div>
+              <div *ngIf="metricas.objetosEnCustodia > metricas.objetosDevueltos" class="flex items-start space-x-3 p-3 bg-blue-50 rounded-lg">
+                <fa-icon [icon]="faIcons.boxOpen" class="w-5 h-5 text-blue-600 mt-0.5"></fa-icon>
+                <p class="text-sm text-blue-800">Muchos objetos en custodia. Implementar sistema de notificaciones.</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </section>
+
+      <!-- Rankings Tab -->
+      <div *ngIf="activeTab === 'rankings'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">🏆 Top 10 Usuarios Más Activos</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 transition-colors duration-200"
+                    [disabled]="loadingRankings"
+                    (click)="cargarTop10()">
+              <fa-icon [icon]="faIcons.refresh" 
+                       [class.animate-spin]="loadingRankings" 
+                       class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Actualizar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loadingRankings" class="flex items-center justify-center py-12">
+          <div class="text-center">
+            <fa-icon [icon]="faIcons.refresh" class="w-8 h-8 text-blue-600 animate-spin mb-4"></fa-icon>
+            <p class="text-gray-600">Cargando ranking de usuarios...</p>
+          </div>
+        </div>
+
+        <!-- Top 10 Pyramid -->
+        <div *ngIf="!loadingRankings && top10Usuarios.length > 0" class="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+          <div class="text-center mb-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">🏆 Ranking de Usuarios</h3>
+            <p class="text-gray-600">Los usuarios más activos del sistema</p>
+          </div>
+
+          <!-- Pyramid Container -->
+          <div class="flex flex-col items-center space-y-4 ranking-pyramid">
+            
+            <!-- 1st Place - Crown -->
+            <div *ngIf="top10Usuarios[0]" 
+                 class="w-full max-w-md ranking-card pyramid-first winner-glow glow-effect"
+                 [style.animation-delay]="'0ms'">
+              <div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg p-6 shadow-lg border-2 border-yellow-300">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <div class="w-12 h-12 bg-yellow-200 rounded-full flex items-center justify-center">
+                      <fa-icon [icon]="faIcons.crown" class="w-6 h-6 text-yellow-800 trophy-icon"></fa-icon>
+                    </div>
+                    <div>
+                      <h4 class="text-lg font-bold text-white">🥇 {{ top10Usuarios[0].nombre_usuario || 'Usuario' }}</h4>
+                      <p class="text-yellow-100">{{ top10Usuarios[0].total_actividad || 0 }} actividades</p>
+                    </div>
+                  </div>
+                                      <div class="text-right">
+                      <div class="text-2xl font-bold text-white">#1</div>
+                      <div class="text-yellow-100 text-sm">{{ top10Usuarios[0].incidentes_creados || 0 }} incidentes</div>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2nd & 3rd Place - Medals -->
+            <div class="flex justify-center space-x-4 w-full max-w-2xl pyramid-container">
+              <div *ngIf="top10Usuarios[1]" 
+                   class="flex-1 ranking-card pyramid-second glow-effect"
+                   [style.animation-delay]="'200ms'">
+                <div class="bg-gradient-to-r from-gray-300 to-gray-500 rounded-lg p-4 shadow-md border-2 border-gray-400">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                                          <div class="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+                      <fa-icon [icon]="faIcons.medal" class="w-5 h-5 text-gray-700 trophy-icon"></fa-icon>
+                    </div>
+                      <div>
+                        <h5 class="font-bold text-white">🥈 {{ top10Usuarios[1].nombre_usuario || 'Usuario' }}</h5>
+                        <p class="text-gray-200 text-sm">{{ top10Usuarios[1].total_actividad || 0 }} actividades</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-lg font-bold text-white">#2</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="top10Usuarios[2]" 
+                   class="flex-1 ranking-card pyramid-third glow-effect"
+                   [style.animation-delay]="'400ms'">
+                <div class="bg-gradient-to-r from-orange-300 to-orange-500 rounded-lg p-4 shadow-md border-2 border-orange-400">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                                          <div class="w-10 h-10 bg-orange-200 rounded-full flex items-center justify-center">
+                      <fa-icon [icon]="faIcons.medal" class="w-5 h-5 text-orange-700 trophy-icon"></fa-icon>
+                    </div>
+                      <div>
+                        <h5 class="font-bold text-white">🥉 {{ top10Usuarios[2].nombre_usuario || 'Usuario' }}</h5>
+                        <p class="text-orange-200 text-sm">{{ top10Usuarios[2].total_actividad || 0 }} actividades</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-lg font-bold text-white">#3</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4th to 10th Place - Stars -->
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full max-w-4xl">
+              <div *ngFor="let usuario of top10Usuarios.slice(3, 10); let i = index" 
+                   class="ranking-card pyramid-rest glow-effect"
+                   [style.animation-delay]="(600 + i * 100) + 'ms'">
+                <div class="bg-gradient-to-r from-blue-400 to-blue-600 rounded-lg p-3 shadow-sm border border-blue-300">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-2">
+                      <div class="w-8 h-8 bg-blue-200 rounded-full flex items-center justify-center">
+                        <fa-icon [icon]="faIcons.star" class="w-4 h-4 text-blue-700 trophy-icon"></fa-icon>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <h6 class="font-semibold text-white text-sm truncate">{{ usuario.nombre_usuario || 'Usuario' }}</h6>
+                        <p class="text-blue-200 text-xs">{{ usuario.total_actividad || 0 }} actividades</p>
+                      </div>
+                    </div>
+                    <div class="text-right">
+                      <div class="text-sm font-bold text-white">#{{ i + 4 }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Stats Summary -->
+          <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gradient-to-r from-green-400 to-green-600 rounded-lg p-4 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-green-100 text-sm">Total Usuarios</p>
+                  <p class="text-2xl font-bold">{{ top10Usuarios.length }}</p>
+                </div>
+                <fa-icon [icon]="faIcons.users" class="w-8 h-8 text-green-200"></fa-icon>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-purple-400 to-purple-600 rounded-lg p-4 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-purple-100 text-sm">Total Actividades</p>
+                  <p class="text-2xl font-bold">{{ getTotalIncidentesRanking() }}</p>
+                </div>
+                <fa-icon [icon]="faIcons.exclamationTriangle" class="w-8 h-8 text-purple-200"></fa-icon>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-lg p-4 text-white">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="text-indigo-100 text-sm">Promedio Incidentes</p>
+                  <p class="text-2xl font-bold">{{ getPromedioResolucionRanking() }}</p>
+                </div>
+                <fa-icon [icon]="faIcons.chartLine" class="w-8 h-8 text-indigo-200"></fa-icon>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loadingRankings && top10Usuarios.length === 0" class="bg-white rounded-lg shadow-sm border border-gray-200 p-12">
+          <div class="text-center">
+            <fa-icon [icon]="faIcons.trophy" class="w-16 h-16 text-gray-400 mb-4"></fa-icon>
+            <h3 class="text-xl font-semibold text-gray-900 mb-2">No hay datos de ranking</h3>
+            <p class="text-gray-600 mb-4">No se encontraron usuarios para mostrar en el ranking.</p>
+            <button class="inline-flex items-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                    (click)="cargarTop10()">
+              <fa-icon [icon]="faIcons.refresh" class="w-4 h-4"></fa-icon>
+              <span>Reintentar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trazabilidad Tab -->
+      <div *ngIf="activeTab === 'trazabilidad'" class="space-y-6">
+        <div class="flex items-center justify-between">
+          <h2 class="text-xl font-semibold text-gray-900">Sistema de Trazabilidad</h2>
+          <div class="flex items-center space-x-2">
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200"
+                    (click)="exportarTrazabilidadCompletaExcel()">
+              <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">Excel</span>
+            </button>
+            <button class="inline-flex items-center space-x-2 px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                    (click)="exportarTrazabilidadCompletaPDF()">
+              <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+              <span class="text-sm">PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Descarga Directa por ID de Usuario -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="p-6 border-b border-gray-200">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-lg font-medium text-gray-900">Descarga Directa de Trazabilidad por Usuario</h3>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                      (click)="limpiarConsultasEspecificas()">
+                <fa-icon [icon]="faIcons.eraser" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Limpiar</span>
+              </button>
+            </div>
+            <div class="space-y-6">
+              <!-- Descarga por Usuario -->
+              <div class="space-y-4">
+                <div class="flex items-center space-x-2">
+                  <fa-icon [icon]="faIcons.user" class="w-5 h-5 text-blue-600"></fa-icon>
+                  <h4 class="text-md font-medium text-gray-800">Trazabilidad por Usuario</h4>
+                </div>
+                <div class="flex items-center space-x-3">
+                  <input type="number" 
+                         [(ngModel)]="idUsuarioConsulta" 
+                         placeholder="ID del usuario"
+                         class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                         min="1"
+                         (keyup.enter)="descargarTrazabilidadUsuarioPDF()">
+                  <button class="inline-flex items-center space-x-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200"
+                          [disabled]="!idUsuarioConsulta || loading"
+                          (click)="descargarTrazabilidadUsuarioPDF()">
+                    <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                    <span class="text-sm">Descargar PDF</span>
+                  </button>
+                </div>
+                <p class="text-xs text-gray-500">Ingresa el ID del usuario para descargar la trazabilidad de todos sus incidentes y objetos perdidos</p>
+              </div>
+
+              <!-- Información adicional -->
+              <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div class="flex items-start space-x-3">
+                  <fa-icon [icon]="faIcons.info" class="w-5 h-5 text-blue-600 mt-0.5"></fa-icon>
+                  <div>
+                    <h5 class="text-sm font-medium text-blue-800 mb-1">¿Cómo funciona?</h5>
+                    <p class="text-sm text-blue-700">
+                      Al ingresar el ID de un usuario, se descargará un PDF con toda la trazabilidad de:
+                    </p>
+                    <ul class="text-sm text-blue-700 mt-2 space-y-1">
+                      <li>• Todos los incidentes reportados por ese usuario</li>
+                      <li>• Todos los objetos perdidos reportados por ese usuario</li>
+                      <li>• Cambios de estado y actividades realizadas</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mensajes de Estado -->
+          <div *ngIf="mensajeDescarga" class="p-4 border-t border-gray-200">
+            <div class="flex items-center space-x-3" [ngClass]="{'text-green-700 bg-green-50': descargaExitosa, 'text-red-700 bg-red-50': !descargaExitosa}">
+              <fa-icon [icon]="descargaExitosa ? faIcons.check : faIcons.exclamationCircle" class="w-5 h-5"></fa-icon>
+              <p class="text-sm font-medium">{{ mensajeDescarga }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trazabilidad Completa -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Trazabilidad Completa del Sistema</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadCompletaExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadCompletaPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tipo Entidad</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Anterior</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Nuevo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Cambio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of trazabilidadCompleta" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.id }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.tipo_entidad }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ item.estado_anterior }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ item.estado_nuevo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.usuario_nombre }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_cambio | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.laboratorio }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ item.descripcion }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex items-center space-x-2">
+                      <button *ngIf="item.tipo_entidad === 'INCIDENTE'" 
+                              class="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs hover:bg-orange-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadIncidenteEspecificoExcel(item.entidad_id)"
+                              title="Exportar trazabilidad del incidente">
+                        <fa-icon [icon]="faIcons.excel" class="w-3 h-3 mr-1"></fa-icon>
+                        Excel
+                      </button>
+                      <button *ngIf="item.tipo_entidad === 'INCIDENTE'" 
+                              class="inline-flex items-center px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadIncidenteEspecificoPDF(item.entidad_id)"
+                              title="Exportar trazabilidad del incidente">
+                        <fa-icon [icon]="faIcons.pdf" class="w-3 h-3 mr-1"></fa-icon>
+                        PDF
+                      </button>
+                      <button *ngIf="item.tipo_entidad === 'OBJETO_PERDIDO'" 
+                              class="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs hover:bg-purple-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadObjetoPerdidoEspecificoExcel(item.entidad_id)"
+                              title="Exportar trazabilidad del objeto perdido">
+                        <fa-icon [icon]="faIcons.excel" class="w-3 h-3 mr-1"></fa-icon>
+                        Excel
+                      </button>
+                      <button *ngIf="item.tipo_entidad === 'OBJETO_PERDIDO'" 
+                              class="inline-flex items-center px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadObjetoPerdidoEspecificoPDF(item.entidad_id)"
+                              title="Exportar trazabilidad del objeto perdido">
+                        <fa-icon [icon]="faIcons.pdf" class="w-3 h-3 mr-1"></fa-icon>
+                        PDF
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Trazabilidad de Incidentes -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Trazabilidad de Incidentes</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadIncidentesExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadIncidentesPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Incidente</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Anterior</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Nuevo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Cambio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of trazabilidadIncidentes" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.entidad_id }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ item.estado_anterior }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ item.estado_nuevo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.usuario_nombre }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_cambio | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.laboratorio }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ item.descripcion }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex items-center space-x-2">
+                      <button class="inline-flex items-center px-2 py-1 bg-orange-100 text-orange-700 rounded text-xs hover:bg-orange-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadIncidenteEspecificoExcel(item.entidad_id)"
+                              title="Exportar trazabilidad del incidente">
+                        <fa-icon [icon]="faIcons.excel" class="w-3 h-3 mr-1"></fa-icon>
+                        Excel
+                      </button>
+                      <button class="inline-flex items-center px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadIncidenteEspecificoPDF(item.entidad_id)"
+                              title="Exportar trazabilidad del incidente">
+                        <fa-icon [icon]="faIcons.pdf" class="w-3 h-3 mr-1"></fa-icon>
+                        PDF
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Trazabilidad de Objetos Perdidos -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+          <div class="flex items-center justify-between p-6 border-b border-gray-200">
+            <h3 class="text-lg font-medium text-gray-900">Trazabilidad de Objetos Perdidos</h3>
+            <div class="flex items-center space-x-2">
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadObjetosExcel()">
+                <fa-icon [icon]="faIcons.excel" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">Excel</span>
+              </button>
+              <button class="inline-flex items-center space-x-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                      (click)="exportarTrazabilidadObjetosPDF()">
+                <fa-icon [icon]="faIcons.pdf" class="w-4 h-4"></fa-icon>
+                <span class="text-sm">PDF</span>
+              </button>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID Objeto</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Anterior</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado Nuevo</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Cambio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Laboratorio</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Descripción</th>
+                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr *ngFor="let item of trazabilidadObjetos" class="hover:bg-gray-50">
+                  <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ item.entidad_id }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-orange-600">{{ item.estado_anterior }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-green-600">{{ item.estado_nuevo }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.usuario_nombre }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ item.fecha_cambio | date:'short' }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{{ item.laboratorio }}</td>
+                  <td class="px-6 py-4 text-sm text-gray-600 max-w-xs truncate">{{ item.descripcion }}</td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <div class="flex items-center space-x-2">
+                      <button class="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-700 rounded text-xs hover:bg-purple-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadObjetoPerdidoEspecificoExcel(item.entidad_id)"
+                              title="Exportar trazabilidad del objeto perdido">
+                        <fa-icon [icon]="faIcons.excel" class="w-3 h-3 mr-1"></fa-icon>
+                        Excel
+                      </button>
+                      <button class="inline-flex items-center px-2 py-1 bg-red-100 text-red-700 rounded text-xs hover:bg-red-200 transition-colors duration-200"
+                              (click)="exportarTrazabilidadObjetoPerdidoEspecificoPDF(item.entidad_id)"
+                              title="Exportar trazabilidad del objeto perdido">
+                        <fa-icon [icon]="faIcons.pdf" class="w-3 h-3 mr-1"></fa-icon>
+                        PDF
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+

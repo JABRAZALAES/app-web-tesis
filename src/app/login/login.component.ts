@@ -1,20 +1,15 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { HttpClientModule } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 // FontAwesome
 import { faEnvelope, faLock, faEye, faEyeSlash, faShieldAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  standalone: true,
-  imports: [FormsModule, HttpClientModule, CommonModule, FontAwesomeModule]
+  standalone: false
 })
 export class LoginComponent {
   correo: string = '';
