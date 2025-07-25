@@ -1,0 +1,211 @@
+<div class="w-full max-w-7xl mx-auto p-6 bg-white rounded-2xl shadow-lg border border-slate-200/60 backdrop-blur-sm">
+
+  <!-- Encabezado de filtros mejorado -->
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+    <div class="flex items-center gap-3">
+      <div class="p-2.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
+        <fa-icon [icon]="faIcons.filter" class="text-white text-lg"></fa-icon>
+      </div>
+      <div>
+        <h2 class="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
+          Filtros de Búsqueda
+        </h2>
+        <p class="text-sm text-slate-500 mt-0.5">Personaliza tu consulta con los siguientes criterios</p>
+      </div>
+    </div>
+
+    <!-- Acciones del header -->
+    <div class="flex items-center gap-3">
+      <!-- Contador de filtros activos -->
+      <div *ngIf="getFiltrosActivos() > 0" class="flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium">
+        <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
+        <span>{{ getFiltrosActivos() }} filtro(s) activo(s)</span>
+      </div>
+
+      <!-- Botón limpiar -->
+      <button
+        type="button"
+        class="text-red-600 text-sm flex items-center gap-2 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 border border-red-200 hover:border-red-300"
+        (click)="limpiarFiltros()"
+        [disabled]="loading"
+      >
+        <fa-icon [icon]="faIcons.times" class="text-base"></fa-icon>
+        <span>Limpiar todo</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Formulario de filtros -->
+  <form [formGroup]="filtrosForm" (ngSubmit)="aplicarFiltros()" class="space-y-8">
+
+    <!-- Grid de filtros principales -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
+
+      <!-- Período Académico -->
+      <div class="space-y-2">
+        <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+          <i class="fas fa-graduation-cap text-blue-500"></i>
+          Período Académico
+        </label>
+        <div class="relative group">
+          <select
+            formControlName="periodoAcademico"
+            (change)="onFiltroChange()"
+            class="w-full appearance-none border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
+            [disabled]="loading"
+          >
+            <option value="">Seleccionar período</option>
+            <option *ngFor="let periodo of periodosAcademicos" [value]="periodo.id">
+              {{ periodo.nombre }} ({{ periodo.estado_periodo }})
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+            <i class="fas fa-chevron-down text-slate-400 text-sm group-hover:text-slate-600 transition-colors"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Laboratorio -->
+      <div class="space-y-2">
+        <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+          <i class="fas fa-flask text-green-500"></i>
+          Laboratorio
+        </label>
+        <div class="relative group">
+          <select
+            formControlName="laboratorio"
+            (change)="onFiltroChange()"
+            class="w-full appearance-none border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
+            [disabled]="loading"
+          >
+            <option value="">Todos los laboratorios</option>
+            <option *ngFor="let lab of laboratorios" [value]="lab.id">
+              {{ lab.nombre }}
+            </option>
+          </select>
+          <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
+            <i class="fas fa-chevron-down text-slate-400 text-sm group-hover:text-slate-600 transition-colors"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fecha Inicio -->
+      <div class="space-y-2">
+        <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+          <i class="fas fa-calendar-alt text-purple-500"></i>
+          Fecha Inicio
+        </label>
+        <div class="relative">
+          <input
+            type="date"
+            formControlName="fechaInicio"
+            (change)="onFiltroChange()"
+            class="w-full pl-4 pr-4 py-3 border border-slate-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
+            [disabled]="loading"
+          />
+        </div>
+      </div>
+
+      <!-- Fecha Fin -->
+      <div class="space-y-2">
+        <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+          <i class="fas fa-calendar-check text-orange-500"></i>
+          Fecha Fin
+        </label>
+        <div class="relative">
+          <input
+            type="date"
+            formControlName="fechaFin"
+            (change)="onFiltroChange()"
+            class="w-full pl-4 pr-4 py-3 border border-slate-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
+            [disabled]="loading"
+          />
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Botones de acción -->
+    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-200">
+
+      <!-- Filtros avanzados toggle -->
+
+
+      <!-- Botones principales -->
+      <div class="flex items-center gap-3">
+        <!-- Botón guardar filtros -->
+        <button
+          type="button"
+          class="flex items-center gap-2 px-4 py-2.5 text-slate-600 border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 transition-all duration-200"
+          [disabled]="loading"
+        >
+          <i class="fas fa-save text-sm"></i>
+          <span>Guardar</span>
+        </button>
+
+        <!-- Botón aplicar -->
+        <button
+          type="submit"
+          class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
+          [disabled]="loading"
+        >
+          <fa-icon [icon]="faIcons.search" class="text-sm"></fa-icon>
+          <span>{{ loading ? 'Aplicando...' : 'Aplicar Filtros' }}</span>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <!-- Estado de carga mejorado -->
+  <div *ngIf="loading" class="flex items-center justify-center gap-3 mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
+    <div class="flex space-x-1">
+      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+    </div>
+    <span class="text-blue-700 font-medium">Aplicando filtros...</span>
+  </div>
+
+  <!-- Resumen de filtros mejorado -->
+  <div
+    *ngIf="!loading && getFiltrosActivos() > 0"
+    class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6"
+  >
+    <div class="flex items-start gap-3">
+      <div class="p-2 bg-blue-100 rounded-lg">
+        <i class="fas fa-info-circle text-blue-600"></i>
+      </div>
+      <div class="flex-1">
+        <h4 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
+          Filtros Aplicados
+          <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+            {{ getFiltrosActivos() }}
+          </span>
+        </h4>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700">
+          <div *ngIf="filtrosForm.get('periodoAcademico')?.value" class="flex items-center gap-2">
+            <i class="fas fa-graduation-cap text-blue-500 w-4"></i>
+            <span><strong>Período:</strong> {{ getPeriodoSeleccionado() }}</span>
+          </div>
+          <div *ngIf="filtrosForm.get('laboratorio')?.value" class="flex items-center gap-2">
+            <i class="fas fa-flask text-green-500 w-4"></i>
+            <span><strong>Laboratorio:</strong> {{ getLaboratorioSeleccionado() }}</span>
+          </div>
+          <div *ngIf="filtrosForm.get('fechaInicio')?.value || filtrosForm.get('fechaFin')?.value" class="flex items-center gap-2">
+            <i class="fas fa-calendar text-purple-500 w-4"></i>
+            <span><strong>Fechas:</strong>
+              {{ filtrosForm.get('fechaInicio')?.value || 'Sin inicio' }} -
+              {{ filtrosForm.get('fechaFin')?.value || 'Sin fin' }}
+            </span>
+          </div>
+          <div *ngIf="filtrosForm.get('estado')?.value" class="flex items-center gap-2">
+            <i class="fas fa-toggle-on text-indigo-500 w-4"></i>
+            <span><strong>Estado:</strong> {{ filtrosForm.get('estado')?.value }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

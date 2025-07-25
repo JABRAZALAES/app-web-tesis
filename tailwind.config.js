@@ -5,6 +5,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // AQUÍ ES DONDE DEBES AGREGAR LA CONFIGURACIÓN PARA EL ESPACIADO
+      spacing: {
+        '68': '17rem', // Define h-68 como 17 * 16px = 272px
+        '70': '17.5rem', // Opcional: podrías agregar otros valores si los necesitas
+        '72': '18rem', // Aunque h-72 ya existe, es buena práctica explicitarlo si estás extendiendo
+      },
       colors: {
         // Colores ESPE personalizados
         espe: {

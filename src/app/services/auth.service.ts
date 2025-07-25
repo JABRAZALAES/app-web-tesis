@@ -39,6 +39,32 @@ export class AuthService {
     );
   }
 
+  // Método para obtener el usuario actual
+  getCurrentUser(): any {
+    const usuarioStr = localStorage.getItem('usuario');
+    if (usuarioStr) {
+      try {
+        return JSON.parse(usuarioStr);
+      } catch (e) {
+        console.error('Error al parsear usuario:', e);
+        return null;
+      }
+    }
+    return null;
+  }
+
+  // Método para verificar si el usuario está autenticado
+  isAuthenticated(): boolean {
+    const token = localStorage.getItem('token');
+    const usuario = this.getCurrentUser();
+    return !!(token && usuario);
+  }
+
+  // Método para obtener el token
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
   // Método para cerrar sesión
   logout(): void {
     localStorage.removeItem('token');

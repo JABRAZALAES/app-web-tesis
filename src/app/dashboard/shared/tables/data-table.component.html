@@ -1,0 +1,200 @@
+<div class="w-full max-w-7xl mx-auto p-4 bg-white rounded-xl shadow-md">
+  <!-- Header de la tabla -->
+  <div class="flex flex-col md:flex-row justify-between items-center mb-6">
+    <div class="mb-4 md:mb-0">
+      <h3 class="text-xl font-semibold text-gray-800">{{ title }}</h3>
+      <p *ngIf="subtitle" class="text-gray-600 text-sm mt-1">{{ subtitle }}</p>
+    </div>
+
+    <!-- Botones de exportación -->
+    <div *ngIf="config.showExport" class="flex gap-3">
+      <button
+        type="button"
+        (click)="onExportExcel()"
+        class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+        aria-label="Exportar a Excel"
+      >
+        <fa-icon [icon]="faIcons.excel"></fa-icon>
+        <span>Excel</span>
+      </button>
+      <button
+        type="button"
+        (click)="onExportPdf()"
+        class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
+        aria-label="Exportar a PDF"
+      >
+        <fa-icon [icon]="faIcons.pdf"></fa-icon>
+        <span>PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Barra de búsqueda -->
+  <div *ngIf="config.showSearch" class="mb-6">
+    <div class="relative max-w-md">
+      <fa-icon
+        [icon]="faIcons.search"
+        class="absolute left-3 top-3 text-gray-400 pointer-events-none"
+      ></fa-icon>
+      <input
+        type="text"
+        [(ngModel)]="searchTerm"
+        (input)="onSearch()"
+        placeholder="Buscar en la tabla..."
+        class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full border border-gray-200 rounded-lg">
+      <thead class="bg-gray-100">
+        <tr>
+          <th
+            *ngFor="let column of config.columns"
+            [style.width]="column.width"
+            (click)="column.sortable ? onSort(column) : null"
+            [class.cursor-pointer]="column.sortable"
+            class="text-left text-gray-700 font-semibold px-4 py-3 border-b border-gray-300 select-none"
+          >
+            <div class="flex items-center gap-2">
+              <span>{{ column.label }}</span>
+              <fa-icon
+                *ngIf="column.sortable"
+                [icon]="getSortIcon(column)"
+                [ngClass]="getSortClass(column)"
+                class="text-gray-500"
+              ></fa-icon>
+            </div>
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <!-- Estado de carga -->
+        <tr *ngIf="loading">
+          <td [attr.colspan]="config.columns.length" class="text-center py-10">
+            <div class="flex flex-col items-center gap-3 text-gray-600">
+              <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+              <span>Cargando datos...</span>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Sin datos -->
+        <tr *ngIf="!loading && paginatedData.length === 0">
+          <td [attr.colspan]="config.columns.length" class="text-center py-10 text-gray-500">
+            <div class="flex flex-col items-center gap-2">
+              <fa-icon [icon]="faIcons.search" class="text-4xl"></fa-icon>
+              <h3 class="text-lg font-semibold">No hay datos</h3>
+              <p>No se encontraron registros que coincidan con los criterios de búsqueda.</p>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Filas de datos -->
+        <tr
+          *ngFor="let row of paginatedData; trackBy: trackByIndex"
+          (click)="onRowClick(row)"
+          class="hover:bg-gray-50 cursor-pointer"
+        >
+          <td
+            *ngFor="let column of config.columns"
+            class="px-4 py-3 border-b border-gray-200"
+          >
+            <ng-container [ngSwitch]="column.type">
+              <!-- Estado con badge -->
+              <span
+                *ngSwitchCase="'status'"
+                [ngClass]="{
+                  'inline-block px-3 py-1 rounded-full text-sm font-semibold': true,
+                  'bg-green-100 text-green-700': row[column.key] === 'Resuelto' || row[column.key] === 'Devuelto',
+                  'bg-yellow-100 text-yellow-700': row[column.key] === 'Activo' || row[column.key] === 'En Custodia',
+                  'bg-red-100 text-red-700': row[column.key] === 'Pendiente',
+                  'bg-blue-100 text-blue-700': row[column.key] === 'Reclamado',
+                  'bg-gray-200 text-gray-600': !row[column.key]
+                }"
+              >
+                {{ formatValue(row[column.key], column) }}
+              </span>
+
+              <!-- Número con formato -->
+              <span *ngSwitchCase="'number'" class="font-mono">
+                {{ formatValue(row[column.key], column) }}
+              </span>
+
+              <!-- Porcentaje -->
+              <span *ngSwitchCase="'percentage'" class="font-mono">
+                {{ formatValue(row[column.key], column) }}
+              </span>
+
+              <!-- Fecha -->
+              <span *ngSwitchCase="'date'" class="text-gray-600">
+                {{ formatValue(row[column.key], column) }}
+              </span>
+
+              <!-- Texto por defecto -->
+              <span *ngSwitchDefault>
+                {{ formatValue(row[column.key], column) }}
+              </span>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Paginación -->
+  <div
+    *ngIf="config.showPagination && totalPages > 1"
+    class="flex flex-col md:flex-row items-center justify-between mt-6"
+  >
+    <div class="text-gray-600 text-sm mb-3 md:mb-0">
+      Mostrando
+      <strong>{{ (currentPage - 1) * itemsPerPage + 1 }}</strong>
+      a
+      <strong>{{ Math.min(currentPage * itemsPerPage, totalItems) }}</strong>
+      de
+      <strong>{{ totalItems }}</strong>
+      resultados
+    </div>
+
+    <div class="flex gap-2">
+      <button
+        type="button"
+        (click)="onPageChange(currentPage - 1)"
+        [disabled]="currentPage === 1"
+        class="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        aria-label="Página anterior"
+      >
+        <fa-icon [icon]="faIcons.chevronLeft"></fa-icon>
+        <span class="hidden sm:inline">Anterior</span>
+      </button>
+
+<button
+  *ngFor="let page of pages"
+  type="button"
+  (click)="onPageChange(page)"
+  [class.bg-blue-600]="page === currentPage"
+  [class.text-white]="page === currentPage"
+  [class.bg-gray-200]="page !== currentPage"
+  class="px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition"
+  [attr.aria-current]="page === currentPage ? 'page' : null"
+>
+  {{ page }}
+</button>
+
+      <button
+        type="button"
+        (click)="onPageChange(currentPage + 1)"
+        [disabled]="currentPage === totalPages"
+        class="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+        aria-label="Página siguiente"
+      >
+        <span class="hidden sm:inline">Siguiente</span>
+        <fa-icon [icon]="faIcons.chevronRight"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>

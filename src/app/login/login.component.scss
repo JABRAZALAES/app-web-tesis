@@ -1,0 +1,381 @@
+// ===== VARIABLES =====
+$primary-color: #3b82f6;
+$primary-dark: #2563eb;
+$secondary-color: #6366f1;
+$success-color: #10b981;
+$error-color: #ef4444;
+$warning-color: #f59e0b;
+
+$gray-50: #f9fafb;
+$gray-100: #f3f4f6;
+$gray-200: #e5e7eb;
+$gray-300: #d1d5db;
+$gray-400: #9ca3af;
+$gray-500: #6b7280;
+$gray-600: #4b5563;
+$gray-700: #374151;
+$gray-900: #111827;
+
+$border-radius: 0.5rem;
+$border-radius-lg: 0.75rem;
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+
+// ===== ANIMACIONES =====
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+// ===== UTILIDADES =====
+.animation-delay-1000 {
+  animation-delay: 1s;
+}
+
+// ===== COMPONENTES BASE =====
+
+// Grupos de formulario
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+// Labels
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: $gray-700;
+  margin-bottom: 0.25rem;
+
+  &::after {
+    content: ' *';
+    color: $error-color;
+    font-weight: normal;
+  }
+}
+
+// Inputs
+.form-input {
+  width: 100%;
+  padding: 0.875rem 0.75rem;
+  border: 2px solid $gray-300;
+  border-radius: $border-radius;
+  font-size: 0.875rem;
+  color: $gray-900;
+  background-color: white;
+  box-shadow: $shadow-sm;
+  transition: all 0.2s ease;
+
+  &::placeholder {
+    color: $gray-400;
+    font-weight: normal;
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &:hover:not(:focus) {
+    border-color: $gray-400;
+  }
+
+  &.error {
+    border-color: $error-color;
+    background-color: #fef2f2;
+    animation: shake 0.3s ease-in-out;
+
+    &:focus {
+      border-color: $error-color;
+      box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    }
+  }
+}
+
+// Iconos en inputs
+.input-icon-left {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 10;
+
+  fa-icon {
+    font-size: 1rem;
+    color: $gray-500;
+  }
+}
+
+.input-icon-right {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  z-index: 10;
+
+  fa-icon {
+    font-size: 0.875rem;
+    color: $gray-500;
+  }
+
+  &:hover {
+    background-color: $gray-100;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $gray-100;
+  }
+}
+
+// Mensajes de error
+.error-message {
+  font-size: 0.75rem;
+  color: $error-color;
+  margin-top: 0.25rem;
+
+  div {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &::before {
+      content: '•';
+      font-weight: bold;
+    }
+  }
+}
+
+// Botones
+.btn-primary {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background: linear-gradient(135deg, $primary-color 0%, $secondary-color 100%);
+  color: white;
+  border: none;
+  border-radius: $border-radius;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: $shadow-lg;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px -5px rgba(59, 130, 246, 0.3);
+    background: linear-gradient(135deg, $primary-dark 0%, $primary-color 100%);
+
+    &::before {
+      left: 100%;
+    }
+  }
+
+  &:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: $shadow-md;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+
+    &:hover {
+      transform: none;
+      box-shadow: $shadow-lg;
+    }
+  }
+
+  &.loading {
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      margin: auto;
+      border: 2px solid transparent;
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// ===== COMPONENTE LOGIN ESPECÍFICO =====
+app-login {
+
+  // Contenedor principal
+  .min-h-screen {
+    min-height: 100vh;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  // Círculos de fondo animados
+  .absolute.bg-blue-400,
+  .absolute.bg-blue-500 {
+    animation: pulse-slow 8s ease-in-out infinite;
+  }
+
+  // Contenedor del formulario
+  .relative.z-10 {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  // Encabezado
+  .bg-gradient-to-br {
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover::before {
+      opacity: 1;
+    }
+
+    img {
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+
+      &:hover {
+        transform: scale(1.05) rotate(5deg);
+      }
+    }
+
+  }
+
+  // Formulario
+  form {
+    .form-group {
+      animation: fadeInUp 0.6s ease-out calc(0.4s + var(--delay, 0s)) both;
+
+      &:nth-child(1) { --delay: 0.1s; }
+      &:nth-child(2) { --delay: 0.2s; }
+      &:nth-child(3) { --delay: 0.3s; }
+      &:nth-child(4) { --delay: 0.4s; }
+    }
+  }
+
+  // Pie del componente
+  .bg-gray-50 {
+    background: linear-gradient(to bottom, #f9fafb, #f3f4f6);
+
+    .flex {
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-1px);
+
+        fa-icon {
+          color: $success-color !important;
+          transform: scale(1.1);
+        }
+      }
+    }
+  }
+}
+.bg-gradient-to-br h1 {
+  color: #fff !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+// ===== RESPONSIVE =====
+@media (max-width: 640px) {
+  .form-input {
+    font-size: 1rem; // Evita zoom en iOS
+  }
+
+  .btn-primary {
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .relative.z-10 {
+    margin: 1rem;
+    max-width: calc(100vw - 2rem);
+  }
+}
+.text-white {
+  color: #fff !important;
+  text-shadow: none !important;
+  opacity: 1 !important;
+}
+
+// ===== ESTADOS DE ACCESIBILIDAD =====
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ===== MODO OSCURO (OPCIONAL) =====
+@media (prefers-color-scheme: dark) {
+  // Puedes agregar estilos para modo oscuro aquí si lo necesitas
+}

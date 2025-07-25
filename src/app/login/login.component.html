@@ -1,29 +1,29 @@
-<div class="min-h-screen flex items-center justify-center p-4 relative bg-gradient-to-b from-[#667eea] via-[#4B73E8] to-[#3b5998] overflow-hidden">
+<div class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; position: relative; background: linear-gradient(to bottom, #667eea, #4B73E8, #3b5998); overflow: hidden;">
 
   <!-- Fondo dinámico animado -->
-  <div class="absolute top-0 left-0 w-full h-full pointer-events-none">
-    <div class="absolute bg-[#667eea] opacity-30 rounded-full blur-3xl animate-slow-move w-80 h-80 -top-32 -left-32"></div>
-    <div class="absolute bg-[#4B73E8] opacity-20 rounded-full blur-3xl animate-slow-move-delay w-96 h-96 top-20 right-0"></div>
+  <div class="absolute top-0 left-0 w-full h-full pointer-events-none" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;">
+    <div class="absolute bg-[#667eea] opacity-30 rounded-full blur-3xl animate-slow-move w-80 h-80 -top-32 -left-32" style="position: absolute; background-color: #667eea; opacity: 0.3; border-radius: 9999px; filter: blur(24px); width: 20rem; height: 20rem; top: -8rem; left: -8rem; animation: slow-move 20s ease-in-out infinite;"></div>
+    <div class="absolute bg-[#4B73E8] opacity-20 rounded-full blur-3xl animate-slow-move-delay w-96 h-96 top-20 right-0" style="position: absolute; background-color: #4B73E8; opacity: 0.2; border-radius: 9999px; filter: blur(24px); width: 24rem; height: 24rem; top: 5rem; right: 0; animation: slow-move-delay 25s ease-in-out infinite;"></div>
   </div>
 
   <!-- Contenedor de login -->
-  <div class="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-lg border border-[#4B73E8] overflow-hidden">
+  <div class="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-lg border border-[#4B73E8] overflow-hidden" style="position: relative; z-index: 10; width: 100%; max-width: 28rem; background-color: white; border-radius: 1rem; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); border: 1px solid #4B73E8; overflow: hidden;">
 
     <!-- Encabezado -->
-    <div class="bg-gradient-to-br from-[#667eea] to-[#4B73E8] px-8 py-8 text-center rounded-t-2xl shadow" style="box-shadow: 0 8px 32px 0 rgba(59,89,152,0.15);">
-      <img src="assets/logo.png" alt="Logo ESPE" class="w-20 h-auto mx-auto mb-4" />
-      <h1 class="text-2xl font-semibold text-white mb-1 tracking-tight">Gestión de Novedades e Incidentes</h1>
-      <p class="text-[#dbeafe] text-sm">Acceso Administrativo</p>
+    <div class="bg-gradient-to-br from-[#667eea] to-[#4B73E8] px-8 py-8 text-center rounded-t-2xl shadow" style="background: linear-gradient(to bottom right, #667eea, #4B73E8); padding-left: 2rem; padding-right: 2rem; padding-top: 2rem; padding-bottom: 2rem; text-align: center; border-top-left-radius: 1rem; border-top-right-radius: 1rem; box-shadow: 0 8px 32px 0 rgba(59,89,152,0.15);">
+      <img src="assets/logo.png" alt="Logo ESPE" class="w-20 h-auto mx-auto mb-4" style="width: 5rem; height: auto; margin-left: auto; margin-right: auto; margin-bottom: 1rem;" />
+      <h2 class="text-2xl font-bold text-[#dbeafe] text-center mb-4" style="font-size: 1.5rem; line-height: 1.25rem; font-weight: 600; color: #dbeafe;">Gestion de Incidentes</h2>
+              <p class="text-[#dbeafe] text-sm" style="color: #dbeafe; font-size: 0.875rem; line-height: 1.25rem;">Acceso Administrativo</p>
     </div>
 
     <!-- Formulario -->
-    <div class="px-8 py-10 bg-white">
-      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6" autocomplete="off">
+    <div class="px-8 py-10 bg-white" style="padding-left: 2rem; padding-right: 2rem; padding-top: 2.5rem; padding-bottom: 2.5rem; background-color: white;">
+      <form #loginForm="ngForm" (ngSubmit)="onSubmit()" class="space-y-6" autocomplete="off" style="display: flex; flex-direction: column; gap: 1.5rem;">
         <!-- Correo -->
         <div>
-          <label for="correo" class="block text-sm font-medium text-gray-900">Correo</label>
-          <div class="mt-1 relative">
-            <fa-icon [icon]="faEnvelope" class="absolute left-3 top-3.5 text-gray-600"></fa-icon>
+          <label for="correo" class="block text-sm font-medium text-gray-900" style="display: block; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: #111827;">Correo</label>
+          <div class="mt-1 relative" style="margin-top: 0.25rem; position: relative;">
+            <fa-icon [icon]="faEnvelope" class="absolute left-3 top-3.5 text-gray-600" style="position: absolute; left: 0.75rem; top: 0.875rem; color: #4b5563;"></fa-icon>
             <input
               type="email"
               id="correo"
@@ -34,9 +34,10 @@
               #correoModel="ngModel"
               placeholder="ejemplo@espe.edu.ec"
               class="pl-10 pr-3 py-3.5 w-full border border-gray-300 rounded-lg text-sm text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              style="padding-left: 2.5rem; padding-right: 0.75rem; padding-top: 0.875rem; padding-bottom: 0.875rem; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem; line-height: 1.25rem; color: #111827; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);"
             />
           </div>
-          <div *ngIf="correoModel.invalid && (correoModel.dirty || correoModel.touched)" class="text-red-600 text-xs mt-1">
+          <div *ngIf="correoModel.invalid && (correoModel.dirty || correoModel.touched)" class="text-red-600 text-xs mt-1" style="color: #dc2626; font-size: 0.75rem; line-height: 1rem; margin-top: 0.25rem;">
             <div *ngIf="correoModel.errors?.['required']">El correo es obligatorio.</div>
             <div *ngIf="correoModel.errors?.['email']">Formato de correo inválido.</div>
           </div>
@@ -44,9 +45,9 @@
 
         <!-- Contraseña -->
         <div>
-          <label for="contrasena" class="block text-sm font-medium text-gray-900">Contraseña</label>
-          <div class="mt-1 relative">
-            <fa-icon [icon]="faLock" class="absolute left-3 top-3.5 text-gray-600"></fa-icon>
+          <label for="contrasena" class="block text-sm font-medium text-gray-900" style="display: block; font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; color: #111827;">Contraseña</label>
+          <div class="mt-1 relative" style="margin-top: 0.25rem; position: relative;">
+            <fa-icon [icon]="faLock" class="absolute left-3 top-3.5 text-gray-600" style="position: absolute; left: 0.75rem; top: 0.875rem; color: #4b5563;"></fa-icon>
             <input
               [type]="mostrarPassword ? 'text' : 'password'"
               id="contrasena"
@@ -57,19 +58,20 @@
               #contrasenaModel="ngModel"
               placeholder="Ingrese su contraseña"
               class="pl-10 pr-10 py-3.5 w-full border border-gray-300 rounded-lg text-sm text-gray-900 shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              style="padding-left: 2.5rem; padding-right: 2.5rem; padding-top: 0.875rem; padding-bottom: 0.875rem; width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; font-size: 0.875rem; line-height: 1.25rem; color: #111827; box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);"
             />
-            <button type="button" (click)="togglePassword()" class="absolute right-3 top-3.5 text-gray-600 focus:outline-none">
+            <button type="button" (click)="togglePassword()" class="absolute right-3 top-3.5 text-gray-600 focus:outline-none" style="position: absolute; right: 0.75rem; top: 0.875rem; color: #4b5563; outline: none;">
               <fa-icon [icon]="mostrarPassword ? faEyeSlash : faEye"></fa-icon>
             </button>
           </div>
-          <div *ngIf="contrasenaModel.invalid && (contrasenaModel.dirty || contrasenaModel.touched)" class="text-red-600 text-xs mt-1">
+          <div *ngIf="contrasenaModel.invalid && (contrasenaModel.dirty || contrasenaModel.touched)" class="text-red-600 text-xs mt-1" style="color: #dc2626; font-size: 0.75rem; line-height: 1rem; margin-top: 0.25rem;">
             <div *ngIf="contrasenaModel.errors?.['required']">La contraseña es obligatoria.</div>
             <div *ngIf="contrasenaModel.errors?.['minlength']">Debe tener al menos 6 caracteres.</div>
           </div>
         </div>
 
         <!-- Error de autenticación -->
-        <div *ngIf="errorLogin" class="text-red-600 text-sm text-center -mt-4">
+        <div *ngIf="errorLogin" class="text-red-600 text-sm text-center -mt-4" style="color: #dc2626; font-size: 0.875rem; line-height: 1.25rem; text-align: center; margin-top: -1rem;">
           {{ errorLogin }}
         </div>
 
@@ -78,6 +80,7 @@
           type="submit"
           [disabled]="loginForm.invalid"
           class="w-full py-3.5 px-4 rounded-lg text-white bg-gradient-to-r from-[#4B73E8] to-[#667eea] hover:from-[#3b5998] hover:to-[#4B73E8] text-sm font-medium shadow-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          style="width: 100%; padding-top: 0.875rem; padding-bottom: 0.875rem; padding-left: 1rem; padding-right: 1rem; border-radius: 0.5rem; color: white; background: linear-gradient(to right, #4B73E8, #667eea); font-size: 0.875rem; line-height: 1.25rem; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transition: all 0.2s ease;"
         >
           Iniciar Sesión
         </button>
@@ -85,9 +88,9 @@
     </div>
 
     <!-- Pie -->
-    <div class="px-8 py-4 bg-gray-50 text-center border-t border-gray-200 text-xs text-gray-600">
-      <div class="flex justify-center items-center gap-1 text-gray-700 font-medium">
-        <fa-icon [icon]="faShieldAlt" class="w-4 h-4"></fa-icon>
+    <div class="px-8 py-4 bg-gray-50 text-center border-t border-gray-200 text-xs text-gray-600" style="padding-left: 2rem; padding-right: 2rem; padding-top: 1rem; padding-bottom: 1rem; background-color: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb; font-size: 0.75rem; line-height: 1rem; color: #4b5563;">
+      <div class="flex justify-center items-center gap-1 text-gray-700 font-medium" style="display: flex; justify-content: center; align-items: center; gap: 0.25rem; color: #374151; font-weight: 500;">
+        <fa-icon [icon]="faShieldAlt" class="w-4 h-4" style="width: 1rem; height: 1rem;"></fa-icon>
         Conexión segura
       </div>
     </div>

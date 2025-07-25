@@ -1,0 +1,176 @@
+<div *ngIf="data && metricas" class="p-4 md:p-6">
+  <!-- Métricas principales -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Tarjeta Total Incidentes -->
+    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-blue-500">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Incidentes</h3>
+        <p class="text-4xl font-bold text-blue-600 mb-1">{{ formatearNumero(metricas.totalIncidentes) }}</p>
+        <div class="text-sm text-green-500 flex items-center gap-1">
+          <span class="text-green-600 font-medium">↗ +12%</span>
+          <span class="text-gray-500">vs mes anterior</span>
+        </div>
+      </div>
+      <div class="bg-blue-50 p-3 rounded-full">
+        <fa-icon [icon]="faIcons.warning" class="text-blue-500 text-3xl"></fa-icon>
+      </div>
+    </div>
+
+    <!-- Tarjeta Total Objetos Encontrados -->
+    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-green-500">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Objetos Encontrados</h3>
+        <p class="text-4xl font-bold text-green-600 mb-1">{{ formatearNumero(metricas.totalObjetos) }}</p>
+        <div class="text-sm text-green-500 flex items-center gap-1">
+          <span class="text-green-600 font-medium">↗ +8%</span>
+          <span class="text-gray-500">vs mes anterior</span>
+        </div>
+      </div>
+      <div class="bg-green-50 p-3 rounded-full">
+        <fa-icon [icon]="faIcons.objects" class="text-green-500 text-3xl"></fa-icon>
+      </div>
+    </div>
+
+    <!-- Tarjeta Porcentaje Resueltos -->
+    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-indigo-500">
+      <div>
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">Tasa de Resolución</h3>
+        <p class="text-4xl font-bold text-indigo-600 mb-1">{{ formatearPorcentaje(metricas.porcentajeResolucion) }}</p>
+        <div class="text-sm text-green-500 flex items-center gap-1">
+          <span class="text-green-600 font-medium">↗ +5%</span>
+          <span class="text-gray-500">vs mes anterior</span>
+        </div>
+      </div>
+      <div class="bg-indigo-50 p-3 rounded-full">
+        <fa-icon [icon]="faIcons.check" class="text-indigo-500 text-3xl"></fa-icon>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos principales -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- Incidentes por Laboratorio -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-blue-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartBar" class="text-blue-500 text-lg"></fa-icon>
+          </div>
+          Incidentes por Laboratorio
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="incidentesLaboratorioChart"
+                [options]="barChartOptions"
+                [type]="barChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Incidentes por Estado -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-pink-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartPie" class="text-pink-500 text-lg"></fa-icon>
+          </div>
+          Estado de Incidentes
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="incidentesEstadoChart"
+                [options]="pieChartOptions"
+                [type]="pieChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Tendencia de Incidentes por Mes -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-purple-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartLine" class="text-purple-500 text-lg"></fa-icon>
+          </div>
+          Tendencia Mensual
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="tendenciaChart"
+                [options]="lineChartOptions"
+                [type]="lineChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Incidentes por Tipo de Inconveniente -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-orange-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartBar" class="text-orange-500 text-lg"></fa-icon>
+          </div>
+          Tipos de Inconvenientes
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="incidentesInconvenienteChart"
+                [options]="barChartOptions"
+                [type]="barChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Objetos Perdidos por Laboratorio -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-green-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartBar" class="text-green-500 text-lg"></fa-icon>
+          </div>
+          Objetos por Laboratorio
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="objetosLaboratorioChart"
+                [options]="barChartOptions"
+                [type]="barChartType">
+        </canvas>
+      </div>
+    </div>
+
+    <!-- Objetos Perdidos por Estado -->
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
+          <div class="bg-yellow-50 p-2 rounded-lg">
+            <fa-icon [icon]="faIcons.chartPie" class="text-yellow-500 text-lg"></fa-icon>
+          </div>
+          Estado de Objetos
+        </h3>
+      </div>
+      <div class="h-64 relative">
+        <canvas baseChart
+                [data]="objetosEstadoChart"
+                [options]="pieChartOptions"
+                [type]="pieChartType">
+        </canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estado de carga mejorado -->
+  <div *ngIf="!data || !metricas" class="flex flex-col items-center justify-center py-20 text-center">
+    <div class="relative">
+      <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mb-4"></div>
+      <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-300 animate-ping"></div>
+    </div>
+    <p class="text-gray-600 text-lg font-medium">Cargando datos del dashboard...</p>
+    <p class="text-gray-400 text-sm mt-1">Esto puede tomar unos segundos</p>
+  </div>
+</div>
