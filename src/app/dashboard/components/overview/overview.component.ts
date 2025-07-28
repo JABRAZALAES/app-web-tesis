@@ -1,22 +1,10 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { NgChartsModule, BaseChartDirective } from 'ng2-charts';
 import { Chart, ChartConfiguration, ChartType, registerables } from 'chart.js';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
-import {
-  faTachometerAlt,
-  faExclamationTriangle,
-  faCheckCircle,
-  faBoxOpen,
-  faFlask,
-  faUsers,
-  faClock,
-  faChartBar,
-  faChartPie,
-  faChartLine
-} from '@fortawesome/free-solid-svg-icons';
+
 import { DashboardData, Metricas } from '../../services/dashboard-data.service';
 
 // Registrar componentes de Chart.js
@@ -27,7 +15,7 @@ Chart.register(...registerables);
   templateUrl: './overview.component.html',
   styleUrls: ['./overview.component.scss'],
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, NgChartsModule]
+  imports: [CommonModule, NgChartsModule]
 })
 export class OverviewComponent implements OnInit, OnDestroy {
   @Input() data: DashboardData | null = null;
@@ -35,19 +23,7 @@ export class OverviewComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
 
-  // Iconos
-  faIcons = {
-    dashboard: faTachometerAlt,
-    warning: faExclamationTriangle,
-    check: faCheckCircle,
-    objects: faBoxOpen,
-    flask: faFlask,
-    users: faUsers,
-    clock: faClock,
-    chartBar: faChartBar,
-    chartPie: faChartPie,
-    chartLine: faChartLine
-  };
+
 
   // Configuración de gráficos
   public barChartType: ChartType = 'bar';

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { GestionLaboratoriosService, PeriodoAcademico, Computadora } from '../../services/gestion-laboratorios.service';
 import { FormsModule } from '@angular/forms';
-import { DatePipe } from '@angular/common';
+import Swal from 'sweetalert2';
+import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -24,6 +25,7 @@ export class GestionLaboratoriosComponent implements OnInit {
     fecha_fin: '',
     estado_periodo: 'activo' // valor por defecto
   };
+  laboratoriosConComputadoras: { laboratorio: any, computadoras: Computadora[] }[] = [];
 
   // Computadoras
   computadoras: Computadora[] = [];
@@ -34,7 +36,7 @@ export class GestionLaboratoriosComponent implements OnInit {
     nombre: '',
     laboratorio_id: 0,
     especificaciones: '',
-    estado: 'ACTIVA',
+    estado: 'ACTIVO',
     numero_serie: ''
   };
 
@@ -86,65 +88,105 @@ proximoLaboratorio: any = null;
 
 
   crearPeriodo(): void {
-    const periodoEnviar = {
-      nombre: this.nuevoPeriodo.nombre,
-      fecha_inicio: this.nuevoPeriodo.fecha_inicio,
-      fecha_fin: this.nuevoPeriodo.fecha_fin
-    };
+  const periodoEnviar = {
+    nombre: this.nuevoPeriodo.nombre,
+    fecha_inicio: this.nuevoPeriodo.fecha_inicio,
+    fecha_fin: this.nuevoPeriodo.fecha_fin
+  };
 
-    if (!periodoEnviar.nombre || !periodoEnviar.fecha_inicio || !periodoEnviar.fecha_fin) {
-      this.error = 'Por favor completa todos los campos obligatorios.';
-      return;
-    }
-
-    if (new Date(periodoEnviar.fecha_fin) <= new Date(periodoEnviar.fecha_inicio)) {
-      this.error = 'La fecha de fin debe ser posterior a la fecha de inicio';
-      return;
-    }
-
-    this.creando = true;
-    this.error = null;
-    this.mensajeExito = null;
-
-    this.gestionLaboratoriosService.crearPeriodo(periodoEnviar as PeriodoAcademico).subscribe({
-      next: resp => {
-        this.mensajeExito = 'Período creado exitosamente';
-        this.nuevoPeriodo = { nombre: '', fecha_inicio: '', fecha_fin: '', estado_periodo: 'activo' };
-        this.cargarPeriodos();
-        this.creando = false;
-      },
-      error: err => {
-        console.error('Error backend:', err);
-        this.error = err.error?.message || 'Error al crear período';
-        this.creando = false;
-      }
+  if (!periodoEnviar.nombre || !periodoEnviar.fecha_inicio || !periodoEnviar.fecha_fin) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Por favor completa todos los campos obligatorios.'
     });
+    return;
   }
 
-  eliminarPeriodo(id?: number): void {
-    if (!id) return;
-    if (!confirm('¿Estás seguro de eliminar este período académico? Esta acción no se puede deshacer.')) return;
-
-    this.gestionLaboratoriosService.eliminarPeriodo(id).subscribe({
-      next: resp => {
-        this.mensajeExito = 'Período eliminado exitosamente';
-        this.error = null;
-        this.cargarPeriodos();
-        setTimeout(() => this.mensajeExito = null, 3000);
-      },
-      error: err => {
-        console.error('Error eliminando período:', err);
-        this.error = err.error?.message || 'Error al eliminar período';
-        this.mensajeExito = null;
-        setTimeout(() => this.error = null, 5000);
-      }
+  if (new Date(periodoEnviar.fecha_fin) <= new Date(periodoEnviar.fecha_inicio)) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'La fecha de fin debe ser posterior a la fecha de inicio'
     });
+    return;
   }
 
-  editarPeriodo(periodo: PeriodoAcademico): void {
-    this.nuevoPeriodo = { ...periodo };
-    this.abrirModalCrear();
-  }
+  this.creando = true;
+  this.error = null;
+  this.mensajeExito = null;
+
+  this.gestionLaboratoriosService.crearPeriodo(periodoEnviar as PeriodoAcademico).subscribe({
+    next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Período creado exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      this.mensajeExito = 'Período creado exitosamente';
+      this.nuevoPeriodo = { nombre: '', fecha_inicio: '', fecha_fin: '', estado_periodo: 'activo' };
+      this.cargarPeriodos();
+      this.creando = false;
+      this.cerrarModalCrear();
+    },
+    error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al crear período'
+      });
+      this.error = err.error?.message || 'Error al crear período';
+      this.creando = false;
+    }
+  });
+}
+
+
+eliminarPeriodo(id?: number): void {
+  if (!id) return;
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.gestionLaboratoriosService.eliminarPeriodo(id).subscribe({
+        next: resp => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Eliminado!',
+            text: 'Período eliminado exitosamente',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          this.mensajeExito = 'Período eliminado exitosamente';
+          this.error = null;
+          this.cargarPeriodos();
+        },
+        error: err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Error al eliminar período'
+          });
+          this.error = err.error?.message || 'Error al eliminar período';
+          this.mensajeExito = null;
+        }
+      });
+    }
+  });
+}
+
+
+editarPeriodo(periodo: PeriodoAcademico): void {
+  this.nuevoPeriodo = { ...periodo };
+  this.mostrarModalCrear = true;
+}
 
   actualizarEstadisticas(): void {
     if (!this.periodos.length) {
@@ -165,6 +207,23 @@ proximoLaboratorio: any = null;
       .filter(p => new Date(p.fecha_inicio) > hoy)
       .sort((a, b) => new Date(a.fecha_inicio).getTime() - new Date(b.fecha_inicio).getTime())[0] || null;
   }
+actualizarPeriodo(): void {
+  if (!this.nuevoPeriodo.id) return;
+  this.creando = true;
+  this.gestionLaboratoriosService.actualizarPeriodo(this.nuevoPeriodo.id, this.nuevoPeriodo).subscribe({
+    next: resp => {
+      Swal.fire('¡Actualizado!', 'Período actualizado exitosamente.', 'success');
+      this.cargarPeriodos();
+      this.creando = false;
+      this.cerrarModalCrear();
+    },
+    error: err => {
+      const msg = err?.error?.message || 'Error al actualizar período.';
+      Swal.fire('Error', msg, 'error');
+      this.creando = false;
+    }
+  });
+}
 
   // ===== MÉTODOS COMPUTADORAS =====
 
@@ -200,57 +259,127 @@ proximoLaboratorio: any = null;
   });
 }
 
-  crearComputadora(): void {
-    // Validar campos obligatorios
-    if (!this.nuevaComputadora.nombre || !this.nuevaComputadora.laboratorio_id) {
-      this.errorComputadoras = 'Nombre y laboratorio son requeridos para crear una computadora.';
-      return;
-    }
 
-    this.errorComputadoras = null;
-    this.mensajeExitoComputadora = null;
-    this.creandoComputadora = true;
 
-    this.gestionLaboratoriosService.crearComputadora(this.nuevaComputadora).subscribe({
-      next: resp => {
-        this.mensajeExitoComputadora = 'Computadora creada exitosamente';
-        const laboratorioId = this.nuevaComputadora.laboratorio_id;
-        this.nuevaComputadora = {
-          nombre: '',
-          laboratorio_id: 0,
-          especificaciones: '',
-          estado: 'ACTIVA',
-          numero_serie: ''
-        };
-        this.cargarComputadorasPorLaboratorio(laboratorioId);
-        this.creandoComputadora = false;
-      },
-      error: err => {
-        this.errorComputadoras = err.error?.message || 'Error al crear computadora';
-        this.creandoComputadora = false;
-        console.error('Error backend:', err);
-      }
+crearComputadora(): void {
+  if (!this.nuevaComputadora.nombre || !this.nuevaComputadora.laboratorio_id) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Nombre y laboratorio son requeridos para crear una computadora.'
     });
+    return;
   }
-    getComputadorasPorLaboratorio(labId: number): Computadora[] {
-    return this.computadoras?.filter(c => c.laboratorio_id === labId) || [];
-  }
+
+  this.errorComputadoras = null;
+  this.mensajeExitoComputadora = null;
+  this.creandoComputadora = true;
+
+  this.gestionLaboratoriosService.crearComputadora(this.nuevaComputadora).subscribe({
+    next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Computadora creada exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      this.mensajeExitoComputadora = 'Computadora creada exitosamente';
+      const laboratorioId = this.nuevaComputadora.laboratorio_id;
+      this.nuevaComputadora = {
+        nombre: '',
+        laboratorio_id: 0,
+        especificaciones: '',
+        estado: 'ACTIVA',
+        numero_serie: ''
+      };
+      this.cargarComputadorasPorLaboratorio(laboratorioId);
+      this.creandoComputadora = false;
+      this.cerrarModalCrearComputadora();
+    },
+    error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al crear computadora'
+      });
+      this.errorComputadoras = err.error?.message || 'Error al crear computadora';
+      this.creandoComputadora = false;
+    }
+  });
+}
 
 eliminarComputadora(id?: number): void {
   if (!id) return;
-  if (!confirm('¿Estás seguro de eliminar esta computadora? Esta acción no se puede deshacer.')) return;
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.gestionLaboratoriosService.eliminarComputadora(id).subscribe({
+        next: resp => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Eliminada!',
+            text: 'Computadora eliminada exitosamente',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          this.mensajeExitoComputadora = 'Computadora eliminada exitosamente';
+          this.errorComputadoras = null;
+          this.cargarTodasComputadoras();
+        },
+        error: err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Error al eliminar computadora'
+          });
+          this.errorComputadoras = err.error?.message || 'Error al eliminar computadora';
+          this.mensajeExitoComputadora = null;
+        }
+      });
+    }
+  });
+}
 
-  this.gestionLaboratoriosService.eliminarComputadora(id).subscribe({
+editarComputadora(computadora: Computadora): void {
+  this.nuevaComputadora = { ...computadora };
+  this.mostrarModalCrearComputadora = true;
+}
+
+
+actualizarComputadora(): void {
+  if (!this.nuevaComputadora.id) return;
+  this.creandoComputadora = true;
+  this.errorComputadoras = null;
+  this.mensajeExitoComputadora = null;
+  this.gestionLaboratoriosService.actualizarComputadora(this.nuevaComputadora.id, this.nuevaComputadora).subscribe({
     next: resp => {
-      this.mensajeExitoComputadora = 'Computadora eliminada exitosamente';
-      this.errorComputadoras = null;
-      this.cargarTodasComputadoras(); // Recarga todas las computadoras
-      setTimeout(() => this.mensajeExitoComputadora = null, 3000);
+      Swal.fire({
+        icon: 'success',
+        title: '¡Actualizada!',
+        text: 'Computadora actualizada exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      this.mensajeExitoComputadora = 'Computadora actualizada exitosamente';
+      this.cargarTodasComputadoras();
+      this.creandoComputadora = false;
+      this.cerrarModalCrearComputadora();
     },
     error: err => {
-      this.errorComputadoras = err.error?.message || 'Error al eliminar computadora';
-      this.mensajeExitoComputadora = null;
-      setTimeout(() => this.errorComputadoras = null, 5000);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al actualizar computadora'
+      });
+      this.errorComputadoras = err.error?.message || 'Error al actualizar computadora';
+      this.creandoComputadora = false;
     }
   });
 }
@@ -304,67 +433,117 @@ cargarLaboratorios(): void {
 
 
 // Crear laboratorio
+
 crearLaboratorio(): void {
-  if (!this.nuevoLaboratorio.nombre || !this.nuevoLaboratorio.ubicacion) {
-    this.errorLaboratorios = 'Nombre y ubicación son requeridos.';
+  // Usa laboratorioSeleccionado en vez de nuevoLaboratorio
+  if (!this.laboratorioSeleccionado.nombre || !this.laboratorioSeleccionado.ubicacion) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Nombre y ubicación son requeridos.'
+    });
     return;
   }
   this.errorLaboratorios = null;
   this.mensajeExitoLaboratorio = null;
-  this.gestionLaboratoriosService.crearLaboratorio(this.nuevoLaboratorio).subscribe({
+  this.gestionLaboratoriosService.crearLaboratorio(this.laboratorioSeleccionado).subscribe({
     next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Laboratorio creado exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
       this.mensajeExitoLaboratorio = 'Laboratorio creado exitosamente';
-      this.nuevoLaboratorio = { nombre: '', ubicacion: '' };
+      this.laboratorioSeleccionado = { nombre: '', ubicacion: '' };
       this.cargarLaboratorios();
-      setTimeout(() => this.mensajeExitoLaboratorio = null, 3000);
+      this.cerrarModalCrearLaboratorio();
     },
     error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al crear laboratorio'
+      });
       this.errorLaboratorios = err.error?.message || 'Error al crear laboratorio';
       this.mensajeExitoLaboratorio = null;
-      setTimeout(() => this.errorLaboratorios = null, 5000);
     }
   });
 }
 
+
 // Actualizar laboratorio
+
 actualizarLaboratorio(): void {
   if (!this.laboratorioSeleccionado?.id) return;
   this.errorLaboratorios = null;
   this.mensajeExitoLaboratorio = null;
   this.gestionLaboratoriosService.actualizarLaboratorio(this.laboratorioSeleccionado.id, this.laboratorioSeleccionado).subscribe({
     next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Actualizado!',
+        text: 'Laboratorio actualizado exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
       this.mensajeExitoLaboratorio = 'Laboratorio actualizado exitosamente';
       this.laboratorioSeleccionado = null;
       this.cargarLaboratorios();
-      setTimeout(() => this.mensajeExitoLaboratorio = null, 3000);
+      this.cerrarModalCrearLaboratorio();
     },
     error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al actualizar laboratorio'
+      });
       this.errorLaboratorios = err.error?.message || 'Error al actualizar laboratorio';
       this.mensajeExitoLaboratorio = null;
-      setTimeout(() => this.errorLaboratorios = null, 5000);
     }
   });
 }
+
 
 // Eliminar laboratorio
 eliminarLaboratorio(id?: number): void {
   if (!id) return;
-  if (!confirm('¿Estás seguro de eliminar este laboratorio? Esta acción no se puede deshacer.')) return;
-  this.gestionLaboratoriosService.eliminarLaboratorio(id).subscribe({
-    next: resp => {
-      this.mensajeExitoLaboratorio = 'Laboratorio eliminado exitosamente';
-      this.errorLaboratorios = null;
-      this.cargarLaboratorios(); // Recarga la tabla
-      setTimeout(() => this.mensajeExitoLaboratorio = null, 3000);
-    },
-    error: err => {
-      this.errorLaboratorios = err.error?.message || 'Error al eliminar laboratorio';
-      this.mensajeExitoLaboratorio = null;
-      setTimeout(() => this.errorLaboratorios = null, 5000);
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.gestionLaboratoriosService.eliminarLaboratorio(id).subscribe({
+        next: resp => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Eliminado!',
+            text: 'Laboratorio eliminado exitosamente',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          this.mensajeExitoLaboratorio = 'Laboratorio eliminado exitosamente';
+          this.errorLaboratorios = null;
+          this.cargarLaboratorios();
+        },
+        error: err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Error al eliminar laboratorio'
+          });
+          this.errorLaboratorios = err.error?.message || 'Error al eliminar laboratorio';
+          this.mensajeExitoLaboratorio = null;
+        }
+      });
     }
   });
 }
-
 // Seleccionar laboratorio para editar
 seleccionarLaboratorio(lab: any): void {
   this.laboratorioSeleccionado = { ...lab };
@@ -401,20 +580,20 @@ seleccionarLaboratorio(lab: any): void {
     this.computadoras = [];
     this.errorComputadoras = null;
   }
-
-  abrirModalCrearComputadora(): void {
-    this.mensajeExitoComputadora = null;
-    this.errorComputadoras = null;
-    this.creandoComputadora = false;
-    this.nuevaComputadora = {
-      nombre: '',
-      laboratorio_id: 0,
-      especificaciones: '',
-      estado: 'ACTIVA',
-      numero_serie: ''
-    };
-    this.mostrarModalCrearComputadora = true;
-  }
+abrirModalCrearComputadora(): void {
+  this.mensajeExitoComputadora = null;
+  this.errorComputadoras = null;
+  this.creandoComputadora = false;
+  this.nuevaComputadora = {
+    nombre: '',
+    laboratorio_id: 0,
+    especificaciones: '',
+    estado: 'ACTIVA',
+    numero_serie: ''
+  };
+  this.cargarLaboratorios(); // <-- Asegúrate de cargar los laboratorios aquí
+  this.mostrarModalCrearComputadora = true;
+}
 
   cerrarModalCrearComputadora(): void {
     this.mostrarModalCrearComputadora = false;
@@ -431,9 +610,38 @@ seleccionarLaboratorio(lab: any): void {
 
 abrirModalTablaComputadoras(): void {
   this.mostrarModalTablaComputadoras = true;
-  this.cargarTodasComputadoras();
+  this.laboratoriosConComputadoras = [];
+  this.cargarLaboratoriosConComputadoras();
 }
 
+cargarLaboratoriosConComputadoras(): void {
+  this.cargandoComputadoras = true;
+  this.gestionLaboratoriosService.obtenerLaboratorios().subscribe({
+    next: resp => {
+      const labs = resp.data;
+      const peticiones = labs.map(lab =>
+        this.gestionLaboratoriosService.obtenerComputadorasPorLaboratorio(lab.id)
+      );
+      forkJoin(peticiones).subscribe({
+        next: resultados => {
+          this.laboratoriosConComputadoras = labs.map((lab, i) => ({
+            laboratorio: lab,
+            computadoras: resultados[i]
+          }));
+          this.cargandoComputadoras = false;
+        },
+        error: err => {
+          this.cargandoComputadoras = false;
+          this.laboratoriosConComputadoras = [];
+        }
+      });
+    },
+    error: err => {
+      this.cargandoComputadoras = false;
+      this.laboratoriosConComputadoras = [];
+    }
+  });
+}
   cerrarModalTablaComputadoras(): void {
     this.mostrarModalTablaComputadoras = false;
   }
@@ -463,12 +671,12 @@ abrirModalTablaComputadoras(): void {
   mostrarModalTablaLaboratorios: boolean = false;
 
   // Abrir modal para crear laboratorio
-  abrirModalCrearLaboratorio(): void {
-    this.mostrarModalCrearLaboratorio = true;
-    this.nuevoLaboratorio = { nombre: '', ubicacion: '' };
-    this.mensajeExitoLaboratorio = null;
-    this.errorLaboratorios = null;
-  }
+abrirModalCrearLaboratorio(): void {
+  this.laboratorioSeleccionado = { nombre: '', ubicacion: '' }; // <-- Inicializa vacío
+  this.mostrarModalCrearLaboratorio = true;
+  this.mensajeExitoLaboratorio = null;
+  this.errorLaboratorios = null;
+}
 
   // Cerrar modal para crear laboratorio
   cerrarModalCrearLaboratorio(): void {

@@ -2,12 +2,10 @@
   <div class="max-w-7xl mx-auto">
 
     <!-- ===================== PERÍODOS ACADÉMICOS ===================== -->
-<!-- ...existing code... -->
-<div class="text-center mb-6">
-  <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Períodos Académicos</h1>
-  <p class="text-slate-600 text-lg">Gestiona los períodos académicos de tu institución educativa</p>
-</div>
-<!-- ...existing code... -->
+    <div class="text-center mb-6">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Períodos Académicos</h1>
+      <p class="text-slate-600 text-lg">Gestiona los períodos académicos de tu institución educativa</p>
+    </div>
     <div class="flex flex-wrap gap-4 mb-6 justify-center">
       <button (click)="abrirModalCrear()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -23,57 +21,10 @@
       </button>
     </div>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-0">
-
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Períodos</p>
-            <p class="text-3xl font-bold text-slate-800">{{ periodos.length || 0 }}</p>
-            <p class="text-slate-400 text-sm mt-1">Períodos registrados</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2h-2a2 2 0 00-2 2v6a2 2 0 01-2 2H9z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Período Activo</p>
-            <p class="text-xl font-bold text-slate-800">{{ periodoActivo?.nombre || 'Ninguno' }}</p>
-            <p class="text-slate-400 text-sm mt-1">En curso actualmente</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Próximo Período</p>
-            <p class="text-xl font-bold text-slate-800">{{ proximoPeriodo?.nombre || 'No definido' }}</p>
-            <p class="text-slate-400 text-sm mt-1">Siguiente en calendario</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-purple-100 to-pink-200 rounded-xl">
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4l2 2 4-4"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-    </div>
     <!-- Modal Tabla de Períodos -->
     <div *ngIf="mostrarModalTabla" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[90vh] transform transition-all duration-300 scale-100 border border-slate-200">
-
-        <!-- Header del Modal -->
-        <div class="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white p-8 rounded-t-3xl">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -86,21 +37,15 @@
                 <p class="text-slate-300 text-sm mt-1">Gestiona todos los períodos de tu institución</p>
               </div>
             </div>
-            <button
-              (click)="cerrarModalTabla()"
-              class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110"
-            >
+            <button (click)="cerrarModalTabla()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
         </div>
-
-        <!-- Contenido del Modal -->
         <div class="p-8 overflow-auto max-h-[calc(90vh-160px)]">
-
-          <!-- Loading State -->
+          <pre>{{ laboratoriosConComputadoras | json }}</pre>
           <div *ngIf="loading" class="flex flex-col items-center justify-center py-16">
             <div class="flex space-x-2 mb-6">
               <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
@@ -110,11 +55,9 @@
             <p class="text-slate-600 font-medium text-lg">Cargando períodos académicos...</p>
             <p class="text-slate-400 text-sm mt-2">Esto puede tomar unos momentos</p>
           </div>
-
-          <!-- Tabla de Períodos -->
           <div *ngIf="!loading && periodos && periodos.length > 0" class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200">
             <table class="w-full">
-              <thead class="bg-gradient-to-r from-slate-800 to-slate-700 text-white">
+              <thead class="bg-gradient-to-r from-blue-800 to-blue-700 text-white">
                 <tr>
                   <th class="px-6 py-4 text-left font-semibold">Nombre del Período</th>
                   <th class="px-6 py-4 text-left font-semibold">Fecha de Inicio</th>
@@ -130,34 +73,28 @@
                   </td>
                   <td class="px-6 py-4 text-slate-600">
                     <div class="flex items-center gap-2">
-                      <i class="fas fa-calendar-alt text-blue-500"></i>
+                      <i class="fas fa-calendar-alt text-blue-600"></i>
                       {{ periodo.fecha_inicio | date:'dd/MM/yyyy' }}
                     </div>
                   </td>
                   <td class="px-6 py-4 text-slate-600">
                     <div class="flex items-center gap-2">
-                      <i class="fas fa-calendar-check text-purple-500"></i>
+                      <i class="fas fa-calendar-check text-blue-700"></i>
                       {{ periodo.fecha_fin | date:'dd/MM/yyyy' }}
                     </div>
                   </td>
                   <td class="px-6 py-4">
-                    <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-green-100 text-green-800">
-                      Activo
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider bg-blue-100 text-blue-800">
+                      {{ periodo.estado_periodo || 'Inactivo' }}
                     </span>
                   </td>
                   <td class="px-6 py-4">
                     <div class="flex justify-center gap-2">
-                      <button
-                        (click)="editarPeriodo(periodo)"
-                        class="px-4 py-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-white rounded-lg hover:from-yellow-600 hover:to-orange-600 transition-all duration-200 flex items-center gap-1 text-sm font-medium"
-                      >
+                      <button (click)="editarPeriodo(periodo)" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                         <i class="fas fa-edit"></i>
                         Editar
                       </button>
-                      <button
-                        (click)="eliminarPeriodo(periodo.id)"
-                        class="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg hover:from-red-600 hover:to-pink-600 transition-all duration-200 flex items-center gap-1 text-sm font-medium"
-                      >
+                      <button (click)="eliminarPeriodo(periodo.id)" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
                         <i class="fas fa-trash"></i>
                         Eliminar
                       </button>
@@ -167,18 +104,13 @@
               </tbody>
             </table>
           </div>
-
-          <!-- Empty State -->
           <div *ngIf="!loading && (!periodos || periodos.length === 0)" class="text-center py-16">
             <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-calendar-times text-slate-400 text-4xl"></i>
             </div>
             <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin períodos registrados</h3>
             <p class="text-slate-500 mb-6">No se han encontrado períodos académicos en el sistema.</p>
-            <button
-              (click)="abrirModalCrear(); cerrarModalTabla()"
-              class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200"
-            >
+            <button (click)="abrirModalCrear(); cerrarModalTabla()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200">
               Crear Primer Período
             </button>
           </div>
@@ -189,9 +121,7 @@
     <!-- Modal Crear/Editar Período -->
     <div *ngIf="mostrarModalCrear" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 border border-slate-200">
-
-        <!-- Header del Modal -->
-        <div class="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 text-white p-8 rounded-t-3xl">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
               <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
@@ -200,102 +130,67 @@
                 </svg>
               </div>
               <div>
-                <h3 class="text-2xl font-bold">Crear Nuevo Período</h3>
+                <h3 class="text-2xl font-bold">{{ nuevoPeriodo.id ? 'Editar Período' : 'Crear Nuevo Período' }}</h3>
                 <p class="text-slate-300 text-sm mt-1">Define un nuevo período académico</p>
               </div>
             </div>
-            <button
-              (click)="cerrarModalCrear()"
-              class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110"
-            >
+            <button (click)="cerrarModalCrear()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
               </svg>
             </button>
           </div>
         </div>
-
-        <!-- Formulario -->
         <div class="p-8">
-          <form (ngSubmit)="crearPeriodo()" #formPeriodo="ngForm" novalidate class="space-y-6">
-
+          <form (ngSubmit)="nuevoPeriodo.id ? actualizarPeriodo() : crearPeriodo()" #formPeriodo="ngForm" novalidate class="space-y-6">
             <!-- Nombre del Período -->
             <div class="space-y-2">
               <label for="nombrePeriodo" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
-                <i class="fas fa-tag text-blue-500"></i>
+                <i class="fas fa-tag text-blue-600"></i>
                 Nombre del Período
                 <span class="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="nombrePeriodo"
-                name="nombre"
-                [(ngModel)]="nuevoPeriodo.nombre"
-                required
-                #nombrePeriodo="ngModel"
-                placeholder="Ej: Período 2025-I"
-                class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200"
-              />
+              <input type="text" id="nombrePeriodo" name="nombre" [(ngModel)]="nuevoPeriodo.nombre" required #nombrePeriodo="ngModel" placeholder="Ej: Período 2025-I" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
               <p *ngIf="nombrePeriodo.invalid && nombrePeriodo.touched" class="text-red-500 text-sm flex items-center gap-2">
                 <i class="fas fa-exclamation-circle"></i>
                 El nombre del período es obligatorio
               </p>
             </div>
-
             <!-- Fecha de Inicio -->
             <div class="space-y-2">
               <label for="fechaInicio" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
-                <i class="fas fa-calendar-alt text-green-500"></i>
+                <i class="fas fa-calendar-alt text-blue-600"></i>
                 Fecha de Inicio
                 <span class="text-red-500">*</span>
               </label>
-              <input
-                type="date"
-                id="fechaInicio"
-                name="fecha_inicio"
-                [(ngModel)]="nuevoPeriodo.fecha_inicio"
-                required
-                #fechaInicio="ngModel"
-                class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200"
-              />
+              <input type="date" id="fechaInicio" name="fecha_inicio" [(ngModel)]="nuevoPeriodo.fecha_inicio" required #fechaInicio="ngModel" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
               <p *ngIf="fechaInicio.invalid && fechaInicio.touched" class="text-red-500 text-sm flex items-center gap-2">
                 <i class="fas fa-exclamation-circle"></i>
                 La fecha de inicio es obligatoria
               </p>
             </div>
-
             <!-- Fecha de Fin -->
             <div class="space-y-2">
               <label for="fechaFin" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
-                <i class="fas fa-calendar-check text-purple-500"></i>
+                <i class="fas fa-calendar-check text-blue-700"></i>
                 Fecha de Fin
                 <span class="text-red-500">*</span>
               </label>
-              <input
-                type="date"
-                id="fechaFin"
-                name="fecha_fin"
-                [(ngModel)]="nuevoPeriodo.fecha_fin"
-                required
-                #fechaFin="ngModel"
-                class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200"
-              />
+              <input type="date" id="fechaFin" name="fecha_fin" [(ngModel)]="nuevoPeriodo.fecha_fin" required #fechaFin="ngModel" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
               <p *ngIf="fechaFin.invalid && fechaFin.touched" class="text-red-500 text-sm flex items-center gap-2">
                 <i class="fas fa-exclamation-circle"></i>
                 La fecha de fin es obligatoria
               </p>
             </div>
-
             <!-- Mensajes de Estado -->
-            <div *ngIf="mensajeExito" class="p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 text-green-800 rounded-xl flex items-center gap-3">
-              <div class="p-1 bg-green-100 rounded-lg">
-                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div *ngIf="mensajeExito" class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-800 rounded-xl flex items-center gap-3">
+              <div class="p-1 bg-blue-100 rounded-lg">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                 </svg>
               </div>
               <span class="font-medium">{{ mensajeExito }}</span>
             </div>
-
             <div *ngIf="error && !mensajeExito" class="p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-800 rounded-xl flex items-center gap-3">
               <div class="p-1 bg-red-100 rounded-lg">
                 <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -304,27 +199,20 @@
               </div>
               <span class="font-medium">{{ error }}</span>
             </div>
-
             <!-- Botones de Acción -->
             <div class="flex gap-4 pt-4">
-              <button
-                type="button"
-                (click)="cerrarModalCrear()"
-                class="flex-1 px-6 py-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-400 font-medium transition-all duration-200"
-              >
+              <button type="button" (click)="cerrarModalCrear()" class="flex-1 px-6 py-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-400 font-medium transition-all duration-200">
                 Cancelar
               </button>
-              <button
-                type="submit"
-                [disabled]="creando || formPeriodo.invalid"
-                class="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl"
-              >
+              <button type="submit" [disabled]="creando || formPeriodo.invalid" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
                 <div *ngIf="creando" class="flex space-x-1">
                   <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0ms"></div>
                   <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 150ms"></div>
                   <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 300ms"></div>
                 </div>
-                <span>{{ creando ? 'Creando Período...' : 'Crear Período' }}</span>
+                <span>
+                  {{ nuevoPeriodo.id ? (creando ? 'Actualizando...' : 'Actualizar Período') : (creando ? 'Creando Período...' : 'Crear Período') }}
+                </span>
               </button>
             </div>
           </form>
@@ -332,13 +220,11 @@
       </div>
     </div>
 
-<!-- ===================== computadoras ===================== -->
-
-<!-- ...sección de computadoras... -->
-<div class="text-center mt-1 mb-8">
-  <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Computadoras</h1>
-  <p class="text-slate-600 ...">Gestiona las computadoras de tu inventario</p>
-</div>
+    <!-- ===================== COMPUTADORAS ===================== -->
+    <div class="text-center mt-16 mb-8">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Computadoras</h1>
+      <p class="text-slate-600 text-lg">Gestiona las computadoras de tu institución</p>
+    </div>
     <div class="flex flex-wrap gap-4 mb-6 justify-center">
       <button (click)="abrirModalCrearComputadora()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -353,185 +239,221 @@
         Ver Todas las Computadoras
       </button>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Computadoras</p>
-            <p class="text-3xl font-bold text-slate-800">{{ computadoras.length || 0 }}</p>
-            <p class="text-slate-400 text-sm mt-1">Computadoras registradas</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2h-2a2 2 0 00-2 2v6a2 2 0 01-2 2H9z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Computadora Activa</p>
-            <p class="text-xl font-bold text-slate-800">{{ computadoraActiva?.nombre || 'Ninguna' }}</p>
-            <p class="text-slate-400 text-sm mt-1">En uso actualmente</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+
+    <!-- Modal Tabla de Computadoras -->
+    <div *ngIf="mostrarModalTablaComputadoras" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[90vh] transform transition-all duration-300 scale-100 border border-slate-200">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">Computadoras Registradas</h3>
+                <p class="text-slate-300 text-sm mt-1">Gestiona todas las computadoras</p>
+              </div>
+            </div>
+            <button (click)="cerrarModalTablaComputadoras()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </div>
         </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Próxima Computadora</p>
-            <p class="text-xl font-bold text-slate-800">{{ proximaComputadora?.nombre || 'No definida' }}</p>
-            <p class="text-slate-400 text-sm mt-1">Siguiente en inventario</p>
+        <div class="p-8 overflow-auto max-h-[calc(90vh-160px)]">
+          <div *ngIf="cargandoComputadoras" class="flex flex-col items-center justify-center py-16">
+            <div class="flex space-x-2 mb-6">
+              <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+              <div class="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+              <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+            </div>
+            <p class="text-slate-600 font-medium text-lg">Cargando computadoras...</p>
+            <p class="text-slate-400 text-sm mt-2">Esto puede tomar unos momentos</p>
           </div>
-          <div class="p-4 bg-gradient-to-br from-purple-100 to-pink-200 rounded-xl">
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4l2 2 4-4"></path>
-            </svg>
+<div *ngIf="!cargandoComputadoras && laboratoriosConComputadoras.length > 0">
+  <div *ngFor="let grupo of laboratoriosConComputadoras" class="mb-12">
+    <h2 class="text-2xl font-bold text-blue-800 mb-4">
+      Laboratorio: {{ grupo.laboratorio.nombre }} <span class="text-slate-500 text-base">({{ grupo.laboratorio.ubicacion }})</span>
+    </h2>
+    <div *ngIf="grupo.computadoras.length > 0" class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200">
+      <table class="w-full">
+        <thead class="bg-gradient-to-r from-blue-800 to-blue-700 text-white">
+          <tr>
+            <th class="px-6 py-4 text-left font-semibold">Nombre</th>
+            <th class="px-6 py-4 text-left font-semibold">Especificaciones</th>
+            <th class="px-6 py-4 text-left font-semibold">Número de Serie</th>
+            <th class="px-6 py-4 text-left font-semibold">Estado</th>
+            <th class="px-6 py-4 text-center font-semibold">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-200">
+          <tr *ngFor="let computadora of grupo.computadoras" class="hover:bg-slate-100 transition-colors duration-150">
+            <td class="px-6 py-4">
+              <div class="font-semibold text-slate-800">{{ computadora.nombre }}</div>
+            </td>
+            <td class="px-6 py-4 text-slate-600">
+              {{ computadora.especificaciones }}
+            </td>
+            <td class="px-6 py-4 text-slate-600">
+              {{ computadora.numero_serie }}
+            </td>
+            <td class="px-6 py-4">
+              <span class="px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider"
+                    [ngClass]="{'bg-green-100 text-green-800': computadora.estado === 'ACTIVO',
+                               'bg-red-100 text-red-800': computadora.estado !== 'ACTIVO'}">
+                {{ computadora.estado || 'N/A' }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex justify-center gap-2">
+                <button (click)="editarComputadora(computadora)" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                  <i class="fas fa-edit"></i>
+                  Editar
+                </button>
+                <button (click)="eliminarComputadora(computadora.id)" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                  <i class="fas fa-trash"></i>
+                  Eliminar
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div *ngIf="grupo.computadoras.length === 0" class="text-slate-500 py-8 text-center">
+      No hay computadoras registradas en este laboratorio.
+    </div>
+  </div>
+</div>
+          <div *ngIf="!cargandoComputadoras && (!computadoras || computadoras.length === 0)" class="text-center py-16">
+            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-desktop text-slate-400 text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin computadoras registradas</h3>
+            <p class="text-slate-500 mb-6">No se han encontrado computadoras en el sistema.</p>
+            <button (click)="abrirModalCrearComputadora(); cerrarModalTablaComputadoras()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200">
+              Crear Primera Computadora
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="mostrarModalCrearComputadora" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-          <h3 class="text-xl font-bold flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Crear Nueva Computadora
-          </h3>
-          <button (click)="cerrarModalCrearComputadora()" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+    <!-- Modal Crear/Editar Computadora -->
+    <div *ngIf="mostrarModalCrearComputadora" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 border border-slate-200">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">{{ nuevaComputadora.id ? 'Editar Computadora' : 'Crear Nueva Computadora' }}</h3>
+                <p class="text-slate-300 text-sm mt-1">Registra una nueva computadora</p>
+              </div>
+            </div>
+            <button (click)="cerrarModalCrearComputadora()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="p-6">
-          <form (ngSubmit)="crearComputadora()" #formComputadora="ngForm" novalidate>
-            <div class="mb-4">
-              <label for="nombreComputadora" class="block text-gray-700 font-semibold mb-2">
-                Nombre de la Computadora <span class="text-red-500">*</span>
+        <div class="p-8">
+          <form (ngSubmit)="nuevaComputadora.id ? actualizarComputadora() : crearComputadora()" #formComputadora="ngForm" novalidate class="space-y-6">
+            <!-- Nombre de la Computadora -->
+            <div class="space-y-2">
+              <label for="nombreComputadora" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-tag text-blue-600"></i>
+                Nombre de la Computadora
+                <span class="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="nombreComputadora"
-                name="nombre"
-                [(ngModel)]="nuevaComputadora.nombre"
-                required
-                #nombreComputadora="ngModel"
-                placeholder="Ej: Laptop Dell Inspiron"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="nombreComputadora.invalid && nombreComputadora.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                El nombre es obligatorio
+              <input type="text" id="nombreComputadora" name="nombre" [(ngModel)]="nuevaComputadora.nombre" required #nombreComputadora="ngModel" placeholder="Ej: PC-01" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
+              <p *ngIf="nombreComputadora.invalid && nombreComputadora.touched" class="text-red-500 text-sm flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>
+                El nombre de la computadora es obligatorio
               </p>
             </div>
-            <div class="mb-4">
-              <label for="laboratorio_id" class="block text-gray-700 font-semibold mb-2">
-                Laboratorio <span class="text-red-500">*</span>
+            <!-- Especificaciones -->
+            <div class="space-y-2">
+              <label for="especificaciones" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-info-circle text-blue-600"></i>
+                Especificaciones
               </label>
-              <input
-                type="number"
-                id="laboratorio_id"
-                name="laboratorio_id"
-                [(ngModel)]="nuevaComputadora.laboratorio_id"
-                required
-                #laboratorioId="ngModel"
-                placeholder="ID del laboratorio"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="laboratorioId.invalid && laboratorioId.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
+              <input type="text" id="especificaciones" name="especificaciones" [(ngModel)]="nuevaComputadora.especificaciones" #especificaciones="ngModel" placeholder="Ej: Intel i7, 16GB RAM, 512GB SSD" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
+            </div>
+            <!-- Número de Serie -->
+            <div class="space-y-2">
+              <label for="numeroSerie" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-barcode text-blue-600"></i>
+                Número de Serie
+              </label>
+              <input type="text" id="numeroSerie" name="numero_serie" [(ngModel)]="nuevaComputadora.numero_serie" #numeroSerie="ngModel" placeholder="Ej: SN123456789" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
+            </div>
+            <!-- Laboratorio -->
+            <div class="space-y-2">
+              <label for="laboratorio" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-flask text-blue-600"></i>
+                Laboratorio
+                <span class="text-red-500">*</span>
+              </label>
+              <select id="laboratorio" name="laboratorio_id" [(ngModel)]="nuevaComputadora.laboratorio_id" required #laboratorio="ngModel" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200">
+                <option value="">Seleccione un laboratorio</option>
+                <option *ngFor="let lab of laboratorios" [value]="lab.id">{{ lab.nombre }}</option>
+              </select>
+              <p *ngIf="laboratorio.invalid && laboratorio.touched" class="text-red-500 text-sm flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>
                 El laboratorio es obligatorio
               </p>
             </div>
-            <div class="mb-4">
-              <label for="especificaciones" class="block text-gray-700 font-semibold mb-2">
-                Especificaciones <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="especificaciones"
-                name="especificaciones"
-                [(ngModel)]="nuevaComputadora.especificaciones"
-                required
-                #especificaciones="ngModel"
-                placeholder="Ej: Intel i5, 8GB RAM, SSD 256GB"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="especificaciones.invalid && especificaciones.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                Las especificaciones son obligatorias
-              </p>
-            </div>
-            <div class="mb-4">
-              <label for="numero_serie" class="block text-gray-700 font-semibold mb-2">
-                Número de Serie <span class="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="numero_serie"
-                name="numero_serie"
-                [(ngModel)]="nuevaComputadora.numero_serie"
-                required
-                #numeroSerie="ngModel"
-                placeholder="Ej: SN123456"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="numeroSerie.invalid && numeroSerie.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                El número de serie es obligatorio
-              </p>
-            </div>
-            <div class="mb-6">
-              <label for="estado" class="block text-gray-700 font-semibold mb-2">
+            <!-- Estado -->
+            <div class="space-y-2">
+              <label for="estadoComputadora" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-check-circle text-green-600"></i>
                 Estado
               </label>
-              <select
-                id="estado"
-                name="estado"
-                [(ngModel)]="nuevaComputadora.estado"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              >
-                <option value="ACTIVA">ACTIVA</option>
-                <option value="INACTIVA">INACTIVA</option>
-                <option value="EN_REPARACION">EN REPARACIÓN</option>
+              <select id="estadoComputadora" name="estado" [(ngModel)]="nuevaComputadora.estado" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200">
+                <option value="ACTIVO">Activa</option>
+                <option value="INACTIVA">Inactiva</option>
               </select>
             </div>
-            <div *ngIf="mensajeExitoComputadora" class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              {{ mensajeExitoComputadora }}
+            <!-- Mensajes de Estado -->
+            <div *ngIf="mensajeExitoComputadora" class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-800 rounded-xl flex items-center gap-3">
+              <div class="p-1 bg-blue-100 rounded-lg">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <span class="font-medium">{{ mensajeExitoComputadora }}</span>
             </div>
-            <div *ngIf="errorComputadoras && !mensajeExitoComputadora" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              {{ errorComputadoras }}
+            <div *ngIf="errorComputadoras && !mensajeExitoComputadora" class="p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-800 rounded-xl flex items-center gap-3">
+              <div class="p-1 bg-red-100 rounded-lg">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <span class="font-medium">{{ errorComputadoras }}</span>
             </div>
-            <div class="flex gap-3">
-              <button
-                type="button"
-                (click)="cerrarModalCrearComputadora()"
-                class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              >
+            <!-- Botones de Acción -->
+            <div class="flex gap-4 pt-4">
+              <button type="button" (click)="cerrarModalCrearComputadora()" class="flex-1 px-6 py-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-400 font-medium transition-all duration-200">
                 Cancelar
               </button>
-              <button
-                type="submit"
-                [disabled]="creandoComputadora || formComputadora.invalid"
-                class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-4 py-3 rounded-lg transition-all flex items-center justify-center gap-2"
-              >
-                <svg *ngIf="creandoComputadora" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                  <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                </svg>
-                {{ creandoComputadora ? 'Creando...' : 'Crear Computadora' }}
+              <button type="submit" [disabled]="creandoComputadora || formComputadora.invalid" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <div *ngIf="creandoComputadora" class="flex space-x-1">
+                  <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                  <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                  <div class="w-2 h-2 bg-white rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                </div>
+                <span>
+                  {{ nuevaComputadora.id ? (creandoComputadora ? 'Actualizando...' : 'Actualizar Computadora') : (creandoComputadora ? 'Creando Computadora...' : 'Crear Computadora') }}
+                </span>
               </button>
             </div>
           </form>
@@ -539,279 +461,188 @@
       </div>
     </div>
 
-    <div *ngIf="mostrarModalTablaComputadoras" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] transform transition-all duration-300 scale-100">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-          <h3 class="text-xl font-bold flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-            </svg>
-            Computadoras Registradas
-          </h3>
-          <button (click)="cerrarModalTablaComputadoras()" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="p-6 overflow-auto max-h-[calc(90vh-120px)]">
-          <div *ngIf="loading" class="flex items-center justify-center py-12">
-            <div class="text-center">
-              <svg class="animate-spin w-12 h-12 text-blue-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <p class="text-gray-600 text-lg">Cargando computadoras...</p>
-            </div>
-          </div>
-          <ng-container *ngIf="!loading && computadoras">
-            <ng-container *ngFor="let labId of [1,2,3,4,5,6,7]">
-              <div class="mb-8">
-                <h4 class="text-lg font-bold text-blue-700 mb-2">
-                  {{ labId === 1 ? 'FAB-LAB' : 'Laboratorio ' + labId }}
-                </h4>
-                <table class="min-w-full text-left border-collapse border border-gray-200 mb-4">
-                  <thead class="bg-gradient-to-r from-blue-700 to-blue-800 text-white">
-                    <tr>
-                      <th class="p-3 border border-blue-800">Nombre</th>
-                      <th class="p-3 border border-blue-800">Especificaciones</th>
-                      <th class="p-3 border border-blue-800">Número Serie</th>
-                      <th class="p-3 border border-blue-800">Estado</th>
-                      <th class="p-3 border border-blue-800">Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let comp of getComputadorasPorLaboratorio(labId)" class="hover:bg-gray-50">
-                      <td class="p-3 border border-gray-200">{{ comp.nombre }}</td>
-                      <td class="p-3 border border-gray-200">{{ comp.especificaciones }}</td>
-                      <td class="p-3 border border-gray-200">{{ comp.numero_serie }}</td>
-                      <td class="p-3 border border-gray-200">{{ comp.estado || 'N/A' }}</td>
-                      <td class="p-3 border border-gray-200 flex gap-2">
-                        <button
-                          (click)="eliminarComputadora(comp.id)"
-                          class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                        >
-                          Eliminar
-                        </button>
-                      </td>
-                    </tr>
-                    <tr *ngIf="getComputadorasPorLaboratorio(labId).length === 0">
-                      <td colspan="5" class="p-3 border border-gray-200 text-center text-gray-400">
-                        Sin computadoras registradas
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </ng-container>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-
-
-<!-- ===================== LABORATORIOS ===================== -->
-
-<div class="text-center mb-8 mt-8">
+    <!-- ===================== LABORATORIOS ===================== -->
+    <div class="text-center mb-8 mt-16">
       <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Laboratorios</h1>
       <p class="text-slate-600 text-lg">Gestiona los laboratorios de tu institución</p>
     </div>
     <div class="flex flex-wrap gap-4 mb-6 justify-center">
-      <button (click)="mostrarModalCrearLaboratorio = true" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
+      <button (click)="abrirModalCrearLaboratorio()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
         Crear Nuevo Laboratorio
       </button>
-      <button (click)="mostrarModalTablaLaboratorios = true; cargarLaboratorios()" class="bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
+      <button (click)="abrirModalTablaLaboratorios()" class="bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
         </svg>
-        Ver Laboratorios
+        Ver Todos los Laboratorios
       </button>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Total Laboratorios</p>
-            <p class="text-3xl font-bold text-slate-800">{{ laboratorios.length || 0 }}</p>
-            <p class="text-slate-400 text-sm mt-1">Laboratorios registrados</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl">
-            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2h-2a2 2 0 00-2 2v6a2 2 0 01-2 2H9z"></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Laboratorio Activo</p>
-            <p class="text-xl font-bold text-slate-800">{{ laboratorioActivo?.nombre || 'Ninguno' }}</p>
-            <p class="text-slate-400 text-sm mt-1">En uso actualmente</p>
-          </div>
-          <div class="p-4 bg-gradient-to-br from-green-100 to-emerald-200 rounded-xl">
-            <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+
+    <!-- Modal Tabla de Laboratorios -->
+    <div *ngIf="mostrarModalTablaLaboratorios" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-6xl max-h-[90vh] transform transition-all duration-300 scale-100 border border-slate-200">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">Laboratorios Registrados</h3>
+                <p class="text-slate-300 text-sm mt-1">Gestiona todos los laboratorios</p>
+              </div>
+            </div>
+            <button (click)="cerrarModalTablaLaboratorios()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </div>
         </div>
-      </div>
-      <div class="bg-white rounded-2xl shadow-lg p-8 border border-slate-200/60 backdrop-blur-sm hover:shadow-xl transition-all duration-200">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-slate-500 text-sm font-semibold uppercase tracking-wider mb-2">Próximo Laboratorio</p>
-            <p class="text-xl font-bold text-slate-800">{{ proximoLaboratorio?.nombre || 'No definido' }}</p>
-            <p class="text-slate-400 text-sm mt-1">Siguiente en inventario</p>
+        <div class="p-8 overflow-auto max-h-[calc(90vh-160px)]">
+          <div *ngIf="cargandoLaboratorios" class="flex flex-col items-center justify-center py-16">
+            <div class="flex space-x-2 mb-6">
+              <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+              <div class="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+              <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+            </div>
+            <p class="text-slate-600 font-medium text-lg">Cargando laboratorios...</p>
+            <p class="text-slate-400 text-sm mt-2">Esto puede tomar unos momentos</p>
           </div>
-          <div class="p-4 bg-gradient-to-br from-purple-100 to-pink-200 rounded-xl">
-            <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3a2 2 0 012-2h4a2 2 0 012 2v4m-6 4l2 2 4-4"></path>
-            </svg>
+          <div *ngIf="!cargandoLaboratorios && laboratorios && laboratorios.length > 0" class="bg-slate-50 rounded-2xl overflow-hidden border border-slate-200">
+            <table class="w-full">
+              <thead class="bg-gradient-to-r from-blue-800 to-blue-700 text-white">
+                <tr>
+                  <th class="px-6 py-4 text-left font-semibold">Nombre</th>
+                  <th class="px-6 py-4 text-left font-semibold">Ubicación</th>
+                  <th class="px-6 py-4 text-center font-semibold">Acciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200">
+                <tr *ngFor="let laboratorio of laboratorios" class="hover:bg-slate-100 transition-colors duration-150">
+                  <td class="px-6 py-4">
+                    <div class="font-semibold text-slate-800">{{ laboratorio.nombre }}</div>
+                  </td>
+                  <td class="px-6 py-4 text-slate-600">
+                    {{ laboratorio.ubicacion }}
+                  </td>
+                  <td class="px-6 py-4">
+                    <div class="flex justify-center gap-2">
+                      <button (click)="seleccionarLaboratorio(laboratorio); abrirModalCrearLaboratorio()" class="px-4 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <i class="fas fa-edit"></i>
+                        Editar
+                      </button>
+                      <button (click)="eliminarLaboratorio(laboratorio.id)" class="px-4 py-2 bg-gradient-to-r from-red-500 to-red-600 text-white rounded-lg hover:from-red-600 hover:to-red-700 transition-all duration-200 flex items-center gap-1 text-sm font-medium focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        <i class="fas fa-trash"></i>
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div *ngIf="!cargandoLaboratorios && (!laboratorios || laboratorios.length === 0)" class="text-center py-16">
+            <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <i class="fas fa-flask text-slate-400 text-4xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin laboratorios registrados</h3>
+            <p class="text-slate-500 mb-6">No se han encontrado laboratorios en el sistema.</p>
+            <button (click)="abrirModalCrearLaboratorio(); cerrarModalTablaLaboratorios()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200">
+              Crear Primer Laboratorio
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div *ngIf="mostrarModalCrearLaboratorio" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all duration-300 scale-100">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-          <h3 class="text-xl font-bold flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-            </svg>
-            Crear Nuevo Laboratorio
-          </h3>
-          <button (click)="mostrarModalCrearLaboratorio = false" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
+    <!-- Modal Crear/Editar Laboratorio -->
+    <div *ngIf="mostrarModalCrearLaboratorio" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 border border-slate-200">
+        <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-4">
+              <div class="p-2 bg-white/20 rounded-xl backdrop-blur-sm">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold">{{ laboratorioSeleccionado?.id ? 'Editar Laboratorio' : 'Crear Nuevo Laboratorio' }}</h3>
+                <p class="text-slate-300 text-sm mt-1">Registra un nuevo laboratorio</p>
+              </div>
+            </div>
+            <button (click)="cerrarModalCrearLaboratorio()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
+          </div>
         </div>
-        <div class="p-6">
-          <form (ngSubmit)="crearLaboratorio()" #formLaboratorio="ngForm" novalidate>
-            <div class="mb-4">
-              <label for="nombreLaboratorio" class="block text-gray-700 font-semibold mb-2">
-                Nombre del Laboratorio <span class="text-red-500">*</span>
+        <div class="p-8">
+          <form (ngSubmit)="laboratorioSeleccionado?.id ? actualizarLaboratorio() : crearLaboratorio()" #formLaboratorio="ngForm" novalidate class="space-y-6">
+            <!-- Nombre del Laboratorio -->
+            <div class="space-y-2">
+              <label for="nombreLaboratorio" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-tag text-blue-600"></i>
+                Nombre del Laboratorio
+                <span class="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="nombreLaboratorio"
-                name="nombre"
-                [(ngModel)]="nuevoLaboratorio.nombre"
-                required
-                #nombreLaboratorio="ngModel"
-                placeholder="Ej: FAB-LAB"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="nombreLaboratorio.invalid && nombreLaboratorio.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
-                El nombre es obligatorio
+              <input type="text" id="nombreLaboratorio" name="nombre" [(ngModel)]="laboratorioSeleccionado.nombre" required #nombreLaboratorio="ngModel" placeholder="Ej: Laboratorio de Computación 1" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
+              <p *ngIf="nombreLaboratorio.invalid && nombreLaboratorio.touched" class="text-red-500 text-sm flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>
+                El nombre del laboratorio es obligatorio
               </p>
             </div>
-            <div class="mb-6">
-              <label for="ubicacionLaboratorio" class="block text-gray-700 font-semibold mb-2">
-                Ubicación <span class="text-red-500">*</span>
+            <!-- Ubicación -->
+            <div class="space-y-2">
+              <label for="ubicacion" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
+                <i class="fas fa-map-marker-alt text-blue-600"></i>
+                Ubicación
+                <span class="text-red-500">*</span>
               </label>
-              <input
-                type="text"
-                id="ubicacionLaboratorio"
-                name="ubicacion"
-                [(ngModel)]="nuevoLaboratorio.ubicacion"
-                required
-                #ubicacionLaboratorio="ngModel"
-                placeholder="Ej: Edificio B, Planta Baja"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-              />
-              <p *ngIf="ubicacionLaboratorio.invalid && ubicacionLaboratorio.touched" class="text-red-500 text-sm mt-1 flex items-center gap-1">
+              <input type="text" id="ubicacion" name="ubicacion" [(ngModel)]="laboratorioSeleccionado.ubicacion" required #ubicacion="ngModel" placeholder="Ej: Edificio A, Segundo Piso" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
+              <p *ngIf="ubicacion.invalid && ubicacion.touched" class="text-red-500 text-sm flex items-center gap-2">
+                <i class="fas fa-exclamation-circle"></i>
                 La ubicación es obligatoria
               </p>
             </div>
-            <div *ngIf="mensajeExitoLaboratorio" class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              {{ mensajeExitoLaboratorio }}
+            <!-- Mensajes de Estado -->
+            <div *ngIf="mensajeExitoLaboratorio" class="p-4 bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200 text-blue-800 rounded-xl flex items-center gap-3">
+              <div class="p-1 bg-blue-100 rounded-lg">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <span class="font-medium">{{ mensajeExitoLaboratorio }}</span>
             </div>
-            <div *ngIf="errorLaboratorios && !mensajeExitoLaboratorio" class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              {{ errorLaboratorios }}
+            <div *ngIf="errorLaboratorios && !mensajeExitoLaboratorio" class="p-4 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 text-red-800 rounded-xl flex items-center gap-3">
+              <div class="p-1 bg-red-100 rounded-lg">
+                <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+              </div>
+              <span class="font-medium">{{ errorLaboratorios }}</span>
             </div>
-            <div class="flex gap-3">
-              <button
-                type="button"
-                (click)="mostrarModalCrearLaboratorio = false"
-                class="flex-1 px-4 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 font-medium transition-colors"
-              >
+            <!-- Botones de Acción -->
+            <div class="flex gap-4 pt-4">
+              <button type="button" (click)="cerrarModalCrearLaboratorio()" class="flex-1 px-6 py-4 border border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 hover:border-slate-400 font-medium transition-all duration-200">
                 Cancelar
               </button>
-              <button
-                type="submit"
-                [disabled]="formLaboratorio.invalid"
-                class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-4 py-3 rounded-lg transition-all flex items-center justify-center gap-2"
-              >
-                Crear Laboratorio
+              <button type="submit" [disabled]="formLaboratorio.invalid" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold px-6 py-4 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl">
+                <span>
+                  {{ laboratorioSeleccionado?.id ? 'Actualizar Laboratorio' : 'Crear Laboratorio' }}
+                </span>
               </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-
-    <div *ngIf="mostrarModalTablaLaboratorios" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] transform transition-all duration-300 scale-100">
-        <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-t-2xl flex items-center justify-between">
-          <h3 class="text-xl font-bold flex items-center gap-2">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-            </svg>
-            Laboratorios Registrados
-          </h3>
-          <button (click)="mostrarModalTablaLaboratorios = false" class="text-white hover:bg-white hover:bg-opacity-20 p-2 rounded-full transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-            </svg>
-          </button>
-        </div>
-        <div class="p-6 overflow-auto max-h-[calc(90vh-120px)]">
-          <div *ngIf="cargandoLaboratorios" class="flex items-center justify-center py-12">
-            <div class="text-center">
-              <svg class="animate-spin w-12 h-12 text-blue-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="m4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <p class="text-gray-600 text-lg">Cargando laboratorios...</p>
-            </div>
-          </div>
-          <table *ngIf="!cargandoLaboratorios && laboratorios && laboratorios.length > 0" class="min-w-full text-left border-collapse border border-gray-200">
-            <thead class="bg-gradient-to-r from-blue-700 to-blue-800 text-white">
-              <tr>
-                <th class="p-3 border border-blue-800">Nombre</th>
-                <th class="p-3 border border-blue-800">Ubicación</th>
-                <th class="p-3 border border-blue-800">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let lab of laboratorios" class="hover:bg-gray-50">
-                <td class="p-3 border border-gray-200">{{ lab.nombre }}</td>
-                <td class="p-3 border border-gray-200">{{ lab.ubicacion }}</td>
-                <td class="p-3 border border-gray-200 flex gap-2">
-                  <button
-                    (click)="eliminarLaboratorio(lab.id)"
-                    class="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <p *ngIf="!cargandoLaboratorios && (!laboratorios || laboratorios.length === 0)" class="text-center text-gray-500 py-12">
-            No hay laboratorios registrados.
-          </p>
-        </div>
-      </div>
-    </div>
+  </div>
+</div>

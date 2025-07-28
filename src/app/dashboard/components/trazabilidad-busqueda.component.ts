@@ -1,19 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import {
-  faSearch,
-  faUser,
-  faHistory,
-  faCalendar,
-  faExclamationTriangle,
-  faBoxOpen,
-  faSpinner,
-faArrowRight
-
-} from '@fortawesome/free-solid-svg-icons';
 import { ReportesService } from '../../services/reportes.service';
 
 @Component({
@@ -21,22 +9,10 @@ import { ReportesService } from '../../services/reportes.service';
   templateUrl: './trazabilidad-busqueda.component.html',
   styleUrls: ['./trazabilidad-busqueda.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FontAwesomeModule]
+  imports: [CommonModule, FormsModule]
 })
 export class TrazabilidadBusquedaComponent implements OnInit {
-  // Iconos
-  faIcons = {
-    search: faSearch,
-    user: faUser,
-    history: faHistory,
-    calendar: faCalendar,
-    incident: faExclamationTriangle,
-    object: faBoxOpen,
-    box: faBoxOpen,
-     spinner: faSpinner,
-      arrowRight: faArrowRight
 
-  };
 
   // Estado del componente
   nombreUsuario: string = '';
@@ -103,17 +79,7 @@ export class TrazabilidadBusquedaComponent implements OnInit {
     }
   }
 
-  // Obtener ícono según el tipo de entidad
-  getEntityIcon(tipoEntidad: string): any {
-    switch (tipoEntidad?.toLowerCase()) {
-      case 'incidente':
-        return this.faIcons.incident;
-      case 'objeto_perdido':
-        return this.faIcons.object;
-      default:
-        return this.faIcons.history;
-    }
-  }
+
 
   // Obtener clase CSS según el tipo de entidad
   getEntityClass(tipoEntidad: string): string {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +7,9 @@ import { CanActivate, Router } from '@angular/router';
 export class AuthGuard implements CanActivate {
   constructor(private router: Router) {}
 
-  canActivate(): boolean {
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     try {
-      // 1. Verificar si hay token
+      // 1. Verificar token
       const token = localStorage.getItem('token');
       if (!token) {
         console.log('No hay token, redirigiendo a login');
@@ -17,7 +17,7 @@ export class AuthGuard implements CanActivate {
         return false;
       }
 
-      // 2. Verificar rol
+      // 2. Verificar usuario y rol
       const usuarioStr = localStorage.getItem('usuario');
       if (!usuarioStr) {
         console.log('No hay información de usuario, redirigiendo a login');
@@ -26,17 +26,20 @@ export class AuthGuard implements CanActivate {
       }
 
       const usuario = JSON.parse(usuarioStr);
-      const rolesPermitidos = ['jefe', 'tecnico'];
-      
-      if (!usuario.rol || !rolesPermitidos.includes(usuario.rol)) {
-        console.log('Rol no permitido:', usuario.rol);
-        // Redirigir a login en lugar de una página que no existe
+      const rolUsuario = usuario?.rol;
+
+      // 3. Verificar roles permitidos en la ruta
+      const rolesPermitidos = route.data['roles'] as string[] | undefined;
+
+      if (rolesPermitidos && !rolesPermitidos.includes(rolUsuario)) {
+        console.log(`Rol "${rolUsuario}" no autorizado para esta ruta`);
         this.router.navigate(['/login']);
         return false;
       }
 
-      console.log('Acceso autorizado para usuario:', usuario.nombre);
+      // 4. Si pasa todas las validaciones
       return true;
+
     } catch (error) {
       console.error('Error en AuthGuard:', error);
       this.router.navigate(['/login']);

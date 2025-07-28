@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://10.3.1.112:3000/api/usuarios/login';
+  private apiUrl = 'http://192.168.56.1:3000/api/usuarios/login';
 
   constructor(
     private http: HttpClient,
@@ -19,7 +19,7 @@ export class AuthService {
     return this.http.post(this.apiUrl, { correo, contrasena }).pipe(
       map((response: any) => {
         // Validación de roles para la web
-        const rolesPermitidos = ['jefe', 'tecnico'];
+        const rolesPermitidos = ['jefe', 'tecnico', 'normal'];
         if (!rolesPermitidos.includes(response.usuario.rol)) {
           throw new Error('Acceso restringido: Solo personal autorizado');
         }

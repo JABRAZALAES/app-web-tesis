@@ -82,13 +82,18 @@ export class GestionLaboratoriosService {
     );
   }
 
-  actualizarPeriodo(id: number, periodo: Partial<PeriodoAcademico>): Observable<{ success: boolean; message: string; data: PeriodoAcademico }> {
+    actualizarPeriodo(id: number, periodo: Partial<PeriodoAcademico>): Observable<{ success: boolean; message: string; data: PeriodoAcademico }> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token de autenticación');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token.trim()}`
+    });
     return this.http.put<{ success: boolean; message: string; data: PeriodoAcademico }>(
       `${this.apiUrl}/periodos/${id}`,
-      periodo
+      periodo,
+      { headers }
     );
   }
-
   eliminarPeriodo(id: number): Observable<{ success: boolean; message: string; data: any }> {
     const token = localStorage.getItem('token');
     if (!token) throw new Error('No hay token de autenticación');
@@ -126,14 +131,14 @@ export class GestionLaboratoriosService {
 obtenerComputadorasPorLaboratorio(laboratorio_id: number): Observable<Computadora[]> {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No hay token de autenticación');
+
   const headers = new HttpHeaders({
     Authorization: `Bearer ${token.trim()}`
   });
-  return this.http.get<Computadora[]>(
-    `${this.apiUrl}/computadoras?laboratorio_id=${laboratorio_id}`,
-    { headers }
-  );
-}
+
+  return this.http.get<any>(`${this.apiUrl}/computadoras?laboratorio_id=${laboratorio_id}`, { headers })
+    .pipe(map(resp => resp.data));
+} 
 obtenerTodasComputadoras(): Observable<Computadora[]> {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No hay token de autenticación');
@@ -147,6 +152,14 @@ obtenerTodasComputadoras(): Observable<Computadora[]> {
     // Extrae solo el array de computadoras
     map(resp => resp.data)
   );
+}
+actualizarComputadora(id: number, computadora: Computadora): Observable<any> {
+  const token = localStorage.getItem('token');
+  if (!token) throw new Error('No hay token de autenticación');
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token.trim()}`
+  });
+  return this.http.put(`${this.apiUrl}/computadoras/${id}`, computadora, { headers });
 }
   // Eliminar computadora (requiere token)
   eliminarComputadora(id: number): Observable<{ success: boolean; message: string; data: any }> {

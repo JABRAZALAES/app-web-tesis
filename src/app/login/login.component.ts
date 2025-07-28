@@ -1,22 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import Swal from 'sweetalert2';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-
-// FontAwesome icons
-import {
-  faEnvelope,
-  faLock,
-  faEye,
-  faEyeSlash,
-  faShieldAlt,
-  faSignInAlt,
-  faExclamationTriangle,
-
-} from '@fortawesome/free-solid-svg-icons';
 
 interface LoginForm {
   correo: string;
@@ -38,7 +26,7 @@ interface AuthResponse {
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, FontAwesomeModule]
+  imports: [CommonModule, FormsModule]
 })
 export class LoginComponent implements OnInit, OnDestroy {
   // ===== PROPIEDADES DEL FORMULARIO =====
@@ -48,17 +36,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   errorLogin: string = '';
   isLoading: boolean = false;
 
-  // ===== ICONOS FONTAWESOME =====
-  readonly faEnvelope = faEnvelope;
-  readonly faLock = faLock;
-  readonly faEye = faEye;
-  readonly faEyeSlash = faEyeSlash;
-  readonly faShieldAlt = faShieldAlt;
-  readonly faSignInAlt = faSignInAlt;
-  readonly faExclamationTriangle = faExclamationTriangle;
-
   // ===== CONFIGURACIÓN =====
-  private readonly ROLES_PERMITIDOS = ['jefe', 'tecnico'] as const;
+  private readonly ROLES_PERMITIDOS = ['jefe', 'tecnico', 'normal'] as const;
   private readonly destroy$ = new Subject<void>();
 
   constructor(
@@ -90,6 +69,12 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   onSubmit(): void {
     if (!this.validarFormulario()) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Formulario incompleto',
+        text: this.errorLogin,
+        confirmButtonColor: '#4B73E8'
+      });
       return;
     }
 
@@ -177,19 +162,46 @@ export class LoginComponent implements OnInit, OnDestroy {
    */
   private manejarLoginExitoso(response: AuthResponse): void {
     try {
-      if (!this.esRolPermitido(response.usuario.rol)) {
+      const rolUsuario = response.usuario.rol;
+
+      if (!this.esRolPermitido(rolUsuario)) {
         this.authService.logout();
-        this.errorLogin = 'Acceso denegado. Solo usuarios autorizados (Jefe/Técnico) pueden ingresar';
+        Swal.fire({
+          icon: 'error',
+          title: 'Acceso denegado',
+          text: 'Solo usuarios autorizados pueden ingresar',
+          confirmButtonColor: '#4B73E8'
+        });
         return;
       }
 
       this.guardarSesion(response);
       this.limpiarFormulario();
-      this.redirigirDashboard();
+
+      // Mensaje de bienvenida
+      Swal.fire({
+        icon: 'success',
+        title: '¡Bienvenido!',
+        text: `Hola, ${response.usuario.nombre || response.usuario.correo}`,
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        // Redirección por rol
+        if (rolUsuario === 'normal') {
+          this.router.navigate(['/rankings']);
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
+      });
 
     } catch (error) {
       console.error('Error procesando respuesta de login:', error);
-      this.errorLogin = 'Error interno. Por favor, intente nuevamente';
+      Swal.fire({
+        icon: 'error',
+        title: 'Error interno',
+        text: 'Por favor, intente nuevamente',
+        confirmButtonColor: '#4B73E8'
+      });
     }
   }
 
@@ -229,25 +241,42 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Maneja errores de login
    */
   private manejarErrorLogin(error: any): void {
-    console.error('Error en login:', error);
+    try {
+      console.error('Error en login:', JSON.stringify(error));
 
-    let mensajeError = 'Ha ocurrido un error inesperado';
+      let mensajeError = 'Ha ocurrido un error inesperado';
 
-    if (error?.status === 401) {
-      mensajeError = 'Credenciales incorrectas. Verifique su correo y contraseña';
-    } else if (error?.status === 403) {
-      mensajeError = 'Acceso denegado. No tiene permisos para acceder al sistema';
-    } else if (error?.status === 429) {
-      mensajeError = 'Demasiados intentos de login. Intente nuevamente en unos minutos';
-    } else if (error?.status === 0) {
-      mensajeError = 'Error de conexión. Verifique su conexión a internet';
-    } else if (error?.error?.message) {
-      mensajeError = error.error.message;
-    } else if (error?.message) {
-      mensajeError = error.message;
+      if (error?.status === 401) {
+        mensajeError = 'Credenciales incorrectas. Verifique su correo y contraseña';
+      } else if (error?.status === 403) {
+        mensajeError = 'Acceso denegado. No tiene permisos para acceder al sistema';
+      } else if (error?.status === 429) {
+        mensajeError = 'Demasiados intentos de login. Intente nuevamente en unos minutos';
+      } else if (error?.status === 0) {
+        mensajeError = 'Error de conexión. Verifique su conexión a internet';
+      } else if (error?.error?.message) {
+        mensajeError = error.error.message;
+      } else if (error?.message) {
+        mensajeError = error.message;
+      }
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Error de inicio de sesión',
+        text: mensajeError,
+        confirmButtonColor: '#4B73E8'
+      });
+      this.errorLogin = mensajeError;
+    } catch (e) {
+      console.error('Error procesando el error de login:', e);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error desconocido',
+        text: 'Ocurrió un error inesperado',
+        confirmButtonColor: '#4B73E8'
+      });
+      this.errorLogin = 'Error desconocido';
     }
-
-    this.errorLogin = mensajeError;
   }
 
   // ===== MÉTODOS AUXILIARES PARA TEMPLATE =====
@@ -265,5 +294,4 @@ export class LoginComponent implements OnInit, OnDestroy {
   get mostrarLoading(): boolean {
     return this.isLoading;
   }
-  
 }

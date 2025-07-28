@@ -14,7 +14,12 @@
         class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
         aria-label="Exportar a Excel"
       >
-        <fa-icon [icon]="faIcons.excel"></fa-icon>
+        <!-- Excel Icon SVG -->
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 2V22H20V6L16 2H4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M8 12L12 16L16 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span>Excel</span>
       </button>
       <button
@@ -23,7 +28,14 @@
         class="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
         aria-label="Exportar a PDF"
       >
-        <fa-icon [icon]="faIcons.pdf"></fa-icon>
+        <!-- PDF Icon SVG -->
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span>PDF</span>
       </button>
     </div>
@@ -32,10 +44,11 @@
   <!-- Barra de búsqueda -->
   <div *ngIf="config.showSearch" class="mb-6">
     <div class="relative max-w-md">
-      <fa-icon
-        [icon]="faIcons.search"
-        class="absolute left-3 top-3 text-gray-400 pointer-events-none"
-      ></fa-icon>
+      <!-- Search Icon SVG -->
+      <svg class="absolute left-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+        <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
       <input
         type="text"
         [(ngModel)]="searchTerm"
@@ -60,12 +73,22 @@
           >
             <div class="flex items-center gap-2">
               <span>{{ column.label }}</span>
-              <fa-icon
-                *ngIf="column.sortable"
-                [icon]="getSortIcon(column)"
-                [ngClass]="getSortClass(column)"
-                class="text-gray-500"
-              ></fa-icon>
+              <!-- Sort Icons SVG -->
+              <ng-container *ngIf="column.sortable">
+                <!-- Sort Up Icon -->
+                <svg *ngIf="sortKey === column.key && sortDirection === 'asc'" class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 14L12 9L17 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Sort Down Icon -->
+                <svg *ngIf="sortKey === column.key && sortDirection === 'desc'" class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Sort Both Icon (default) -->
+                <svg *ngIf="sortKey !== column.key" class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 15L12 10L17 15" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M7 9L12 14L17 9" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </ng-container>
             </div>
           </th>
         </tr>
@@ -76,7 +99,11 @@
         <tr *ngIf="loading">
           <td [attr.colspan]="config.columns.length" class="text-center py-10">
             <div class="flex flex-col items-center gap-3 text-gray-600">
-              <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-500 border-t-transparent"></div>
+              <!-- Loading Spinner SVG -->
+              <svg class="animate-spin h-10 w-10 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" stroke-opacity="0.25"/>
+                <path fill="currentColor" d="M4 12C4 16.4183 7.58172 20 12 20V22C6.47715 22 2 17.5228 2 12H4Z"/>
+              </svg>
               <span>Cargando datos...</span>
             </div>
           </td>
@@ -86,7 +113,12 @@
         <tr *ngIf="!loading && paginatedData.length === 0">
           <td [attr.colspan]="config.columns.length" class="text-center py-10 text-gray-500">
             <div class="flex flex-col items-center gap-2">
-              <fa-icon [icon]="faIcons.search" class="text-4xl"></fa-icon>
+              <!-- Empty Search Icon SVG -->
+              <svg class="w-16 h-16 text-gray-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+                <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M16 11C16 13.7614 13.7614 16 11 16C8.23858 16 6 13.7614 6 11C6 8.23858 8.23858 6 11 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
               <h3 class="text-lg font-semibold">No hay datos</h3>
               <p>No se encontraron registros que coincidan con los criterios de búsqueda.</p>
             </div>
@@ -168,22 +200,25 @@
         class="flex items-center gap-1 px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
         aria-label="Página anterior"
       >
-        <fa-icon [icon]="faIcons.chevronLeft"></fa-icon>
+        <!-- Chevron Left Icon SVG -->
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <span class="hidden sm:inline">Anterior</span>
       </button>
 
-<button
-  *ngFor="let page of pages"
-  type="button"
-  (click)="onPageChange(page)"
-  [class.bg-blue-600]="page === currentPage"
-  [class.text-white]="page === currentPage"
-  [class.bg-gray-200]="page !== currentPage"
-  class="px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition"
-  [attr.aria-current]="page === currentPage ? 'page' : null"
->
-  {{ page }}
-</button>
+      <button
+        *ngFor="let page of pages"
+        type="button"
+        (click)="onPageChange(page)"
+        [class.bg-blue-600]="page === currentPage"
+        [class.text-white]="page === currentPage"
+        [class.bg-gray-200]="page !== currentPage"
+        class="px-3 py-1 rounded hover:bg-blue-500 hover:text-white transition"
+        [attr.aria-current]="page === currentPage ? 'page' : null"
+      >
+        {{ page }}
+      </button>
 
       <button
         type="button"
@@ -193,7 +228,10 @@
         aria-label="Página siguiente"
       >
         <span class="hidden sm:inline">Siguiente</span>
-        <fa-icon [icon]="faIcons.chevronRight"></fa-icon>
+        <!-- Chevron Right Icon SVG -->
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
     </div>
   </div>

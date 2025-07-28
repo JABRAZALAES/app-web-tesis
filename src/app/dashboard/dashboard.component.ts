@@ -1,37 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {
-  faTachometerAlt,
-  faExclamationTriangle,
-  faBoxOpen,
-  faUsers,
-  faChartBar,
-  faTrophy,
-  faRoute,
-  faSearch,
-  faFileExcel,
-  faFilePdf,
-  faTimes,
-  faFilter,
-  faCalendar,
-  faCog,
-  faHome,
-  faUser,
-  faSignOutAlt,
-  faBuilding,
-  faBox,
-  faCommentAlt,
-  faTimesCircle,
-  faImage,
-  faCamera,
-  faInfoCircle,
 
-} from '@fortawesome/free-solid-svg-icons';
 
 // Componentes compartidos
 import { FiltersComponent } from './shared/filters/filters.component';
@@ -66,7 +40,7 @@ export type ActiveTab = 'overview' | 'incidents' | 'objects' | 'rankings' | 'tra
   imports: [
     CommonModule,
     FormsModule,
-    FontAwesomeModule,
+
     FiltersComponent,
     DataTableComponent,
     OverviewComponent,
@@ -96,33 +70,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   tabs: ActiveTab[] = ['overview', 'incidents', 'objects', 'rankings', 'trazabilidad', 'laboratorios'];
 
   // Iconos actualizados
-  faIcons = {
-    overview: faHome,
-    dashboard: faTachometerAlt,
-    incidents: faExclamationTriangle,
-    objects: faBoxOpen,
-    rankings: faTrophy,
-    trazabilidad: faRoute,
-    laboratorios: faBuilding,
-    route: faRoute,
-    chartBar: faChartBar,
-    search: faSearch,
-    excel: faFileExcel,
-    pdf: faFilePdf,
-    times: faTimes,
-    filter: faFilter,
-    calendar: faCalendar,
-    cog: faCog,
-    user: faUser,
-    signOut: faSignOutAlt,
-     box: faBox,
-      commentAlt: faCommentAlt,
-        timesCircle: faTimesCircle,
-          image: faImage,
-            camera: faCamera,
-            infoCircle: faInfoCircle,
 
-  };
 
   // Datos del usuario
   userProfile: any = {
@@ -257,30 +205,30 @@ iniciarAlertaExpiracionSesion(): void {
 }
 
 
-  cargarDatosIniciales(): void {
-    console.log('📊 Cargando datos iniciales del dashboard...');
-    this.loading = true;
-    this.error = null;
+ cargarDatosIniciales(): void {
+  console.log('📊 Cargando datos iniciales del dashboard...');
+  this.loading = true;
+  this.error = null;
 
-    this.dashboardDataService.cargarDashboard(this.filtrosActuales)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (data: DashboardData) => {
-          console.log('✅ Datos del dashboard cargados:', data);
-          this.dashboardData = data;
-          this.metricas = this.dashboardDataService.calcularMetricas(data);
-          this.top10UsuariosPodio = data.rankingUsuarios || [];
-          this.loading = false;
-        },
-        error: (error: any) => {
-          console.error('❌ Error al cargar datos del dashboard:', error);
-          this.error = `Error al cargar datos: ${error.message}`;
-          this.loading = false;
-          this.top10UsuariosPodio = [];
-        }
-      });
-  }
-
+  this.dashboardDataService.cargarDashboard(this.filtrosActuales)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: DashboardData) => {
+        console.log('✅ Datos del dashboard cargados:', data);
+        this.dashboardData = data;
+        this.metricas = this.dashboardDataService.calcularMetricas(data);
+                 this.top10UsuariosPodio = data.rankingUsuarios || [];
+        console.log('👑 Ranking que se pasa al podio:', this.top10UsuariosPodio); // <-- AGREGA ESTE LOG
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('❌ Error al cargar datos del dashboard:', error);
+        this.error = `Error al cargar datos: ${error.message}`;
+        this.loading = false;
+        this.top10UsuariosPodio = [];
+      }
+    });
+}
   onFiltrosAplicados(filtros: FiltrosReporte): void {
     console.log('🔍 Filtros aplicados:', filtros);
     this.filtrosActuales = { ...filtros };

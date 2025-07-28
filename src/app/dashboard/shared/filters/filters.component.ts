@@ -1,8 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFilter, faTimes, faSearch, faCalendarDay } from '@fortawesome/free-solid-svg-icons';
+
 import { FiltrosReporte } from '../../../services/reportes.service';
 import { ReportesService } from '../../../services/reportes.service';
 
@@ -11,7 +10,7 @@ import { ReportesService } from '../../../services/reportes.service';
   templateUrl: './filters.component.html',
   styleUrls: ['./filters.component.scss'],
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FontAwesomeModule]
+  imports: [CommonModule, ReactiveFormsModule]
 })
 export class FiltersComponent implements OnInit {
   @Input() filtrosIniciales: FiltrosReporte = {};
@@ -23,13 +22,6 @@ export class FiltersComponent implements OnInit {
     laboratorios: any[] = [];
   loading = false;
 
-  // Iconos
-  faIcons = {
-    filter: faFilter,
-    times: faTimes,
-    search: faSearch,
-    calendar: faCalendarDay
-  };
 
   constructor(
     private fb: FormBuilder,

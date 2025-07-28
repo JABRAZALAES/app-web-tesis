@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faTrophy, faMedal, faUser, faCrown } from '@fortawesome/free-solid-svg-icons';
+
 
 // Define una interfaz para los datos del usuario para una mejor seguridad de tipo
 interface UserRanking {
@@ -12,9 +11,9 @@ interface UserRanking {
 @Component({
   selector: 'app-podium-ranking',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule],
   template: `
-    <div class="max-w-5xl mx-auto p-6 font-sans bg-gray-50 rounded-lg shadow-xl">
+<div class="max-w-5xl mx-auto p-6 font-sans bg-gray-50 rounded-lg shadow-xl">
       <div class="bg-gray-100 p-4 rounded-t-lg -mx-6 -mt-6 mb-8 border-b border-gray-200">
         <h3 class="text-xl font-semibold text-gray-700">Podio de Rankings</h3>
       </div>
@@ -25,7 +24,11 @@ interface UserRanking {
       </div>
 
       <div *ngIf="!users || users.length === 0" class="text-center py-20 text-gray-400">
-        <fa-icon [icon]="faUser" class="text-8xl mb-6 mx-auto text-blue-300 animate-bounce-slow"></fa-icon>
+        <!-- Large User Icon SVG -->
+        <svg class="w-32 h-32 mb-6 mx-auto text-blue-300 animate-bounce" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
         <h3 class="text-3xl font-bold mb-3 text-gray-700">¡Oops! No hay datos de ranking aún.</h3>
         <p class="text-xl px-4">Parece que no se encontraron usuarios con actividad en el período seleccionado. ¡Anímate a ser el primero!</p>
       </div>
@@ -34,10 +37,20 @@ interface UserRanking {
         <ng-container *ngIf="users[1]">
           <div class="podium-item podium-second bg-gradient-to-br from-blue-100 to-blue-200 border-b-4 border-blue-500 hover:shadow-2xl transition-all duration-300">
             <div class="relative -top-8 text-gray-500">
-              <fa-icon [icon]="faMedal" class="text-4xl text-gray-500 drop-shadow-md"></fa-icon>
+              <!-- Silver Medal Icon SVG -->
+              <svg class="w-16 h-16 text-gray-500 drop-shadow-md" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.1"/>
+                <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="8" r="2" fill="currentColor"/>
+                <text x="12" y="9" text-anchor="middle" class="text-xs font-bold" fill="currentColor">2</text>
+              </svg>
             </div>
             <div class="avatar-circle bg-white shadow-lg border-2 border-blue-300">
-              <fa-icon [icon]="faUser" class="text-5xl text-blue-500"></fa-icon>
+              <!-- User Icon SVG -->
+              <svg class="w-12 h-12 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <div class="user-name-container text-center mt-3">
               <h4 class="font-semibold text-gray-800 text-sm leading-snug">{{ users[1].nombre_usuario }}</h4>
@@ -49,11 +62,22 @@ interface UserRanking {
 
         <ng-container *ngIf="users[0]">
           <div class="podium-item podium-first bg-gradient-to-br from-yellow-100 to-yellow-200 border-b-4 border-yellow-500 hover:shadow-2xl transition-all duration-300">
-            <div class="relative -top-10 text-yellow-600 animate-wiggle">
-              <fa-icon [icon]="faCrown" class="text-5xl text-yellow-500 drop-shadow-lg"></fa-icon>
+            <div class="relative -top-10 text-yellow-600 animate-bounce">
+              <!-- Crown Icon SVG -->
+              <svg class="w-20 h-20 text-yellow-500 drop-shadow-lg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 18H22L20 8L16 12L12 4L8 12L4 8L2 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="currentColor" fill-opacity="0.2"/>
+                <circle cx="12" cy="6" r="1" fill="currentColor"/>
+                <circle cx="8" cy="10" r="1" fill="currentColor"/>
+                <circle cx="16" cy="10" r="1" fill="currentColor"/>
+                <path d="M2 18H22" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              </svg>
             </div>
             <div class="avatar-circle bg-white shadow-xl border-4 border-yellow-400 w-28 h-28">
-              <fa-icon [icon]="faUser" class="text-6xl text-yellow-600"></fa-icon>
+              <!-- Large User Icon SVG -->
+              <svg class="w-16 h-16 text-yellow-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <div class="user-name-container text-center mt-4">
               <h4 class="font-extrabold text-gray-900 text-base leading-snug">{{ users[0].nombre_usuario }}</h4>
@@ -66,10 +90,20 @@ interface UserRanking {
         <ng-container *ngIf="users[2]">
           <div class="podium-item podium-third bg-gradient-to-br from-orange-100 to-orange-200 border-b-4 border-orange-500 hover:shadow-2xl transition-all duration-300">
             <div class="relative -top-8 text-orange-500">
-              <fa-icon [icon]="faMedal" class="text-4xl text-orange-500 drop-shadow-md"></fa-icon>
+              <!-- Bronze Medal Icon SVG -->
+              <svg class="w-16 h-16 text-orange-500 drop-shadow-md" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="currentColor" fill-opacity="0.1"/>
+                <path d="M8.21 13.89L7 23L12 20L17 23L15.79 13.88" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="8" r="2" fill="currentColor"/>
+                <text x="12" y="9" text-anchor="middle" class="text-xs font-bold" fill="currentColor">3</text>
+              </svg>
             </div>
             <div class="avatar-circle bg-white shadow-lg border-2 border-orange-300">
-              <fa-icon [icon]="faUser" class="text-5xl text-orange-500"></fa-icon>
+              <!-- User Icon SVG -->
+              <svg class="w-12 h-12 text-orange-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
             </div>
             <div class="user-name-container text-center mt-3">
               <h4 class="font-semibold text-gray-800 text-sm leading-snug">{{ users[2].nombre_usuario }}</h4>
@@ -85,7 +119,11 @@ interface UserRanking {
              class="bg-white rounded-xl p-2 shadow-md flex items-center gap-3 border border-gray-200 hover:shadow-lg hover:border-blue-300 transition-all duration-200 cursor-pointer">
           <div class="text-lg font-extrabold text-blue-600 w-8 text-center">{{ i + 4 }}°</div>
           <div class="bg-blue-50 rounded-full w-10 h-10 flex items-center justify-center shadow-inner">
-            <fa-icon [icon]="faUser" class="text-blue-400 text-xl"></fa-icon>
+            <!-- Small User Icon SVG -->
+            <svg class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           <div class="flex-grow">
             <div class="user-name-container-list">
@@ -192,10 +230,6 @@ interface UserRanking {
 export class PodiumRankingComponent implements OnChanges {
   @Input() users: UserRanking[] = [];
 
-  faTrophy = faTrophy;
-  faMedal = faMedal;
-  faUser = faUser;
-  faCrown = faCrown;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['users']) {

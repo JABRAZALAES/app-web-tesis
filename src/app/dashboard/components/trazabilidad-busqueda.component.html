@@ -7,7 +7,11 @@
       <!-- Header de búsqueda -->
       <div class="flex items-center gap-3 mb-6">
         <div class="p-2.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
-          <fa-icon [icon]="faIcons.search" class="text-white text-lg"></fa-icon>
+          <!-- Search Icon SVG -->
+          <svg class="text-white w-5 h-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
         <div>
           <h2 class="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
@@ -20,7 +24,11 @@
       <!-- Campo de búsqueda -->
       <div class="form-group space-y-3">
         <label for="nombreUsuario" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
-          <i class="fas fa-user text-blue-500"></i>
+          <!-- User Icon SVG -->
+          <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           Nombre del Usuario
         </label>
         <div class="relative">
@@ -34,7 +42,11 @@
             (keyup.enter)="buscarTrazabilidad()"
           />
           <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-            <i class="fas fa-user text-slate-400"></i>
+            <!-- User Icon SVG -->
+            <svg class="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
         </div>
       </div>
@@ -47,7 +59,11 @@
           (click)="buscarTrazabilidad()"
           [disabled]="loading || !nombreUsuario.trim()"
         >
-          <fa-icon [icon]="faIcons.search" class="text-sm"></fa-icon>
+          <!-- Search Icon SVG -->
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="2"/>
+            <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span>{{ loading ? 'Buscando...' : 'Buscar Trazabilidad' }}</span>
         </button>
 
@@ -77,7 +93,12 @@
   <!-- Estado de error mejorado -->
   <div *ngIf="error && !loading" class="error-state bg-gradient-to-br from-red-50 to-pink-50 border border-red-200 rounded-2xl p-12 text-center">
     <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
-      <fa-icon [icon]="faIcons.incident" class="text-red-500 text-3xl"></fa-icon>
+      <!-- Alert Triangle Icon SVG -->
+      <svg class="w-8 h-8 text-red-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.29 3.86L1.82 18C1.64571 18.3024 1.55299 18.6453 1.55201 18.9945C1.55103 19.3437 1.64171 19.6871 1.81442 19.9905C1.98714 20.2939 2.23584 20.5468 2.53621 20.7239C2.83658 20.901 3.18035 20.9962 3.53 21H20.47C20.8197 20.9962 21.1634 20.901 21.4638 20.7239C21.7642 20.5468 22.0129 20.2939 22.1856 19.9905C22.3583 19.6871 22.449 19.3437 22.448 18.9945C22.447 18.6453 22.3543 18.3024 22.18 18L13.71 3.86C13.5317 3.56611 13.2807 3.32312 12.9812 3.15448C12.6817 2.98585 12.3438 2.89725 12 2.89725C11.6562 2.89725 11.3183 2.98585 11.0188 3.15448C10.7193 3.32312 10.4683 3.56611 10.29 3.86V3.86Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
     <h3 class="text-xl font-semibold text-red-800 mb-2">Error en la búsqueda</h3>
     <p class="text-red-600 mb-4">{{ error }}</p>
@@ -96,7 +117,11 @@
     <div class="user-info bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white p-8">
       <div class="flex items-center gap-6">
         <div class="user-avatar w-24 h-24 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-sm ring-2 ring-white/30">
-          <fa-icon [icon]="faIcons.user" class="text-white text-3xl"></fa-icon>
+          <!-- Large User Icon SVG -->
+          <svg class="w-12 h-12 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
         <div class="user-details flex-1">
           <h3 class="text-3xl font-bold mb-3 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
@@ -121,12 +146,24 @@
       <div class="flex items-center justify-between mb-8">
         <h4 class="flex items-center gap-3 text-2xl font-bold text-slate-800">
           <div class="p-2 bg-blue-100 rounded-lg">
-            <fa-icon [icon]="faIcons.history" class="text-blue-600 text-xl"></fa-icon>
+            <!-- History/Clock Icon SVG -->
+            <svg class="w-6 h-6 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M12 6V12L16 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
           Historial de Cambios
         </h4>
         <div class="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-xl">
-          <i class="fas fa-list text-slate-500"></i>
+          <!-- List Icon SVG -->
+          <svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="8" y1="6" x2="21" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="8" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="8" y1="18" x2="21" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="3" y1="6" x2="3.01" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="3" y1="12" x2="3.01" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <line x1="3" y1="18" x2="3.01" y2="18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span class="text-slate-700 font-medium">{{ cambiosEstados.length }} registro(s)</span>
         </div>
       </div>
@@ -134,7 +171,11 @@
       <!-- Sin cambios -->
       <div *ngIf="cambiosEstados.length === 0" class="no-changes text-center py-16">
         <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
-          <i class="fas fa-inbox text-slate-400 text-3xl"></i>
+          <!-- Inbox Icon SVG -->
+          <svg class="w-10 h-10 text-slate-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 12H16L14 15H10L8 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M5.45 5.11L2 12V18C2 18.5304 2.21071 19.0391 2.58579 19.4142C2.96086 19.7893 3.46957 20 4 20H20C20.5304 20 21.0391 19.7893 21.4142 19.4142C21.7893 19.0391 22 18.5304 22 18V12L18.55 5.11C18.3844 4.77679 18.1292 4.49637 17.813 4.30028C17.4967 4.1042 17.1321 4.0002 16.76 4H7.24C6.86792 4.0002 6.50326 4.1042 6.18704 4.30028C5.87083 4.49637 5.61558 4.77679 5.45 5.11V5.11Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
         </div>
         <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin cambios registrados</h3>
         <p class="text-slate-500">No se encontraron cambios de estado para este usuario.</p>
@@ -151,14 +192,40 @@
           <!-- Header del cambio -->
           <div class="change-header flex items-center gap-5 mb-6">
             <div class="change-icon w-14 h-14 rounded-xl flex items-center justify-center text-xl shadow-md bg-gradient-to-br from-slate-100 to-slate-200 text-slate-600">
-              <fa-icon [icon]="getEntityIcon(cambio.tipo_entidad)"></fa-icon>
+              <!-- Dynamic Entity Icon - you'll need to implement getEntityIconSvg() method -->
+              <ng-container [ngSwitch]="cambio.tipo_entidad">
+                <!-- Document Icon for default -->
+                <svg *ngSwitchDefault class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M14 2V8H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 13H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M16 17H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M10 9H9H8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Add more specific icons based on entity types -->
+                <svg *ngSwitchCase="'usuario'" class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <svg *ngSwitchCase="'incidente'" class="w-6 h-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.29 3.86L1.82 18C1.64571 18.3024 1.55299 18.6453 1.55201 18.9945C1.55103 19.3437 1.64171 19.6871 1.81442 19.9905C1.98714 20.2939 2.23584 20.5468 2.53621 20.7239C2.83658 20.901 3.18035 20.9962 3.53 21H20.47C20.8197 20.9962 21.1634 20.901 21.4638 20.7239C21.7642 20.5468 22.0129 20.2939 22.1856 19.9905C22.3583 19.6871 22.449 19.3437 22.448 18.9945C22.447 18.6453 22.3543 18.3024 22.18 18L13.71 3.86C13.5317 3.56611 13.2807 3.32312 12.9812 3.15448C12.6817 2.98585 12.3438 2.89725 12 2.89725C11.6562 2.89725 11.3183 2.98585 11.0188 3.15448C10.7193 3.32312 10.4683 3.56611 10.29 3.86V3.86Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </ng-container>
             </div>
             <div class="change-info flex-1">
               <div class="change-type text-lg font-bold text-slate-800 mb-2 capitalize">
                 {{ cambio.tipo_entidad }}
               </div>
               <div class="change-date flex items-center gap-2 text-slate-500">
-                <i class="fas fa-calendar-alt text-sm"></i>
+                <!-- Calendar Icon SVG -->
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
                 <span class="font-medium">{{ formatDate(cambio.fecha_cambio) }}</span>
               </div>
             </div>
@@ -178,7 +245,11 @@
 
                 <div class="flex items-center">
                   <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                    <fa-icon [icon]="faIcons.arrowRight" class="text-white text-lg"></fa-icon>
+                    <!-- Arrow Right Icon SVG -->
+                    <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      <path d="M12 5L19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
                   </div>
                 </div>
 
@@ -195,7 +266,10 @@
             <div *ngIf="cambio.comentario" class="change-comment bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-blue-500 rounded-lg p-4">
               <div class="flex items-start gap-3">
                 <div class="p-1.5 bg-blue-100 rounded-lg">
-                  <i class="fas fa-comment-alt text-blue-600 text-sm"></i>
+                  <!-- Comment Icon SVG -->
+                  <svg class="w-4 h-4 text-blue-600" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
                 </div>
                 <div>
                   <p class="text-sm font-semibold text-slate-700 mb-1">Comentario:</p>

@@ -1,18 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { 
-  faSort, 
-  faSortUp, 
-  faSortDown, 
-  faDownload, 
-  faFileExcel, 
-  faFilePdf,
-  faSearch,
-  faChevronLeft,
-  faChevronRight
-} from '@fortawesome/free-solid-svg-icons';
+
 
 export interface TableColumn {
   key: string;
@@ -37,7 +26,7 @@ export interface TableConfig {
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss'],
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, FormsModule]
+  imports: [CommonModule, FormsModule]
 })
 export class DataTableComponent {
   @Input() data: any[] = [];
@@ -51,18 +40,7 @@ export class DataTableComponent {
   @Output() rowClick = new EventEmitter<any>();
   @Output() sortChange = new EventEmitter<{ key: string; direction: 'asc' | 'desc'}>();
 
-  // Iconos completos
-  faIcons = {
-    sort: faSort,
-    sortUp: faSortUp,
-    sortDown: faSortDown,
-    download: faDownload,
-    excel: faFileExcel,
-    pdf: faFilePdf,
-    search: faSearch,
-    chevronLeft: faChevronLeft,
-    chevronRight: faChevronRight
-  };
+
 
   // Estado de la tabla
   currentPage = 1;
@@ -89,7 +67,7 @@ export class DataTableComponent {
       filtered.sort((a, b) => {
         const aVal = a[this.sortKey];
         const bVal = b[this.sortKey];
-        
+
         if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
         if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
         return 0;
@@ -189,25 +167,15 @@ export class DataTableComponent {
     return String(value).charAt(0).toUpperCase() + String(value).slice(1);
   }
 
-  // Métodos de utilidad
-  getSortIcon(column: TableColumn): any {
-    if (!column.sortable || this.sortKey !== column.key) {
-      return this.faIcons.sort;
-    }
-    return this.sortDirection === 'asc' ? this.faIcons.sortUp : this.faIcons.sortDown;
-  }
 
-  getSortClass(column: TableColumn): string {
-    if (!column.sortable || this.sortKey !== column.key) {
-      return 'text-gray-400';
-    }
-    return this.sortDirection === 'asc' ? 'text-blue-600' : 'text-blue-600';
-  }
+
+
 
   // Método para trackBy del ngFor
   trackByIndex(index: number, item: any): number {
     return index;
   }
+
 
   // Referencia al objeto Math global
   Math = Math;
@@ -216,18 +184,18 @@ export class DataTableComponent {
   get pages(): number[] {
     const pages: number[] = [];
     const maxPages = Math.min(5, this.totalPages);
-    
+
     let startPage = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
     let endPage = Math.min(this.totalPages, startPage + maxPages - 1);
-    
+
     if (endPage - startPage + 1 < maxPages) {
       startPage = Math.max(1, endPage - maxPages + 1);
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       pages.push(i);
     }
-    
+
     return pages;
   }
-} 
+}
