@@ -20,6 +20,7 @@ export interface TableConfig {
   showSearch?: boolean;
   sortable?: boolean;
 }
+export type ActiveTab = 'overview' | 'incidents' | 'objects' | 'rankings' | 'trazabilidad' | 'laboratorios' | 'usuarios';
 
 @Component({
   selector: 'app-data-table',
@@ -198,4 +199,8 @@ export class DataTableComponent {
 
     return pages;
   }
+    // ...existing code...
+  tabs: ActiveTab[] = ['overview', 'incidents', 'objects', 'rankings', 'trazabilidad', 'laboratorios', 'usuarios'];
+  // ...existing code...
+  
 }

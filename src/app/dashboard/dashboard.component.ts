@@ -15,6 +15,7 @@ import { OverviewComponent } from './components/overview/overview.component';
 import { PodiumRankingComponent } from './components/podium-ranking.component';
 import { TrazabilidadBusquedaComponent } from './components/trazabilidad-busqueda.component';
 import { GestionLaboratoriosComponent } from './components/gestion-laboratorios.component';
+import { GestionUsuariosComponent } from './components/gestion-usuarios/gestion-usuarios.component';
 
 
 // Servicios
@@ -30,7 +31,9 @@ import { NgChartsModule } from 'ng2-charts';
 
 
 
-export type ActiveTab = 'overview' | 'incidents' | 'objects' | 'rankings' | 'trazabilidad' | 'laboratorios';
+export type ActiveTab = 'overview' | 'incidents' | 'objects' | 'rankings' | 'trazabilidad' | 'laboratorios' | 'usuarios';
+
+
 
 @Component({
   selector: 'app-dashboard',
@@ -47,7 +50,8 @@ export type ActiveTab = 'overview' | 'incidents' | 'objects' | 'rankings' | 'tra
     NgChartsModule,
     PodiumRankingComponent,
     TrazabilidadBusquedaComponent,
-    GestionLaboratoriosComponent
+    GestionLaboratoriosComponent,
+    GestionUsuariosComponent
   ]
 })
 export class DashboardComponent implements OnInit, OnDestroy {
@@ -62,12 +66,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   dashboardData: DashboardData | null = null;
   metricas: Metricas | null = null;
   filtrosActuales: FiltrosReporte = {};
+   periodoSeleccionado: string = '';
 
   // Datos del podio (se vaciará cuando no hay datos)
   top10UsuariosPodio: any[] = [];
 
   // Pestañas actualizadas (sin usuarios y rankings)
-  tabs: ActiveTab[] = ['overview', 'incidents', 'objects', 'rankings', 'trazabilidad', 'laboratorios'];
 
   // Iconos actualizados
 
@@ -206,10 +210,29 @@ iniciarAlertaExpiracionSesion(): void {
 
 
  cargarDatosIniciales(): void {
-  console.log('📊 Cargando datos iniciales del dashboard...');
+   console.log('📊 Cargando datos iniciales del dashboard...');
   this.loading = true;
   this.error = null;
+  this.top10UsuariosPodio = []; // <-- Vacía el ranking antes de cargar
 
+  this.dashboardDataService.cargarDashboard(this.filtrosActuales)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (data: DashboardData) => {
+        console.log('✅ Datos del dashboard cargados:', data);
+        this.dashboardData = data;
+        this.metricas = this.dashboardDataService.calcularMetricas(data);
+        this.top10UsuariosPodio = data.rankingUsuarios || [];
+        console.log('👑 Ranking que se pasa al podio:', this.top10UsuariosPodio);
+        this.loading = false;
+      },
+      error: (error: any) => {
+        console.error('❌ Error al cargar datos del dashboard:', error);
+        this.error = `Error al cargar datos: ${error.message}`;
+        this.loading = false;
+        this.top10UsuariosPodio = [];
+      }
+    });
   this.dashboardDataService.cargarDashboard(this.filtrosActuales)
     .pipe(takeUntil(this.destroy$))
     .subscribe({
@@ -232,8 +255,12 @@ iniciarAlertaExpiracionSesion(): void {
   onFiltrosAplicados(filtros: FiltrosReporte): void {
     console.log('🔍 Filtros aplicados:', filtros);
     this.filtrosActuales = { ...filtros };
+     this.periodoSeleccionado = filtros.periodoAcademico || ''; // <-- Actualiza el período seleccionado
     this.cargarDatosIniciales();
+
+
   }
+
 
   onFiltrosCambiados(filtros: FiltrosReporte): void {
     console.log('🔄 Filtros cambiados:', filtros);
@@ -377,7 +404,8 @@ exportarObjetosPerdidosPorEstadoExcel(): void {
       objects: 'Objetos Perdidos',
       rankings: 'Rankings',
       trazabilidad: 'Trazabilidad',
-      laboratorios: 'Gestión de Laboratorios'
+      laboratorios: 'Gestión de Laboratorios',
+      usuarios: 'Gestión de Usuarios'
     };
     return labels[tab];
   }
@@ -603,9 +631,19 @@ getTabCategory(tab: any): string {
     case 'rankings': return 'Rankings';
     case 'trazabilidad': return 'Trazabilidad';
     case 'laboratorios': return 'Laboratorios';
+    case 'usuarios': return 'Usuarios';
     default: return '';
   }
 }
+  tabs: ActiveTab[] = [
+    'overview',
+    'incidents',
+    'objects',
+    'rankings',
+    'trazabilidad',
+    'laboratorios',
+    'usuarios'
+  ];
 
 // ...existing code...
 

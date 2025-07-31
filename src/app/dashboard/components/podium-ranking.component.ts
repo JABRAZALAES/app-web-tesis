@@ -13,10 +13,12 @@ interface UserRanking {
   standalone: true,
   imports: [CommonModule],
   template: `
-<div class="max-w-5xl mx-auto p-6 font-sans bg-gray-50 rounded-lg shadow-xl">
+
       <div class="bg-gray-100 p-4 rounded-t-lg -mx-6 -mt-6 mb-8 border-b border-gray-200">
-        <h3 class="text-xl font-semibold text-gray-700">Podio de Rankings</h3>
-      </div>
+  <h3 class="text-xl font-semibold text-gray-700">Podio de Rankings</h3>
+  <div *ngIf="periodo" class="text-sm text-blue-700 font-medium mt-1">
+    Período: {{ periodo }}
+  </div>
 
       <div class="text-center mb-10 pt-4">
         <h3 class="text-3xl font-extrabold text-gray-800 mb-2 drop-shadow-sm">🏆 Top 10 Usuarios Activos 🏆</h3>
@@ -229,7 +231,7 @@ interface UserRanking {
 })
 export class PodiumRankingComponent implements OnChanges {
   @Input() users: UserRanking[] = [];
-
+   @Input() periodo: string = ''; // <-- Nuevo input
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['users']) {
@@ -237,3 +239,5 @@ export class PodiumRankingComponent implements OnChanges {
     }
   }
 }
+
+

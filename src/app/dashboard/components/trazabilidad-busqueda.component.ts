@@ -22,6 +22,8 @@ export class TrazabilidadBusquedaComponent implements OnInit {
   // Datos de trazabilidad
   trazabilidadUsuario: any = null;
   cambiosEstados: any[] = [];
+  incidentes: any[] = [];
+objetosPerdidos: any[] = [];
 
   // Output para emitir el nombre al padre
   @Output() usuarioSeleccionado = new EventEmitter<string>();
@@ -42,15 +44,14 @@ export class TrazabilidadBusquedaComponent implements OnInit {
     this.trazabilidadUsuario = null;
     this.cambiosEstados = [];
 
-    this.reportesService.buscarTrazabilidadUsuario(this.nombreUsuario.trim()).subscribe({
-      next: (response: any) => {
-        console.log('✅ Trazabilidad encontrada:', response);
-        this.trazabilidadUsuario = response.data.usuario;
-        this.cambiosEstados = response.data.cambios_estados;
-        this.loading = false;
-        // Emitir el nombre al padre
-        this.usuarioSeleccionado.emit(this.nombreUsuario.trim());
-      },
+   this.reportesService.buscarTrazabilidadUsuario(this.nombreUsuario.trim()).subscribe({
+    next: (response: any) => {
+      this.trazabilidadUsuario = response.usuario;
+      this.incidentes = response.incidentes || [];
+      this.objetosPerdidos = response.objetos_perdidos || [];
+      this.loading = false;
+      this.usuarioSeleccionado.emit(this.nombreUsuario.trim());
+    },
       error: (error: any) => {
         console.error('❌ Error al buscar trazabilidad:', error);
         this.error = error.error?.message || 'Error al buscar trazabilidad del usuario';

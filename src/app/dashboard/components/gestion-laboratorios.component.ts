@@ -183,9 +183,26 @@ eliminarPeriodo(id?: number): void {
 }
 
 
-editarPeriodo(periodo: PeriodoAcademico): void {
-  this.nuevoPeriodo = { ...periodo };
+editarPeriodo(periodo: any) {
+  // Asegúrate de formatear las fechas para el input date
+  this.nuevoPeriodo = {
+    ...periodo,
+    fecha_inicio: this.formatDateForInput(periodo.fecha_inicio),
+    fecha_fin: this.formatDateForInput(periodo.fecha_fin)
+  };
   this.mostrarModalCrear = true;
+}
+
+// Utilidad para formatear la fecha
+formatDateForInput(fecha: string): string {
+  if (!fecha) return '';
+  // Si ya está en formato yyyy-MM-dd, retorna igual
+  if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return fecha;
+  // Si viene en otro formato, intenta convertirlo
+  const d = new Date(fecha);
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const day = d.getDate().toString().padStart(2, '0');
+  return `${d.getFullYear()}-${month}-${day}`;
 }
 
   actualizarEstadisticas(): void {
@@ -349,9 +366,9 @@ eliminarComputadora(id?: number): void {
 
 editarComputadora(computadora: Computadora): void {
   this.nuevaComputadora = { ...computadora };
+  this.cargarLaboratorios(); // <-- Asegúrate de cargar los laboratorios aquí
   this.mostrarModalCrearComputadora = true;
 }
-
 
 actualizarComputadora(): void {
   if (!this.nuevaComputadora.id) return;
@@ -545,8 +562,11 @@ eliminarLaboratorio(id?: number): void {
   });
 }
 // Seleccionar laboratorio para editar
-seleccionarLaboratorio(lab: any): void {
+editarLaboratorio(lab: any): void {
   this.laboratorioSeleccionado = { ...lab };
+  this.mostrarModalCrearLaboratorio = true;
+  this.mensajeExitoLaboratorio = null;
+  this.errorLaboratorios = null;
 }
   // ===== MODALES =====
 
