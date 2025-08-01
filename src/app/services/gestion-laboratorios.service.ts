@@ -13,6 +13,11 @@ export interface PeriodoAcademico {
   created_at?: string;
   updated_at?: string;
 }
+export interface Inconveniente {
+  id?: number;
+  tipo: string;
+  descripcion: string;
+}
 
 export interface PeriodoResponse {
   success: boolean;
@@ -138,7 +143,7 @@ obtenerComputadorasPorLaboratorio(laboratorio_id: number): Observable<Computador
 
   return this.http.get<any>(`${this.apiUrl}/computadoras?laboratorio_id=${laboratorio_id}`, { headers })
     .pipe(map(resp => resp.data));
-} 
+}
 obtenerTodasComputadoras(): Observable<Computadora[]> {
   const token = localStorage.getItem('token');
   if (!token) throw new Error('No hay token de autenticación');
@@ -244,4 +249,35 @@ eliminarLaboratorio(id: number): Observable<{ success: boolean; message: string;
     { headers }
   );
 }
+// ===== INCONVENIENTES =====
+
+  obtenerInconvenientes(): Observable<Inconveniente[]> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token de autenticación');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token.trim()}` });
+    return this.http.get<any>(`${this.apiUrl}/inconvenientes`, { headers })
+      .pipe(map(resp => resp));
+  }
+
+  crearInconveniente(inconveniente: Inconveniente): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token de autenticación');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token.trim()}` });
+    return this.http.post<any>(`${this.apiUrl}/inconvenientes`, inconveniente, { headers });
+  }
+
+  actualizarInconveniente(id: number, inconveniente: Inconveniente): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token de autenticación');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token.trim()}` });
+    return this.http.put<any>(`${this.apiUrl}/inconvenientes/${id}`, inconveniente, { headers });
+  }
+
+  eliminarInconveniente(id: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) throw new Error('No hay token de autenticación');
+    const headers = new HttpHeaders({ Authorization: `Bearer ${token.trim()}` });
+    return this.http.delete<any>(`${this.apiUrl}/inconvenientes/${id}`, { headers });
+  }
 }
+

@@ -220,6 +220,25 @@
       </div>
     </div>
 
+ <div class="text-center mt-16 mb-8">
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Inconvenientes</h1>
+      <p class="text-slate-600 text-lg">Gestiona los Inconvenientes</p>
+    </div>
+    <div class="flex flex-wrap gap-4 mb-6 justify-center">
+      <button (click)="abrirModalCrearInconveniente()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+        </svg>
+        Crear Nueva Inconveniente
+      </button>
+      <button (click)="abrirModalTablaInconvenientes()" class="bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+        </svg>
+        Ver Todos los Inconvenientes
+      </button>
+    </div>
+
     <!-- ===================== COMPUTADORAS ===================== -->
     <div class="text-center mt-16 mb-8">
       <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Computadoras</h1>
@@ -467,7 +486,80 @@
         </div>
       </div>
     </div>
+<!-- Modal Tabla de Inconvenientes -->
+<div *ngIf="mostrarModalTablaInconvenientes" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] transform transition-all duration-300 scale-100 border border-slate-200">
+    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl flex justify-between items-center">
+      <h3 class="text-2xl font-bold">Inconvenientes Registrados</h3>
+      <button (click)="cerrarModalTablaInconvenientes()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="p-8 overflow-auto max-h-[calc(90vh-160px)]">
+      <div *ngIf="errorInconvenientes" class="text-red-600 mb-4">{{ errorInconvenientes }}</div>
+      <table class="w-full">
+        <thead>
+          <tr>
+            <th class="px-6 py-4 text-left font-semibold">Tipo</th>
+            <th class="px-6 py-4 text-left font-semibold">Descripción</th>
+            <th class="px-6 py-4 text-center font-semibold">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let inc of inconvenientes">
+            <td class="px-6 py-4">{{ inc.tipo }}</td>
+            <td class="px-6 py-4">{{ inc.descripcion }}</td>
+            <td class="px-6 py-4 text-center">
+              <button (click)="editarInconveniente(inc)" class="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">Editar</button>
+              <button (click)="eliminarInconveniente(inc.id)" class="px-4 py-2 bg-red-500 text-white rounded-lg">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div *ngIf="!inconvenientes.length" class="text-center py-8 text-slate-500">
+        No hay inconvenientes registrados.
+      </div>
+    </div>
+  </div>
+</div>
 
+<!-- Modal Crear/Editar Inconveniente -->
+<div *ngIf="mostrarModalCrearInconveniente" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 border border-slate-200">
+    <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl flex justify-between items-center">
+      <h3 class="text-2xl font-bold">{{ inconvenienteSeleccionado?.id ? 'Editar Inconveniente' : 'Crear Nuevo Inconveniente' }}</h3>
+      <button (click)="cerrarModalCrearInconveniente()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="p-8">
+            <form (ngSubmit)="guardarInconveniente()" #formInconveniente="ngForm" novalidate class="space-y-6">
+        <div class="space-y-2">
+          <label class="font-semibold text-slate-700 text-sm">Tipo <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="nuevoInconveniente.tipo" name="tipo" required class="w-full px-4 py-4 border border-slate-300 rounded-xl" />
+        </div>
+        <div class="space-y-2">
+          <label class="font-semibold text-slate-700 text-sm">Descripción <span class="text-red-500">*</span></label>
+          <input type="text" [(ngModel)]="nuevoInconveniente.descripcion" name="descripcion" required class="w-full px-4 py-4 border border-slate-300 rounded-xl" />
+        </div>
+        <div *ngIf="mensajeExitoInconveniente" class="p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded-xl mb-2">
+          {{ mensajeExitoInconveniente }}
+        </div>
+        <div *ngIf="errorInconvenientes" class="p-4 bg-red-50 border border-red-200 text-red-800 rounded-xl mb-2">
+          {{ errorInconvenientes }}
+        </div>
+        <div class="flex gap-4 pt-4">
+          <button type="button" (click)="cerrarModalCrearInconveniente()" class="flex-1 px-6 py-4 border border-slate-300 text-slate-700 rounded-xl">Cancelar</button>
+          <button type="submit" [disabled]="creandoInconveniente || formInconveniente.invalid" class="flex-1 bg-blue-600 text-white px-6 py-4 rounded-xl">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
     <!-- ===================== LABORATORIOS ===================== -->
     <div class="text-center mb-8 mt-16">
       <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Laboratorios</h1>

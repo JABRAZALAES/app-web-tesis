@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import Swal from 'sweetalert2';
 import { forkJoin } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Inconveniente } from '../../services/gestion-laboratorios.service';
+
 
 @Component({
   selector: 'app-gestion-laboratorios',
@@ -406,6 +408,9 @@ actualizarComputadora(): void {
     this.proximaComputadora = this.computadoras[1] || null;
   }
 
+
+
+
   // ===== MÉTODOS LABORATORIOS =====
 // ===== MÉTODOS LABORATORIOS =====
 
@@ -715,6 +720,118 @@ abrirModalCrearLaboratorio(): void {
   // Cerrar modal para ver tabla de laboratorios
   cerrarModalTablaLaboratorios(): void {
     this.mostrarModalTablaLaboratorios = false;
+  }
+   // Inconvenientes
+  inconvenientes: Inconveniente[] = [];
+  nuevoInconveniente: Inconveniente = { tipo: '', descripcion: '' };
+  inconvenienteSeleccionado: Inconveniente | null = null;
+  mostrarModalCrearInconveniente = false;
+  mostrarModalTablaInconvenientes = false;
+  creandoInconveniente = false;
+  mensajeExitoInconveniente: string | null = null;
+  errorInconvenientes: string | null = null;
+
+  // ===== MÉTODOS INCONVENIENTES =====
+
+  cargarInconvenientes(): void {
+    this.gestionLaboratoriosService.obtenerInconvenientes().subscribe({
+      next: resp => {
+        this.inconvenientes = resp;
+        this.errorInconvenientes = null;
+      },
+      error: err => {
+        this.errorInconvenientes = err.error?.message || 'Error al cargar inconvenientes';
+      }
+    });
+  }
+
+  crearInconveniente(): void {
+    if (!this.nuevoInconveniente.tipo || !this.nuevoInconveniente.descripcion) {
+      this.errorInconvenientes = 'Tipo y descripción son requeridos';
+      return;
+    }
+    this.creandoInconveniente = true;
+    this.gestionLaboratoriosService.crearInconveniente(this.nuevoInconveniente).subscribe({
+      next: resp => {
+        this.mensajeExitoInconveniente = 'Inconveniente creado exitosamente';
+        this.nuevoInconveniente = { tipo: '', descripcion: '' };
+        this.cargarInconvenientes();
+        this.creandoInconveniente = false;
+        this.cerrarModalCrearInconveniente();
+      },
+      error: err => {
+        this.errorInconvenientes = err.error?.message || 'Error al crear inconveniente';
+        this.creandoInconveniente = false;
+      }
+    });
+  }
+
+  actualizarInconveniente(): void {
+    if (!this.inconvenienteSeleccionado?.id) return;
+    this.creandoInconveniente = true;
+    this.gestionLaboratoriosService.actualizarInconveniente(this.inconvenienteSeleccionado.id, this.inconvenienteSeleccionado).subscribe({
+      next: resp => {
+        this.mensajeExitoInconveniente = 'Inconveniente actualizado exitosamente';
+        this.cargarInconvenientes();
+        this.creandoInconveniente = false;
+        this.cerrarModalCrearInconveniente();
+      },
+      error: err => {
+        this.errorInconvenientes = err.error?.message || 'Error al actualizar inconveniente';
+        this.creandoInconveniente = false;
+      }
+    });
+  }
+
+  eliminarInconveniente(id?: number): void {
+    if (!id) return;
+    this.gestionLaboratoriosService.eliminarInconveniente(id).subscribe({
+      next: resp => {
+        this.mensajeExitoInconveniente = 'Inconveniente eliminado exitosamente';
+        this.cargarInconvenientes();
+      },
+      error: err => {
+        this.errorInconvenientes = err.error?.message || 'Error al eliminar inconveniente';
+      }
+    });
+  }
+
+editarInconveniente(inconveniente: Inconveniente): void {
+  this.nuevoInconveniente = { ...inconveniente }; // Copia los datos aquí
+  this.inconvenienteSeleccionado = { ...inconveniente };
+  this.mostrarModalCrearInconveniente = true;
+  this.mensajeExitoInconveniente = null;
+  this.errorInconvenientes = null;
+}
+  abrirModalCrearInconveniente(): void {
+    this.nuevoInconveniente = { tipo: '', descripcion: '' };
+    this.mostrarModalCrearInconveniente = true;
+    this.mensajeExitoInconveniente = null;
+    this.errorInconvenientes = null;
+  }
+
+  cerrarModalCrearInconveniente(): void {
+    this.mostrarModalCrearInconveniente = false;
+    this.nuevoInconveniente = { tipo: '', descripcion: '' };
+    this.inconvenienteSeleccionado = null;
+    this.mensajeExitoInconveniente = null;
+    this.errorInconvenientes = null;
+  }
+
+  abrirModalTablaInconvenientes(): void {
+    this.mostrarModalTablaInconvenientes = true;
+    this.cargarInconvenientes();
+  }
+
+  cerrarModalTablaInconvenientes(): void {
+    this.mostrarModalTablaInconvenientes = false;
+  }
+    guardarInconveniente(): void {
+    if (this.nuevoInconveniente.id) {
+      this.actualizarInconveniente();
+    } else {
+      this.crearInconveniente();
+    }
   }
 }
 
