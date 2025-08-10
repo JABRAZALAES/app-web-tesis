@@ -5,7 +5,7 @@
 <aside class="w-64 bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 text-white flex flex-col shadow-2xl border-r border-slate-700/50">
 
   <!-- Logo Section -->
-  <div class="p-6 border-b border-slate-700/50 bg-white/5 backdrop-blur-sm">
+<div class="p-6 border-b border-slate-700/50 bg-white/5">
     <div class="flex items-center space-x-4 group">
       <div class="relative">
         <img
@@ -28,8 +28,7 @@
   <nav class="flex-1 p-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-slate-600 scrollbar-track-transparent">
     <div
       *ngFor="let tab of tabs; trackBy: trackByTab"
-      class="group relative flex items-center space-x-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 hover:bg-white/10 hover:backdrop-blur-sm hover:shadow-lg hover:translate-x-1"
-
+      class="group relative flex items-center space-x-3 px-4 py-3.5 rounded-xl cursor-pointer transition-all duration-300 hover:bg-white/10 hover:shadow-lg hover:translate-x-1"
       [class]="getTabClass(tab)"
 
       (click)="cambiarTab(tab)"
@@ -82,7 +81,7 @@
 
       <!-- Active Background -->
       <div
-        class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20 backdrop-blur-sm border border-white/10 transition-all duration-300"
+        class="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-blue-500/20  border border-white/10 transition-all duration-300"
         [class.opacity-100]="isTabActive(tab)"
         [class.opacity-0]="!isTabActive(tab)"
       ></div>
@@ -267,10 +266,19 @@
 
       <!-- ===== PESTAÑA INCIDENTES ===== -->
       <div *ngIf="isTabActive('incidents') && !loading" class="animate-fadeIn">
-        <div class="mb-6">
-          <h2 class="text-xl font-semibold text-gray-900 mb-4"></h2>
-        </div>
-
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Incidentes Reporte Completo</h2>
+    <button
+      class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
+      (click)="exportarReporteIncidentesCompletoExcel()"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 2H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H8V4h11v16zM16 13h-2v2h2v-2zm0-4h-2v2h2V9zm-4 4H8v2h4v-2zm0-4H8v2h4V9z"/>
+        <rect x="2" y="6" width="4" height="12" rx="1" fill="#22c55e"/>
+      </svg>
+      <span>Exportar Reporte Incidentes Completo</span>
+    </button>
+  </div>
         <div class="space-y-6">
           <!-- Tabla por Laboratorio -->
           <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -320,10 +328,20 @@
       </div>
 
       <!-- ===== PESTAÑA OBJETOS PERDIDOS ===== -->
-      <div *ngIf="isTabActive('objects') && !loading" class="animate-fadeIn">
-        <div class="mb-6">
-          <h2 class="text-xl font-semibold text-gray-900">Objetos Perdidos</h2>
-        </div>
+   <div *ngIf="isTabActive('objects') && !loading" class="animate-fadeIn">
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-gray-900">Objetos Perdidos Reporte Completo</h2>
+    <button
+      class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
+      (click)="exportarReporteObjetosPerdidosCompletoExcel()"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 2H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H8V4h11v16zM16 13h-2v2h2v-2zm0-4h-2v2h2V9zm-4 4H8v2h4v-2zm0-4H8v2h4V9z"/>
+        <rect x="2" y="6" width="4" height="12" rx="1" fill="#22c55e"/>
+      </svg>
+      <span>Exportar Reporte Objetos Perdidos Completo</span>
+    </button>
+  </div>
 
         <div class="space-y-6">
           <!-- Tabla por Laboratorio -->
@@ -413,17 +431,25 @@
       </div>
 
       <!-- ===== PESTAÑA TRAZABILIDAD ===== -->
-      <div *ngIf="isTabActive('trazabilidad') && !loading" class="animate-fadeIn space-y-6">
-        <app-trazabilidad-busqueda (usuarioSeleccionado)="onUsuarioSeleccionado($event)"></app-trazabilidad-busqueda>
-        <button
-          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 flex items-center space-x-2"
-          (click)="exportarTrazabilidadPorUsuarioPdf(usuarioSeleccionado)"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
-          </svg>
-          <span>Descargar PDF</span>
-        </button>
+     <div *ngIf="isTabActive('trazabilidad') && !loading" class="animate-fadeIn space-y-6">
+  <div class="mb-6 flex items-center justify-between">
+    <h2 class="text-xl font-semibold text-gray-900">Trazabilidad General</h2>
+    <button
+      class="flex items-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 shadow"
+      (click)="exportarTrazabilidadGeneralExcel()"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M19 2H8c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H8V4h11v16zM16 13h-2v2h2v-2zm0-4h-2v2h2V9zm-4 4H8v2h4v-2zm0-4H8v2h4V9z"/>
+        <rect x="2" y="6" width="4" height="12" rx="1" fill="#22c55e"/>
+      </svg>
+      <span>Exportar Trazabilidad General</span>
+    </button>
+  </div>
+        <app-trazabilidad-busqueda (usuarioSeleccionado)="onUsuarioSeleccionado($event)">
+
+        </app-trazabilidad-busqueda>
+
+
       </div>
 
       <!-- ===== PESTAÑA GESTIÓN DE LABORATORIOS ===== -->
@@ -456,24 +482,15 @@
                   <div class="text-sm font-medium text-gray-600">Nombre</div>
                   <div class="text-gray-900">{{ evidenciaObjetoSeleccionado.nombre_objeto || 'N/A' }}</div>
                 </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                  <div class="text-sm font-medium text-gray-600">Descripción</div>
-                  <div class="text-gray-900">{{ evidenciaObjetoSeleccionado.descripcion || 'N/A' }}</div>
-                </div>
+
                 <div class="bg-white p-3 rounded border border-gray-200">
                   <div class="text-sm font-medium text-gray-600">Lugar</div>
                   <div class="text-gray-900">{{ evidenciaObjetoSeleccionado.lugar || 'N/A' }}</div>
                 </div>
+
+
                 <div class="bg-white p-3 rounded border border-gray-200">
-                  <div class="text-sm font-medium text-gray-600">Laboratorio</div>
-                  <div class="text-gray-900">{{ evidenciaObjetoSeleccionado.laboratorio || 'N/A' }}</div>
-                </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                  <div class="text-sm font-medium text-gray-600">Estado</div>
-                  <div class="text-gray-900">{{ evidenciaObjetoSeleccionado.estado_nombre || 'N/A' }}</div>
-                </div>
-                <div class="bg-white p-3 rounded border border-gray-200">
-                  <div class="text-sm font-medium text-gray-600">Fecha y hora de pérdida</div>
+                  <div class="text-sm font-medium text-gray-600">Fecha de pérdida</div>
                   <div class="text-gray-900">{{ formatDateTime(evidenciaObjetoSeleccionado.fecha_perdida) || 'N/A' }}</div>
                 </div>
                 <div class="bg-white p-3 rounded border border-gray-200">

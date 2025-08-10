@@ -8,3 +8,8 @@ h1.login-title {
   opacity: 1 !important;
   filter: none !important;
 }
+.sidebar-nav .nav-item.active,
+.sidebar-nav .nav-item.active .nav-label {
+  color: #e0e7ff !important; /* azul muy claro, puedes ajustar */
+  opacity: 1 !important;
+}

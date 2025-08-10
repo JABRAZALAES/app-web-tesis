@@ -9,16 +9,17 @@ export interface AuthUsuario {
   id: number;
   correo: string;
   nombre: string;
-  rol: string;
+  rol: 'jefe' | 'tecnico' | 'usuario'; // <-- ahora solo estos tres
   activo: number;
+  tipo_usuario?: string; // <-- nuevo campo opcional
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiLoginUrl = 'http://10.3.1.112:3000/api/usuarios/login';
-  private apiUsuariosUrl = 'http://10.3.1.112:3000/api/usuarios';
+  private apiLoginUrl = 'http://192.168.1.56:3000/api/usuarios/login';
+  private apiUsuariosUrl = 'http://192.168.1.56:3000/api/usuarios';
 
   constructor(
     private http: HttpClient,
@@ -74,37 +75,43 @@ listarUsuarios(q: string = ''): Observable<AuthUsuario[]> {
   if (q) {
     params = new HttpParams().set('q', q);
   }
-  const url = 'http://10.3.1.112:3000/api/auth/usuarios';
+  const url = 'http://192.168.1.56:3000/api/auth/usuarios';
   return this.http.get<any>(url, {
     params,
     headers: this.getAuthHeaders()
   }).pipe(
-      tap(response => {
-        console.log('🔍 RESPUESTA COMPLETA del backend:', response);
-        console.log('🔍 USUARIOS RAW desde BD:', response.data);
+    tap(response => {
+      console.log('🔍 RESPUESTA COMPLETA del backend:', response);
+      console.log('🔍 USUARIOS RAW desde BD:', response.data);
 
-        // Log detallado de cada usuario
-        response.data?.forEach((user: any, index: number) => {
-          console.log(`🔍 Usuario ${index + 1}:`, {
-            id: user.id,
-            nombre: user.nombre,
-            activo: user.activo,
-            tipo_activo: typeof user.activo,
-            activo_raw: JSON.stringify(user.activo)
-          });
+      // Log detallado de cada usuario
+      response.data?.forEach((user: any, index: number) => {
+        console.log(`🔍 Usuario ${index + 1}:`, {
+          id: user.id,
+          nombre: user.nombre,
+          activo: user.activo,
+          tipo_activo: typeof user.activo,
+          activo_raw: JSON.stringify(user.activo),
+          tipo_usuario: user.tipo_usuario
         });
-      }),
-      map(resp => resp.data as AuthUsuario[]),
-      catchError((error) => {
-        console.error('❌ Error al listar usuarios:', error);
-        return throwError(() => error);
-      })
-    );
-  }
+      });
+    }),
+    map(resp => (resp.data as any[]).map(u => ({
+      ...u,
+
+      activo: Number(u.activo), // Asegura que siempre sea número
+      tipo_usuario: u.tipo_usuario // Nuevo campo
+    })) as AuthUsuario[]),
+    catchError((error) => {
+      console.error('❌ Error al listar usuarios:', error);
+      return throwError(() => error);
+    })
+  );
+}
 
 cambiarEstadoUsuario(id: number, activo: number): Observable<any> {
   // Usa la ruta correcta con /auth/usuarios/
-  const url = `http://10.3.1.112:3000/api/auth/usuarios/${id}/estado`;
+  const url = `http://192.168.1.56:3000/api/auth/usuarios/${id}/estado`;
   return this.http.put<any>(url, { activo }, { headers: this.getAuthHeaders() })
     .pipe(
       tap(response => {

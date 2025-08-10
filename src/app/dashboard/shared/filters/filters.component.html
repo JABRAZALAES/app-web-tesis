@@ -1,36 +1,25 @@
 <div class="w-full max-w-7xl mx-auto p-6 bg-white rounded-2xl shadow-lg border border-slate-200/60 backdrop-blur-sm">
-
-  <!-- Encabezado de filtros mejorado -->
-  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+  <!-- Encabezado de filtros -->
+  <div class="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
     <div class="flex items-center gap-3">
       <div class="p-2.5 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl shadow-lg">
-        <svg class="text-white text-lg w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+        <svg class="text-white w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
           <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
         </svg>
       </div>
       <div>
-        <h2 class="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">
-          Filtros de Búsqueda
-        </h2>
+        <h2 class="text-xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Filtros de Búsqueda</h2>
         <p class="text-sm text-slate-500 mt-0.5">Personaliza tu consulta con los siguientes criterios</p>
       </div>
     </div>
 
-    <!-- Acciones del header -->
     <div class="flex items-center gap-3">
-      <!-- Contador de filtros activos -->
       <div *ngIf="getFiltrosActivos() > 0" class="flex items-center gap-2 px-3 py-1.5 bg-blue-100 text-blue-800 rounded-lg text-sm font-medium">
         <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
         <span>{{ getFiltrosActivos() }} filtro(s) activo(s)</span>
       </div>
 
-      <!-- Botón limpiar -->
-      <button
-        type="button"
-        class="text-red-600 text-sm flex items-center gap-2 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 border border-red-200 hover:border-red-300"
-        (click)="limpiarFiltros()"
-        [disabled]="loading"
-      >
+      <button type="button" class="text-red-600 text-sm flex items-center gap-2 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 border border-red-200 hover:border-red-300" (click)="limpiarFiltros()" [disabled]="loading">
         <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
           <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
         </svg>
@@ -39,13 +28,10 @@
     </div>
   </div>
 
-  <!-- Formulario de filtros -->
+  <!-- Formulario -->
   <form [formGroup]="filtrosForm" (ngSubmit)="aplicarFiltros()" class="space-y-8">
-
-    <!-- Grid de filtros principales -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-6">
-
-      <!-- Período Académico -->
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+      <!-- Período -->
       <div class="space-y-2">
         <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
           <svg class="w-4 h-4 text-blue-500" fill="currentColor" viewBox="0 0 24 24">
@@ -53,48 +39,15 @@
           </svg>
           Período Académico
         </label>
-        <div class="relative group">
-          <select
-            formControlName="periodoAcademico"
-            (change)="onFiltroChange()"
-            class="w-full appearance-none border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
-            [disabled]="loading"
-          >
+        <div class="relative">
+          <select formControlName="periodoAcademico" (change)="onFiltroChange()" class="w-full border border-slate-300 rounded-xl px-4 py-3 text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50" [disabled]="loading">
             <option value="">Seleccionar período</option>
             <option *ngFor="let periodo of periodosAcademicos" [value]="periodo.id">
               {{ periodo.nombre }} ({{ periodo.estado_periodo }})
             </option>
           </select>
           <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Laboratorio -->
-      <div class="space-y-2">
-        <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
-          <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M9 2v6l-2 2v3h2v7h6v-7h2v-3l-2-2V2H9zm2 2h2v5.17l2 2V13h-6v-1.83l2-2V4z"/>
-          </svg>
-          Laboratorio
-        </label>
-        <div class="relative group">
-          <select
-            formControlName="laboratorio"
-            (change)="onFiltroChange()"
-            class="w-full appearance-none border border-slate-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
-            [disabled]="loading"
-          >
-            <option value="">Todos los laboratorios</option>
-            <option *ngFor="let lab of laboratorios" [value]="lab.id">
-              {{ lab.nombre }}
-            </option>
-          </select>
-          <div class="absolute inset-y-0 right-0 flex items-center px-3 pointer-events-none">
-            <svg class="w-4 h-4 text-slate-400 group-hover:text-slate-600 transition-colors" fill="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4 text-slate-400" fill="currentColor" viewBox="0 0 24 24">
               <path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/>
             </svg>
           </div>
@@ -105,95 +58,43 @@
       <div class="space-y-2">
         <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
           <svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5C3.89 3 3 3.9 3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
           </svg>
           Fecha Inicio
         </label>
-        <div class="relative">
-          <input
-            type="date"
-            formControlName="fechaInicio"
-            (change)="onFiltroChange()"
-            class="w-full pl-4 pr-4 py-3 border border-slate-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
-            [disabled]="loading"
-          />
-        </div>
+        <input type="date" formControlName="fechaInicio" (change)="onFiltroChange()" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50" [disabled]="loading" />
       </div>
 
       <!-- Fecha Fin -->
       <div class="space-y-2">
         <label class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
           <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM12 10l-4 4h2.5v3h3v-3H16l-4-4z"/>
+            <path d="M19 3h-1V1h-2v2H8V1H6v2H5C3.89 3 3 3.9 3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
           </svg>
           Fecha Fin
         </label>
-        <div class="relative">
-          <input
-            type="date"
-            formControlName="fechaFin"
-            (change)="onFiltroChange()"
-            class="w-full pl-4 pr-4 py-3 border border-slate-300 rounded-xl text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50 disabled:cursor-not-allowed"
-            [disabled]="loading"
-          />
-        </div>
+        <input type="date" formControlName="fechaFin" (change)="onFiltroChange()" class="w-full px-4 py-3 border border-slate-300 rounded-xl text-base focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200 disabled:bg-slate-50" [disabled]="loading" />
       </div>
     </div>
 
-    <!-- Botones de acción -->
-    <div class="flex flex-col sm:flex-row justify-between items-center gap-4 pt-6 border-t border-slate-200">
-
-      <!-- Filtros avanzados toggle -->
-
-      <!-- Botones principales -->
-      <div class="flex items-center gap-3">
-        <!-- Botón guardar filtros -->
-        <button
-          type="button"
-          class="flex items-center gap-2 px-4 py-2.5 text-slate-600 border border-slate-300 rounded-xl hover:bg-slate-50 hover:border-slate-400 transition-all duration-200"
-          [disabled]="loading"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/>
-          </svg>
-          <span>Guardar</span>
-        </button>
-
-        <!-- Botón aplicar -->
-        <button
-          type="submit"
-          class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
-          [disabled]="loading"
-        >
-          <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-          </svg>
-          <span>{{ loading ? 'Aplicando...' : 'Aplicar Filtros' }}</span>
-        </button>
-      </div>
+    <!-- Botones -->
+    <div class="flex justify-end items-center gap-4 pt-6 border-t border-slate-200">
+      <button type="submit" class="bg-gradient-to-r from-blue-400 to-purple-200 text-white px-6 py-2.5 rounded-xl flex items-center gap-2 hover:from-blue-400 hover:to-purple-200 disabled:opacity-50 shadow-lg transition-all duration-200 font-medium" [disabled]="loading">
+        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5S13.09 3 9.5 3 3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+        </svg>
+        <span>{{ loading ? 'Aplicando...' : 'Aplicar Filtros' }}</span>
+      </button>
     </div>
   </form>
 
-  <!-- Estado de carga mejorado -->
-  <div *ngIf="loading" class="flex items-center justify-center gap-3 mt-8 p-4 bg-blue-50 rounded-xl border border-blue-200">
-    <div class="flex space-x-1">
-      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
-      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
-      <div class="w-2 h-2 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
-    </div>
-    <span class="text-blue-700 font-medium">Aplicando filtros...</span>
-  </div>
-
-  <!-- Resumen de filtros mejorado -->
-  <div
-    *ngIf="!loading && getFiltrosActivos() > 0"
-    class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6"
-  >
+  <!-- Resumen de filtros -->
+  <div *ngIf="!loading && getFiltrosActivos() > 0" class="mt-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-xl p-6">
     <div class="flex items-start gap-3">
       <div class="p-2 bg-blue-100 rounded-lg">
-        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
-        </svg>
+                        <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
       </div>
       <div class="flex-1">
         <h4 class="font-semibold text-slate-800 mb-3 flex items-center gap-2">
@@ -210,21 +111,14 @@
             </svg>
             <span><strong>Período:</strong> {{ getPeriodoSeleccionado() }}</span>
           </div>
-          <div *ngIf="filtrosForm.get('laboratorio')?.value" class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M9 2v6l-2 2v3h2v7h6v-7h2v-3l-2-2V2H9zm2 2h2v5.17l2 2V13h-6v-1.83l2-2V4z"/>
-            </svg>
-            <span><strong>Laboratorio:</strong> {{ getLaboratorioSeleccionado() }}</span>
-          </div>
+
           <div *ngIf="filtrosForm.get('fechaInicio')?.value || filtrosForm.get('fechaFin')?.value" class="flex items-center gap-2">
             <svg class="w-4 h-4 text-purple-500" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7z"/>
+              <path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/>
             </svg>
-            <span><strong>Fechas:</strong>
-              {{ filtrosForm.get('fechaInicio')?.value || 'Sin inicio' }} -
-              {{ filtrosForm.get('fechaFin')?.value || 'Sin fin' }}
-            </span>
+            <span><strong>Fechas:</strong> {{ filtrosForm.get('fechaInicio')?.value || 'Sin inicio' }} - {{ filtrosForm.get('fechaFin')?.value || 'Sin fin' }}</span>
           </div>
+
           <div *ngIf="filtrosForm.get('estado')?.value" class="flex items-center gap-2">
             <svg class="w-4 h-4 text-indigo-500" fill="currentColor" viewBox="0 0 24 24">
               <path d="M17 7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h10c2.76 0 5-2.24 5-5s-2.24-5-5-5zM7 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z"/>

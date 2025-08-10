@@ -207,6 +207,67 @@ iniciarAlertaExpiracionSesion(): void {
     alert('⚠️ Tu sesión está a punto de expirar. Por favor, guarda tu trabajo y vuelve a iniciar sesión si es necesario.');
   }, tiempoAlerta);
 }
+exportarTrazabilidadGeneralExcel(): void {
+  this.loading = true;
+  this.reportesService.descargarExcel('trazabilidad-general', this.filtrosActuales).subscribe({
+    next: (blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'trazabilidad-general.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    },
+    error: (error: any) => {
+      console.error('Error al exportar trazabilidad general:', error);
+      this.loading = false;
+      alert('Error al descargar el reporte');
+    }
+  });
+}
+exportarReporteObjetosPerdidosCompletoExcel(): void {
+  this.loading = true;
+  this.reportesService.descargarExcel('objetos-perdidos', this.filtrosActuales).subscribe({
+    next: (blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte-objetos-perdidos.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    },
+    error: (error: any) => {
+      console.error('Error al exportar reporte completo de objetos perdidos:', error);
+      this.loading = false;
+      alert('Error al descargar el reporte');
+    }
+  });
+}
+exportarReporteIncidentesCompletoExcel(): void {
+  this.loading = true;
+  this.reportesService.descargarExcel('reporteIncidentes', this.filtrosActuales).subscribe({
+    next: (blob: Blob) => {
+      // Descarga el archivo con un nombre amigable
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'reporte-incidentes-completo.xlsx';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      this.loading = false;
+    },
+    error: (error: any) => {
+      console.error('Error al exportar reporte completo de incidentes:', error);
+      this.loading = false;
+      alert('Error al descargar el reporte');
+    }
+  });
+}
+
+
+
 
 
  cargarDatosIniciales(): void {

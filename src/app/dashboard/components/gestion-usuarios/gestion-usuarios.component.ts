@@ -4,6 +4,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { debounceTime, switchMap } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
+
 @Component({
   selector: 'app-gestion-usuarios',
   standalone: true,
@@ -12,12 +13,14 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./gestion-usuarios.component.scss']
 })
 export class GestionUsuariosComponent implements OnInit {
-  usuarios: AuthUsuario[] = [];
+ usuarios: AuthUsuario[] = [];
   busqueda = new FormControl('');
   cargando = false;
   error: string | null = null;
   activos = 0;
   inactivos = 0;
+  tipo_usuario: string[] = []; // <-- NUEVO
+
 
   constructor(private authService: AuthService) {}
 
@@ -48,6 +51,7 @@ export class GestionUsuariosComponent implements OnInit {
     this.cargarUsuarios();
   }
 
+
   cargarUsuarios() {
     console.log('🔍 Iniciando carga de usuarios...');
     this.cargando = true;
@@ -66,32 +70,16 @@ export class GestionUsuariosComponent implements OnInit {
   }
 
   // 🔍 Método centralizado para procesar usuarios
-  private procesarUsuarios(usuarios: AuthUsuario[]) {
-    console.log('🔍 Procesando usuarios antes del mapeo:', usuarios);
+private procesarUsuarios(usuarios: AuthUsuario[]) {
+  this.usuarios = usuarios.map((u, index) => ({
+    ...u,
+    activo: Number(u.activo)
+  }));
 
-    this.usuarios = usuarios.map((u, index) => {
-      const usuarioMapeado = {
-        ...u,
-        activo: Number(u.activo)
-      };
-
-      console.log(`🔍 Usuario ${index + 1} mapeado:`, {
-        nombre: u.nombre,
-        activo_original: u.activo,
-        activo_tipo_original: typeof u.activo,
-        activo_mapeado: usuarioMapeado.activo,
-        activo_tipo_mapeado: typeof usuarioMapeado.activo
-      });
-
-      return usuarioMapeado;
-    });
-
-    console.log('🔍 Usuarios finales en componente:', this.usuarios);
-
-    this.contarUsuarios();
-    this.cargando = false;
-    this.error = null;
-  }
+  this.contarUsuarios();
+  this.tipo_usuario = [...new Set(this.usuarios.map(u => u.tipo_usuario).filter((t): t is string => !!t))];
+  this.error = null;
+}
 
   private contarUsuarios() {
     this.activos = this.usuarios.filter(u => u.activo === 1).length;
@@ -165,7 +153,7 @@ export class GestionUsuariosComponent implements OnInit {
       this.authService.cambiarRolUsuario(usuario.id, nuevoRol).subscribe({
         next: (response) => {
           console.log('✅ Rol cambiado:', response);
-          usuario.rol = nuevoRol;
+                usuario.rol = nuevoRol as 'jefe' | 'tecnico' | 'usuario';
           this.error = null;
         },
         error: (err) => {
@@ -175,4 +163,4 @@ export class GestionUsuariosComponent implements OnInit {
       });
     }
   }
-} 
+}

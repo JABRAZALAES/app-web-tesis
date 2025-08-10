@@ -241,21 +241,21 @@
 
     <!-- ===================== COMPUTADORAS ===================== -->
     <div class="text-center mt-16 mb-8">
-      <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Computadoras</h1>
-      <p class="text-slate-600 text-lg">Gestiona las computadoras de tu institución</p>
+      <h1 class="text-4xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent mb-3">Equipos</h1>
+      <p class="text-slate-600 text-lg">Gestiona los equipos de tu institución</p>
     </div>
     <div class="flex flex-wrap gap-4 mb-6 justify-center">
       <button (click)="abrirModalCrearComputadora()" class="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
         </svg>
-        Crear Nueva Computadora
+        Crear Nuevo Equipo
       </button>
       <button (click)="abrirModalTablaComputadoras()" class="bg-white border-2 border-slate-300 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 flex items-center gap-3">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
         </svg>
-        Ver Todas las Computadoras
+        Ver Todos los Equipos
       </button>
     </div>
 
@@ -271,8 +271,8 @@
               </svg>
             </div>
             <div>
-              <h3 class="text-2xl font-bold">Computadoras Registradas</h3>
-              <p class="text-slate-300 text-sm mt-1">Gestiona todas las computadoras</p>
+              <h3 class="text-2xl font-bold">Equipos Registrados</h3>
+              <p class="text-slate-300 text-sm mt-1">Gestiona todos los equipos</p>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -296,7 +296,7 @@
               <div class="w-3 h-3 bg-purple-500 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
               <div class="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
             </div>
-            <p class="text-slate-600 font-medium text-lg">Cargando computadoras...</p>
+            <p class="text-slate-600 font-medium text-lg">Cargando equipos...</p>
             <p class="text-slate-400 text-sm mt-2">Esto puede tomar unos momentos</p>
           </div>
 <div *ngIf="!cargandoComputadoras && laboratoriosConComputadoras.length > 0">
@@ -350,7 +350,7 @@
       </table>
     </div>
     <div *ngIf="grupo.computadoras.length === 0" class="text-slate-500 py-8 text-center">
-      No hay computadoras registradas en este laboratorio.
+      No hay equipos registrados en este laboratorio.
     </div>
   </div>
 </div>
@@ -358,10 +358,10 @@
             <div class="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <i class="fas fa-desktop text-slate-400 text-4xl"></i>
             </div>
-            <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin computadoras registradas</h3>
-            <p class="text-slate-500 mb-6">No se han encontrado computadoras en el sistema.</p>
+            <h3 class="text-xl font-semibold text-slate-600 mb-2">Sin equipos registrados</h3>
+            <p class="text-slate-500 mb-6">No se han encontrado equipos en el sistema.</p>
             <button (click)="abrirModalCrearComputadora(); cerrarModalTablaComputadoras()" class="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200">
-              Crear Primera Computadora
+              Crear Primer Equipo
             </button>
           </div>
         </div>
@@ -380,8 +380,8 @@
                 </svg>
               </div>
               <div>
-                <h3 class="text-2xl font-bold">{{ nuevaComputadora.id ? 'Editar Computadora' : 'Crear Nueva Computadora' }}</h3>
-                <p class="text-slate-300 text-sm mt-1">Registra una nueva computadora</p>
+                <h3 class="text-2xl font-bold">{{ nuevaComputadora.id ? 'Editar Equipo' : 'Crear Nuevo Equipo' }}</h3>
+                <p class="text-slate-300 text-sm mt-1">Registra un nuevo equipo</p>
               </div>
             </div>
             <button (click)="cerrarModalCrearComputadora()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
@@ -397,13 +397,13 @@
             <div class="space-y-2">
               <label for="nombreComputadora" class="flex items-center gap-2 font-semibold text-slate-700 text-sm">
                 <i class="fas fa-tag text-blue-600"></i>
-                Nombre de la Computadora
+                Nombre del Equipo
                 <span class="text-red-500">*</span>
               </label>
               <input type="text" id="nombreComputadora" name="nombre" [(ngModel)]="nuevaComputadora.nombre" required #nombreComputadora="ngModel" placeholder="Ej: PC-01" class="w-full px-4 py-4 border border-slate-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 hover:border-slate-400 transition-all duration-200" />
               <p *ngIf="nombreComputadora.invalid && nombreComputadora.touched" class="text-red-500 text-sm flex items-center gap-2">
                 <i class="fas fa-exclamation-circle"></i>
-                El nombre de la computadora es obligatorio
+                El nombre del equipo es obligatorio
               </p>
             </div>
             <!-- Especificaciones -->
@@ -529,7 +529,7 @@
 <div *ngIf="mostrarModalCrearInconveniente" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
   <div class="bg-white rounded-3xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100 border border-slate-200">
     <div class="bg-gradient-to-r from-blue-900 via-blue-800 to-blue-900 text-white p-8 rounded-t-3xl flex justify-between items-center">
-      <h3 class="text-2xl font-bold">{{ inconvenienteSeleccionado?.id ? 'Editar Inconveniente' : 'Crear Nuevo Inconveniente' }}</h3>
+      <h3 class="text-2xl font-bold">{{ nuevoInconveniente.id ? 'Editar Inconveniente' : 'Crear Nuevo Inconveniente' }}</h3>
       <button (click)="cerrarModalCrearInconveniente()" class="text-white hover:bg-white/20 p-3 rounded-xl transition-all duration-200 hover:scale-110">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -537,10 +537,14 @@
       </button>
     </div>
     <div class="p-8">
-            <form (ngSubmit)="guardarInconveniente()" #formInconveniente="ngForm" novalidate class="space-y-6">
+      <form (ngSubmit)="guardarInconveniente()" #formInconveniente="ngForm" novalidate class="space-y-6">
         <div class="space-y-2">
           <label class="font-semibold text-slate-700 text-sm">Tipo <span class="text-red-500">*</span></label>
-          <input type="text" [(ngModel)]="nuevoInconveniente.tipo" name="tipo" required class="w-full px-4 py-4 border border-slate-300 rounded-xl" />
+        <select [(ngModel)]="nuevoInconveniente.tipo" name="tipo" required class="w-full px-4 py-4 border border-slate-300 rounded-xl">
+  <option value="" disabled selected>Seleccione tipo</option>
+  <option value="GENERAL">GENERAL</option>
+  <option value="ESPECIFICO">ESPECIFICO</option>
+</select>
         </div>
         <div class="space-y-2">
           <label class="font-semibold text-slate-700 text-sm">Descripción <span class="text-red-500">*</span></label>

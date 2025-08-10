@@ -1,217 +1,213 @@
-<div *ngIf="data && metricas" class="p-4 md:p-6">
-  <!-- Métricas principales -->
-  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <!-- Tarjeta Total Incidentes -->
-    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-blue-500">
-      <div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Incidentes</h3>
-        <p class="text-4xl font-bold text-blue-600 mb-1">{{ formatearNumero(metricas.totalIncidentes) }}</p>
-        <div class="text-sm text-green-500 flex items-center gap-1">
-          <span class="text-green-600 font-medium">↗ +12%</span>
-          <span class="text-gray-500">vs mes anterior</span>
+  <div *ngIf="data && metricas" class="bg-white min-h-screen">
+    <!-- Header del Dashboard -->
+
+
+  <div class="max-w-7xl mx-auto px-6">
+    <!-- Métricas principales -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+  <!-- Total Incidentes -->
+  <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600 mb-1">Total Incidentes</p>
+          <p class="text-3xl font-bold text-gray-900">{{ formatearNumero(metricas.totalIncidentes) }}</p>
         </div>
-      </div>
-      <div class="bg-blue-50 p-3 rounded-full">
-        <!-- Warning/Alert Triangle Icon SVG -->
-        <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M10.29 3.86L1.82 18C1.64571 18.3024 1.55299 18.6453 1.55201 18.9945C1.55103 19.3437 1.64171 19.6871 1.81442 19.9905C1.98714 20.2939 2.23584 20.5468 2.53621 20.7239C2.83658 20.901 3.18035 20.9962 3.53 21H20.47C20.8197 20.9962 21.1634 20.901 21.4638 20.7239C21.7642 20.5468 22.0129 20.2939 22.1856 19.9905C22.3583 19.6871 22.449 19.3437 22.448 18.9945C22.447 18.6453 22.3543 18.3024 22.18 18L13.71 3.86C13.5317 3.56611 13.2807 3.32312 12.9812 3.15448C12.6817 2.98585 12.3438 2.89725 12 2.89725C11.6562 2.89725 11.3183 2.98585 11.0188 3.15448C10.7193 3.32312 10.4683 3.56611 10.29 3.86V3.86Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 9V13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 17H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <div class="bg-blue-50 p-3 rounded-full">
+          <svg class="w-6 h-6 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+          </svg>
+        </div>
       </div>
     </div>
+    <div class="bg-blue-50 px-6 py-3">
+      <div class="text-sm text-blue-600 font-medium">Reportes activos</div>
+    </div>
+  </div>
 
-    <!-- Tarjeta Total Objetos Encontrados -->
-    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-green-500">
-      <div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Objetos Encontrados</h3>
-        <p class="text-4xl font-bold text-green-600 mb-1">{{ formatearNumero(metricas.totalObjetos) }}</p>
-        <div class="text-sm text-green-500 flex items-center gap-1">
-          <span class="text-green-600 font-medium">↗ +8%</span>
-          <span class="text-gray-500">vs mes anterior</span>
+  <!-- Objetos Encontrados -->
+  <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600 mb-1">Objetos Encontrados</p>
+          <p class="text-3xl font-bold text-gray-900">{{ formatearNumero(metricas.totalObjetos) }}</p>
         </div>
-      </div>
-      <div class="bg-green-50 p-3 rounded-full">
-        <!-- Package/Box Icon SVG -->
-        <svg class="w-8 h-8 text-green-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M16.5 9.4L7.5 4.21C7.18 4.05 6.82 4.05 6.5 4.21L2.5 6.11C2.22 6.26 2 6.55 2 6.89V17.11C2 17.45 2.22 17.74 2.5 17.89L6.5 19.79C6.82 19.95 7.18 19.95 7.5 19.79L11.5 17.89C11.78 17.74 12 17.45 12 17.11V6.89C12 6.55 11.78 6.26 11.5 6.11L16.5 9.4Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M22 12L12 7L2 12L12 17L22 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M2 12L12 17L22 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <div class="bg-green-50 p-3 rounded-full">
+          <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+          </svg>
+        </div>
       </div>
     </div>
+    <div class="bg-green-50 px-6 py-3">
+      <div class="text-sm text-green-600 font-medium">Items recuperados</div>
+    </div>
+  </div>
 
-    <!-- Tarjeta Porcentaje Resueltos -->
-    <div class="bg-white p-6 rounded-xl shadow-md flex justify-between items-center border-l-4 border-indigo-500">
-      <div>
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Tasa de Resolución</h3>
-        <p class="text-4xl font-bold text-indigo-600 mb-1">{{ formatearPorcentaje(metricas.porcentajeResolucion) }}</p>
-        <div class="text-sm text-green-500 flex items-center gap-1">
-          <span class="text-green-600 font-medium">↗ +5%</span>
-          <span class="text-gray-500">vs mes anterior</span>
+  <!-- Tasa de Resolución -->
+  <div class="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
+    <div class="p-6">
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600 mb-1">Tasa de Resolución</p>
+          <p class="text-3xl font-bold text-gray-900">{{ formatearPorcentaje(metricas.porcentajeResolucion) }}</p>
+        </div>
+        <div class="bg-indigo-50 p-3 rounded-full">
+          <svg class="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
         </div>
       </div>
-      <div class="bg-indigo-50 p-3 rounded-full">
-        <!-- Check Circle Icon SVG -->
-        <svg class="w-8 h-8 text-indigo-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 12L11 14L15 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" stroke-width="2"/>
-        </svg>
+    </div>
+    <div class="bg-indigo-50 px-6 py-3">
+      <div class="text-sm text-indigo-600 font-medium">Casos resueltos</div>
+    </div>
+  </div>
+</div>
+    <!-- Gráficos principales - Layout horizontal mejorado -->
+    <div class="space-y-8">
+      <!-- Fila 1: Incidentes por Laboratorio (Horizontal) -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="bg-blue-50 p-2 rounded-lg">
+              <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Incidentes por Laboratorio</h3>
+          </div>
+          <div class="text-sm text-gray-500">Distribución por ubicación</div>
+        </div>
+        <div class="h-96">
+          <canvas baseChart
+                  [data]="incidentesLaboratorioChart"
+                  [options]="horizontalBarChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Fila 2: Estados de Incidentes y Objetos -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Incidentes por Estado -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+              <div class="bg-pink-50 p-2 rounded-lg">
+                <svg class="w-5 h-5 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Estados de Incidentes</h3>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas baseChart
+                    [data]="incidentesEstadoChart"
+                    [options]="doughnutChartOptions"
+                    [type]="'doughnut'">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Objetos por Estado -->
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center space-x-3">
+              <div class="bg-green-50 p-2 rounded-lg">
+                <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                </svg>
+              </div>
+              <h3 class="text-xl font-bold text-gray-900">Estado de Objetos</h3>
+            </div>
+          </div>
+          <div class="h-80">
+            <canvas baseChart
+                    [data]="objetosEstadoChart"
+                    [options]="doughnutChartOptions"
+                    [type]="'doughnut'">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fila 3: Tipos de Inconvenientes (Horizontal) -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="bg-orange-50 p-2 rounded-lg">
+              <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Tipos de Inconvenientes</h3>
+          </div>
+          <div class="text-sm text-gray-500">Categorías más reportadas</div>
+        </div>
+        <div class="h-96">
+          <canvas baseChart
+                  [data]="incidentesInconvenienteChart"
+                  [options]="horizontalBarChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Fila 4: Objetos por Laboratorio (Horizontal) -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="bg-purple-50 p-2 rounded-lg">
+              <svg class="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Objetos Encontrados por Laboratorio</h3>
+          </div>
+          <div class="text-sm text-gray-500">Distribución por ubicación</div>
+        </div>
+        <div class="h-96">
+          <canvas baseChart
+                  [data]="objetosLaboratorioChart"
+                  [options]="horizontalBarChartOptions"
+                  [type]="'bar'">
+          </canvas>
+        </div>
+      </div>
+
+      <!-- Fila 5: Tendencia Temporal -->
+      <div class="bg-white rounded-xl shadow-lg border border-gray-100 p-8">
+        <div class="flex items-center justify-between mb-6">
+          <div class="flex items-center space-x-3">
+            <div class="bg-indigo-50 p-2 rounded-lg">
+              <svg class="w-5 h-5 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+            </div>
+            <h3 class="text-xl font-bold text-gray-900">Tendencia Mensual de Incidentes</h3>
+          </div>
+          <div class="text-sm text-gray-500">Evolución temporal</div>
+        </div>
+        <div class="h-80">
+          <canvas baseChart
+                  [data]="tendenciaChart"
+                  [options]="areaChartOptions"
+                  [type]="'line'">
+          </canvas>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Gráficos principales -->
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <!-- Incidentes por Laboratorio -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-blue-50 p-2 rounded-lg">
-            <!-- Bar Chart Icon SVG -->
-            <svg class="w-5 h-5 text-blue-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="12" y1="20" x2="12" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="18" y1="20" x2="18" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="6" y1="20" x2="6" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          Incidentes por Laboratorio
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="incidentesLaboratorioChart"
-                [options]="barChartOptions"
-                [type]="barChartType">
-        </canvas>
-      </div>
+  <!-- Estado de carga -->
+  <div *ngIf="!data || !metricas" class="flex flex-col items-center justify-center py-20 bg-white">
+    <div class="relative mb-6">
+      <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-200 border-t-blue-600"></div>
     </div>
-
-    <!-- Incidentes por Estado -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-pink-50 p-2 rounded-lg">
-            <!-- Pie Chart Icon SVG -->
-            <svg class="w-5 h-5 text-pink-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.21 15.89C20.5738 17.3945 19.5788 18.7202 18.3119 19.7513C17.0449 20.7824 15.5447 21.4874 13.9424 21.8048C12.3401 22.1221 10.6844 22.0421 9.12012 21.5718C7.55585 21.1014 6.1306 20.2551 4.97918 19.1037C3.82777 17.9523 2.98151 16.5271 2.51118 14.9628C2.04084 13.3986 1.96083 11.7428 2.27818 10.1405C2.59552 8.53825 3.30056 7.03809 4.33162 5.77109C5.36269 4.50409 6.68836 3.50913 8.19279 2.87299" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2V12H22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          Estado de Incidentes
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="incidentesEstadoChart"
-                [options]="pieChartOptions"
-                [type]="pieChartType">
-        </canvas>
-      </div>
-    </div>
-
-    <!-- Tendencia de Incidentes por Mes -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-purple-50 p-2 rounded-lg">
-            <!-- Line Chart Icon SVG -->
-            <svg class="w-5 h-5 text-purple-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 3V21H21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M9 9L12 6L16 10L20 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          Tendencia Mensual
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="tendenciaChart"
-                [options]="lineChartOptions"
-                [type]="lineChartType">
-        </canvas>
-      </div>
-    </div>
-
-    <!-- Incidentes por Tipo de Inconveniente -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-orange-50 p-2 rounded-lg">
-            <!-- Bar Chart Icon SVG -->
-            <svg class="w-5 h-5 text-orange-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="12" y1="20" x2="12" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="18" y1="20" x2="18" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="6" y1="20" x2="6" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          Tipos de Inconvenientes
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="incidentesInconvenienteChart"
-                [options]="barChartOptions"
-                [type]="barChartType">
-        </canvas>
-      </div>
-    </div>
-
-    <!-- Objetos Perdidos por Laboratorio -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-green-50 p-2 rounded-lg">
-            <!-- Bar Chart Icon SVG -->
-            <svg class="w-5 h-5 text-green-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <line x1="12" y1="20" x2="12" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="18" y1="20" x2="18" y2="4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-              <line x1="6" y1="20" x2="6" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
-          </div>
-          Objetos por Laboratorio
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="objetosLaboratorioChart"
-                [options]="barChartOptions"
-                [type]="barChartType">
-        </canvas>
-      </div>
-    </div>
-
-    <!-- Objetos Perdidos por Estado -->
-    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-      <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 flex items-center gap-2">
-          <div class="bg-yellow-50 p-2 rounded-lg">
-            <!-- Pie Chart Icon SVG -->
-            <svg class="w-5 h-5 text-yellow-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M21.21 15.89C20.5738 17.3945 19.5788 18.7202 18.3119 19.7513C17.0449 20.7824 15.5447 21.4874 13.9424 21.8048C12.3401 22.1221 10.6844 22.0421 9.12012 21.5718C7.55585 21.1014 6.1306 20.2551 4.97918 19.1037C3.82777 17.9523 2.98151 16.5271 2.51118 14.9628C2.04084 13.3986 1.96083 11.7428 2.27818 10.1405C2.59552 8.53825 3.30056 7.03809 4.33162 5.77109C5.36269 4.50409 6.68836 3.50913 8.19279 2.87299" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M22 12C22 10.6868 21.7413 9.38642 21.2388 8.17317C20.7362 6.95991 19.9997 5.85752 19.0711 4.92893C18.1425 4.00035 17.0401 3.26375 15.8268 2.7612C14.6136 2.25866 13.3132 2 12 2V12H22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          Estado de Objetos
-        </h3>
-      </div>
-      <div class="h-64 relative">
-        <canvas baseChart
-                [data]="objetosEstadoChart"
-                [options]="pieChartOptions"
-                [type]="pieChartType">
-        </canvas>
-      </div>
-    </div>
-  </div>
-
-  <!-- Estado de carga mejorado -->
-  <div *ngIf="!data || !metricas" class="flex flex-col items-center justify-center py-20 text-center">
-    <div class="relative">
-      <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-200 border-t-blue-600 mb-4"></div>
-      <div class="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-300 animate-ping"></div>
-    </div>
-    <p class="text-gray-600 text-lg font-medium">Cargando datos del dashboard...</p>
-    <p class="text-gray-400 text-sm mt-1">Esto puede tomar unos segundos</p>
+    <p class="text-gray-600 text-xl font-semibold mb-2">Cargando Dashboard...</p>
+    <p class="text-gray-400 text-sm">Preparando análisis de datos</p>
   </div>
 </div>

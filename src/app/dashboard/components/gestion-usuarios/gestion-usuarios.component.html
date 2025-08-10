@@ -9,8 +9,28 @@
         class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg text-base focus:outline-none focus:border-blue-900 focus:ring-0 transition-colors" />
     </div>
 
+    <!-- Cajitas de información -->
+    <div class="p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 flex flex-col items-center">
+        <span class="text-2xl font-bold text-blue-900">{{ usuarios.length }}</span>
+        <span class="text-blue-700 text-sm font-medium">Total Usuarios</span>
+      </div>
+      <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex flex-col items-center">
+        <span class="text-2xl font-bold text-green-900">{{ activos }}</span>
+        <span class="text-green-700 text-sm font-medium">Activos</span>
+      </div>
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 flex flex-col items-center">
+        <span class="text-2xl font-bold text-red-900">{{ inactivos }}</span>
+        <span class="text-red-700 text-sm font-medium">Inactivos</span>
+      </div>
+      <div class="bg-purple-50 border border-purple-200 rounded-xl p-4 flex flex-col items-center">
+        <span class="text-2xl font-bold text-purple-900">{{ tipo_usuario.length }}</span>
+        <span class="text-purple-700 text-sm font-medium">Tipos de Usuario</span>
+      </div>
+    </div>
+
     <div class="p-8">
-      <div *ngIf="cargando" class="text-center py-12 text-gray-600">Cargando usuarios...</div>
+    
       <div *ngIf="error" class="text-center py-12 text-red-600">{{ error }}</div>
 
       <div *ngIf="usuarios.length > 0" class="overflow-x-auto">
@@ -20,6 +40,7 @@
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Nombre</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Correo</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Rol</th>
+              <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Tipo Usuario</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Estado</th>
               <th class="px-6 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Acciones</th>
             </tr>
@@ -32,10 +53,16 @@
                 <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full" [ngClass]="{
                         'bg-red-100 text-red-800 border border-red-200': usuario.rol === 'jefe',
                         'bg-blue-100 text-blue-800 border border-blue-200': usuario.rol === 'tecnico',
-                        'bg-purple-100 text-purple-800 border border-purple-200': usuario.rol === 'normal'
+                        'bg-purple-100 text-purple-800 border border-purple-200': usuario.rol === 'usuario'
                       }">
-                  {{ usuario.rol === 'jefe' ? 'Jefe' : usuario.rol === 'tecnico' ? 'Técnico' : 'Estudiante' }}
+                  {{ usuario.rol === 'jefe' ? 'Jefe' : usuario.rol === 'tecnico' ? 'Técnico' : 'Usuario' }}
                 </span>
+              </td>
+              <td class="px-6 py-5">
+
+                <span class="inline-flex px-3 py-1 text-xs font-medium rounded-full bg-purple-100 text-purple-800 border border-purple-200">
+          {{ usuario.tipo_usuario }}
+        </span>
               </td>
               <td class="px-6 py-5">
                 <span [ngClass]="usuario.activo === 1
@@ -57,11 +84,11 @@
                   <option value="" disabled selected>Selecciona rol</option>
                   <option value="jefe">Jefe</option>
                   <option value="tecnico">Técnico</option>
-                  <option value="normal">Estudiante</option>
+                  <option value="usuario">Usuario</option>
                 </select>
               </td>
             </tr>
-          </tbody>  
+          </tbody>
         </table>
       </div>
 
@@ -69,3 +96,5 @@
         No se encontraron usuarios
       </div>
     </div>
+  </section>
+</div>

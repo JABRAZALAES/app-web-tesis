@@ -216,8 +216,8 @@ export class LoginComponent implements OnInit, OnDestroy {
    * Guarda la información de sesión
    */
   private guardarSesion(response: AuthResponse): void {
-    localStorage.setItem('token', response.token);
-    localStorage.setItem('usuario', JSON.stringify(response.usuario));
+    sessionStorage.setItem('token', response.token);
+sessionStorage.setItem('usuario', JSON.stringify(response.usuario));
   }
 
   /**

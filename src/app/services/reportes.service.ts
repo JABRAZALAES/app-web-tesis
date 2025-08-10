@@ -115,6 +115,17 @@ export class ReportesService {
     console.log('📋 Parámetros:', params.toString());
     return this.http.get(url, { params });
   }
+    /**
+   * Exportar trazabilidad por usuario (Excel o PDF)
+   * GET /api/reportes/trazabilidad-por-usuario?nombre=Juan&formato=excel|pdf
+   */
+  exportarTrazabilidadPorUsuario(nombre: string, formato: 'excel' | 'pdf' = 'excel'): Observable<Blob> {
+    const params = new HttpParams()
+      .set('nombre', nombre)
+      .set('formato', formato);
+    const url = `${this.baseUrl}/trazabilidad-por-usuario`;
+    return this.http.get(url, { params, responseType: 'blob' });
+  }
 
   // 5. Reporte general de incidentes
   getReporteIncidentes(filtros: FiltrosReporte): Observable<any> {

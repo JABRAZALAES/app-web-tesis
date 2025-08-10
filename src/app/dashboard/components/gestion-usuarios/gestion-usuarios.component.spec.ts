@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { GestionUsuariosComponent } from './gestion-usuarios.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing'; // 👈 Agrega esto
 
 describe('GestionUsuariosComponent', () => {
   let component: GestionUsuariosComponent;
@@ -8,7 +8,10 @@ describe('GestionUsuariosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [GestionUsuariosComponent]
+      imports: [
+        HttpClientTestingModule, // 👈 Importa esto para inyectar HttpClient
+        GestionUsuariosComponent
+      ]
     })
     .compileComponents();
 

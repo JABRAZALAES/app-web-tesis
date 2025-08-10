@@ -15,7 +15,7 @@ interface UserRanking {
   template: `
 
       <div class="bg-gray-100 p-4 rounded-t-lg -mx-6 -mt-6 mb-8 border-b border-gray-200">
-  <h3 class="text-xl font-semibold text-gray-700">Podio de Rankings</h3>
+  <h3 class="text-xl font-semibold text-gray-700"></h3>
   <div *ngIf="periodo" class="text-sm text-blue-700 font-medium mt-1">
     Período: {{ periodo }}
   </div>

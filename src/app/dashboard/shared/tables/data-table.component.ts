@@ -202,5 +202,5 @@ export class DataTableComponent {
     // ...existing code...
   tabs: ActiveTab[] = ['overview', 'incidents', 'objects', 'rankings', 'trazabilidad', 'laboratorios', 'usuarios'];
   // ...existing code...
-  
+
 }

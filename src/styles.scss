@@ -3,9 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== ESTILOS GLOBALES ULTRA-MODERNOS ===== */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 
 :root {
   /* ===== PALETA DE COLORES PREMIUM ===== */
@@ -17,7 +15,7 @@
   --info-gradient: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
   --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
   --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-  
+
   /* Colores base premium */
   --primary: #667eea;
   --primary-dark: #5a6fd8;
@@ -27,7 +25,7 @@
   --warning: #fa709a;
   --danger: #ff9a9e;
   --info: #a8edea;
-  
+
   /* Neutros premium - Tema Claro */
   --bg-primary: #ffffff;
   --bg-secondary: #f8fafc;
@@ -41,7 +39,7 @@
   --text-accent: #f59e0b;
   --border-color: rgba(148, 163, 184, 0.2);
   --border-light: rgba(148, 163, 184, 0.1);
-  
+
   /* Sombras premium - Tema Claro */
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-md: 0 8px 25px rgba(0, 0, 0, 0.12);
@@ -51,14 +49,14 @@
   --shadow-glow-success: 0 0 30px rgba(79, 172, 254, 0.3);
   --shadow-glow-warning: 0 0 30px rgba(250, 112, 154, 0.3);
   --shadow-glow-danger: 0 0 30px rgba(255, 154, 158, 0.3);
-  
+
   /* Bordes premium */
   --border-radius-sm: 0.75rem;
   --border-radius-md: 1rem;
   --border-radius-lg: 1.5rem;
   --border-radius-xl: 2rem;
   --border-radius-2xl: 3rem;
-  
+
   /* Espaciado premium */
   --spacing-xs: 0.5rem;
   --spacing-sm: 1rem;
@@ -90,7 +88,7 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   font-weight: 400;
-  
+
   /* Fondo premium con gradiente animado - Tema Claro */
   background: linear-gradient(-45deg, #ffffff, #f8fafc, #f1f5f9, #ffffff);
   background-size: 400% 400%;
@@ -112,42 +110,42 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-h1 { 
-  font-size: 3rem; 
-  font-weight: 800; 
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
   background: var(--primary-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-h2 { 
-  font-size: 2.5rem; 
-  font-weight: 700; 
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
-h3 { 
-  font-size: 2rem; 
-  font-weight: 600; 
+h3 {
+  font-size: 2rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-h4 { 
-  font-size: 1.5rem; 
-  font-weight: 600; 
+h4 {
+  font-size: 1.5rem;
+  font-weight: 600;
   color: var(--text-primary);
 }
 
-h5 { 
-  font-size: 1.25rem; 
-  font-weight: 500; 
+h5 {
+  font-size: 1.25rem;
+  font-weight: 500;
   color: var(--text-primary);
 }
 
-h6 { 
-  font-size: 1.125rem; 
-  font-weight: 500; 
+h6 {
+  font-size: 1.125rem;
+  font-weight: 500;
   color: var(--text-primary);
 }
 
@@ -677,13 +675,13 @@ body, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, 
 }
 
 @keyframes fadeIn {
-  from { 
-    opacity: 0; 
-    transform: translateY(30px); 
+  from {
+    opacity: 0;
+    transform: translateY(30px);
   }
-  to { 
-    opacity: 1; 
-    transform: translateY(0); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -701,13 +699,13 @@ body, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, 
 }
 
 @keyframes scaleIn {
-  from { 
-    transform: scale(0.9); 
-    opacity: 0; 
+  from {
+    transform: scale(0.9);
+    opacity: 0;
   }
-  to { 
-    transform: scale(1); 
-    opacity: 1; 
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -716,19 +714,19 @@ body, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, 
 }
 
 @keyframes bounceIn {
-  0% { 
-    transform: scale(0.3); 
-    opacity: 0; 
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
   }
-  50% { 
-    transform: scale(1.05); 
+  50% {
+    transform: scale(1.05);
   }
-  70% { 
-    transform: scale(0.9); 
+  70% {
+    transform: scale(0.9);
   }
-  100% { 
-    transform: scale(1); 
-    opacity: 1; 
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
@@ -738,7 +736,7 @@ body, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, 
     --spacing-xl: 2rem;
     --spacing-2xl: 3rem;
   }
-  
+
   h1 { font-size: 2.5rem; }
   h2 { font-size: 2rem; }
   h3 { font-size: 1.75rem; }
@@ -749,15 +747,15 @@ body, div, span, p, h1, h2, h3, h4, h5, h6, a, button, input, textarea, select, 
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
   }
-  
+
   .card {
     padding: var(--spacing-lg);
   }
-  
+
   h1 { font-size: 2rem; }
   h2 { font-size: 1.75rem; }
   h3 { font-size: 1.5rem; }
-  
+
   .btn {
     padding: 0.875rem 1.75rem;
     font-size: 0.8rem;

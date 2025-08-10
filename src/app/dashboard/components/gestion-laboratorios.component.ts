@@ -638,7 +638,17 @@ abrirModalTablaComputadoras(): void {
   this.laboratoriosConComputadoras = [];
   this.cargarLaboratoriosConComputadoras();
 }
+private extraerNumero(nombre: string): number {
+  const match = nombre.match(/\d+/);
+  return match ? parseInt(match[0], 10) : 0;
+}
 
+// Ordena las computadoras de cada laboratorio del 1 al 35
+private ordenarComputadorasPorNumero(): void {
+  this.laboratoriosConComputadoras.forEach(grupo => {
+    grupo.computadoras.sort((a, b) => this.extraerNumero(a.nombre) - this.extraerNumero(b.nombre));
+  });
+}
 cargarLaboratoriosConComputadoras(): void {
   this.cargandoComputadoras = true;
   this.gestionLaboratoriosService.obtenerLaboratorios().subscribe({
@@ -653,6 +663,8 @@ cargarLaboratoriosConComputadoras(): void {
             laboratorio: lab,
             computadoras: resultados[i]
           }));
+          // Ordena aquí
+          this.ordenarComputadorasPorNumero();
           this.cargandoComputadoras = false;
         },
         error: err => {
@@ -745,60 +757,110 @@ abrirModalCrearLaboratorio(): void {
     });
   }
 
-  crearInconveniente(): void {
-    if (!this.nuevoInconveniente.tipo || !this.nuevoInconveniente.descripcion) {
-      this.errorInconvenientes = 'Tipo y descripción son requeridos';
-      return;
+ crearInconveniente(): void {
+  if (!this.nuevoInconveniente.tipo || !this.nuevoInconveniente.descripcion) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Tipo y descripción son requeridos'
+    });
+    this.errorInconvenientes = 'Tipo y descripción son requeridos';
+    return;
+  }
+  this.creandoInconveniente = true;
+  this.gestionLaboratoriosService.crearInconveniente(this.nuevoInconveniente).subscribe({
+    next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: 'Inconveniente creado exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      this.mensajeExitoInconveniente = 'Inconveniente creado exitosamente';
+      this.nuevoInconveniente = { tipo: '', descripcion: '' };
+      this.cargarInconvenientes();
+      this.creandoInconveniente = false;
+      this.cerrarModalCrearInconveniente();
+    },
+    error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al crear inconveniente'
+      });
+      this.errorInconvenientes = err.error?.message || 'Error al crear inconveniente';
+      this.creandoInconveniente = false;
     }
-    this.creandoInconveniente = true;
-    this.gestionLaboratoriosService.crearInconveniente(this.nuevoInconveniente).subscribe({
-      next: resp => {
-        this.mensajeExitoInconveniente = 'Inconveniente creado exitosamente';
-        this.nuevoInconveniente = { tipo: '', descripcion: '' };
-        this.cargarInconvenientes();
-        this.creandoInconveniente = false;
-        this.cerrarModalCrearInconveniente();
-      },
-      error: err => {
-        this.errorInconvenientes = err.error?.message || 'Error al crear inconveniente';
-        this.creandoInconveniente = false;
-      }
-    });
-  }
+  });
+}
 
-  actualizarInconveniente(): void {
-    if (!this.inconvenienteSeleccionado?.id) return;
-    this.creandoInconveniente = true;
-    this.gestionLaboratoriosService.actualizarInconveniente(this.inconvenienteSeleccionado.id, this.inconvenienteSeleccionado).subscribe({
-      next: resp => {
-        this.mensajeExitoInconveniente = 'Inconveniente actualizado exitosamente';
-        this.cargarInconvenientes();
-        this.creandoInconveniente = false;
-        this.cerrarModalCrearInconveniente();
-      },
-      error: err => {
-        this.errorInconvenientes = err.error?.message || 'Error al actualizar inconveniente';
-        this.creandoInconveniente = false;
-      }
-    });
-  }
-
-  eliminarInconveniente(id?: number): void {
-    if (!id) return;
-    this.gestionLaboratoriosService.eliminarInconveniente(id).subscribe({
-      next: resp => {
-        this.mensajeExitoInconveniente = 'Inconveniente eliminado exitosamente';
-        this.cargarInconvenientes();
-      },
-      error: err => {
-        this.errorInconvenientes = err.error?.message || 'Error al eliminar inconveniente';
-      }
-    });
-  }
+actualizarInconveniente(): void {
+  if (!this.nuevoInconveniente.id) return;
+  this.creandoInconveniente = true;
+  this.gestionLaboratoriosService.actualizarInconveniente(this.nuevoInconveniente.id, this.nuevoInconveniente).subscribe({
+    next: resp => {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Actualizado!',
+        text: 'Inconveniente actualizado exitosamente',
+        timer: 2000,
+        showConfirmButton: false
+      });
+      this.mensajeExitoInconveniente = 'Inconveniente actualizado exitosamente';
+      this.cargarInconvenientes();
+      this.creandoInconveniente = false;
+      this.cerrarModalCrearInconveniente();
+    },
+    error: err => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: err.error?.message || 'Error al actualizar inconveniente'
+      });
+      this.errorInconvenientes = err.error?.message || 'Error al actualizar inconveniente';
+      this.creandoInconveniente = false;
+    }
+  });
+}
+ eliminarInconveniente(id?: number): void {
+  if (!id) return;
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'Esta acción no se puede deshacer.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      this.gestionLaboratoriosService.eliminarInconveniente(id).subscribe({
+        next: resp => {
+          Swal.fire({
+            icon: 'success',
+            title: '¡Eliminado!',
+            text: 'Inconveniente eliminado exitosamente',
+            timer: 2000,
+            showConfirmButton: false
+          });
+          this.mensajeExitoInconveniente = 'Inconveniente eliminado exitosamente';
+          this.cargarInconvenientes();
+        },
+        error: err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: err.error?.message || 'Error al eliminar inconveniente'
+          });
+          this.errorInconvenientes = err.error?.message || 'Error al eliminar inconveniente';
+        }
+      });
+    }
+  });
+}
 
 editarInconveniente(inconveniente: Inconveniente): void {
-  this.nuevoInconveniente = { ...inconveniente }; // Copia los datos aquí
-  this.inconvenienteSeleccionado = { ...inconveniente };
+  this.nuevoInconveniente = { ...inconveniente }; // Usar solo esta variable
   this.mostrarModalCrearInconveniente = true;
   this.mensajeExitoInconveniente = null;
   this.errorInconvenientes = null;
